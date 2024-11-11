@@ -32,8 +32,8 @@ a {
 	padding: 0 !important;
 }
 
-.el-menu--horizontal.el-menu {
-	border-bottom: none !important;
+.el-menu {
+	border: 1px solid var(--el-menu-border-color);
 }
 
 .el-menu-item {

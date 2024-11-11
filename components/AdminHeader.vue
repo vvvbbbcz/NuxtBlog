@@ -33,6 +33,10 @@ async function logout() {
 	padding: 0 !important;
 }
 
+.el-menu {
+	border: 1px solid var(--el-menu-border-color);
+}
+
 .el-menu-item {
 	border-bottom: 0 !important;
 }
