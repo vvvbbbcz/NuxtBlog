@@ -6,8 +6,6 @@ definePageMeta({
 	layout: 'admin'
 });
 
-const install = ref(process.env.INSTALL);
-
 const input = ref(false);
 const saveFailed = ref(false);
 const data = ref({
@@ -74,9 +72,6 @@ onMounted(() => {
 
 <template>
 	<el-card>
-		<h1 v-if="install">
-			Welcome to MongoBlog! {{ install }}
-		</h1>
 		<el-form label-width="auto">
 			<h2>网站信息</h2>
 			<el-form-item label="博客名称">
