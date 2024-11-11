@@ -12,5 +12,6 @@
 .el-footer {
 	text-align: center;
 	background-color: var(--el-menu-bg-color);
+	border: 1px solid var(--el-menu-border-color);
 }
 </style>
