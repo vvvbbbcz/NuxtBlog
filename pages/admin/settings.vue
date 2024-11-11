@@ -80,6 +80,7 @@ onMounted(() => {
 			<el-form-item label="分隔符">
 				<el-input v-if="input" v-model="data.separator"/>
 			</el-form-item>
+
 			<h2>管理员信息</h2>
 			<el-form-item label="用户名">
 				<el-input v-if="input" v-model="data.username"/>
@@ -113,10 +114,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-h1 {
-	margin: 0;
-}
-
 .pw-input {
 	margin-bottom: 0;
 }
