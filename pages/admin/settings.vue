@@ -56,7 +56,7 @@ async function save() {
 	}
 
 	data.value.password = await sha256sum(password.value);
-	const {status}: any = await $fetch(`/api/admin/install`, {
+	const {status}: any = await $fetch(`/api/admin/blogInfo/create`, {
 		method: 'POST',
 		body: data.value
 	}).catch(() => {
