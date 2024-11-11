@@ -5,6 +5,7 @@ import DeletedArticle from "~/server/utils/models/DeletedArticle";
 import Draft from "~/server/utils/models/Draft";
 import Picture from "~/server/utils/models/Picture";
 import User from "~/server/utils/models/User";
+import consola from "consola";
 
 export default defineNitroPlugin((): void => {
     const models = [
@@ -16,5 +17,5 @@ export default defineNitroPlugin((): void => {
         Tag,
         User
     ];
-    console.log('Registered ' + models.length + ' Mongoose model(s)');
+    consola.info(`Registered ${models.length} Mongoose model(s)`);
 })
