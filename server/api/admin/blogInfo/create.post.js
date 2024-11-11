@@ -40,7 +40,7 @@ export async function createAdmin(body) {
 
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
-		setResponseStatus(event, 400);
+		setResponseStatus(event, 405);
 		return null;
 	}
 
