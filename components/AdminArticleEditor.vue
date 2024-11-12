@@ -15,6 +15,9 @@ const article = ref({
 	urlName: '',
 	title: '',
 	markdown: '',
+	content: '',
+	date: '',
+	author: 0,
 	visible: true,
 });
 
@@ -28,7 +31,7 @@ if (props.id) {
 
 
 const loading = ref(false)
-const tags = ref([]);
+const tags = ref([{}]);
 
 async function fetchTags() {
 	const {data} = await $fetch(`/api/admin/tag/editorList`, {method: 'GET'});
@@ -43,8 +46,8 @@ async function fetchTags() {
 	}
 }
 
-const selectedTags = ref([]);
-const selectTag = (tag) => {
+const selectedTags = ref([{}]);
+const selectTag = (tag: any) => {
 	if (tag._id != null) {
 		selectedTags.value.push(tag);
 	}
@@ -71,7 +74,7 @@ const saveStatus = ref({
 		saveStatus.value.msg = '保存成功';
 		saveStatus.value.errMsg = '';
 	},
-	fail: (error) => {
+	fail: (error: string) => {
 		saveStatus.value.type = 'danger';
 		saveStatus.value.msg = '保存失败';
 		saveStatus.value.errMsg = error;
@@ -95,7 +98,7 @@ async function publish() {
 	await update(false);
 }
 
-async function update(draft) {
+async function update(draft: any) {
 	article.value.markdown = vditor.getValue();
 
 	if (!draft) {
@@ -107,7 +110,7 @@ async function update(draft) {
 	const apiType = props.id ? (props.draft === draft ? 'update' : 'convertTo') : 'create';
 	const method = props.id ? 'PATCH' : 'POST';
 
-	const {status} = await $fetch(`/api/admin/${aimArticleType}/${apiType}`, {
+	const {status}: any = await $fetch(`/api/admin/${aimArticleType}/${apiType}`, {
 		method: method,
 		body: article.value
 	}).catch(error => {
@@ -118,7 +121,7 @@ async function update(draft) {
 	}
 }
 
-let vditor;
+let vditor: Vditor;
 onMounted(() => {
 	input.value = true;
 
