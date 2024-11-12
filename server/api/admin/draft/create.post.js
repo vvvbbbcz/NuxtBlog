@@ -15,6 +15,7 @@ function filter(body) {
 export async function createArticle(id, requestBody) {
     const model = new Draft(requestBody);
     model._id = id;
+    model.author = 0; // TODO
 
     return model;
 }
@@ -48,5 +49,5 @@ export default defineEventHandler(async (event) => {
     }
 
     setResponseStatus(event, 201);
-    return {id: model._id}; // TODO
+    return sendRedirect(event, `/admin/draft/edit/${model._id}`, 201); // TODO
 })

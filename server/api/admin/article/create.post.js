@@ -25,6 +25,7 @@ export async function createArticle(id, requestBody) {
 	model.publishDate = requestBody.date;
 	model.updateDate = requestBody.date;
 	model.visible = requestBody.visible;
+	model.author = 0; // TODO
 
 	return model;
 }
@@ -57,6 +58,5 @@ export default defineEventHandler(async (event) => {
 		return {error: "save article failed, may be database error."};
 	}
 
-	setResponseStatus(event, 201);
-	return {id: model._id}; // TODO
+	return sendRedirect(event, `/admin/article/edit/${model._id}`, 201); // TODO
 })

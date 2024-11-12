@@ -8,7 +8,7 @@ const {data} = await useFetch(`/api/admin/${type}/list`);
 const articles = data.value;
 
 async function edit(id: number) {
-	await navigateTo(`/admin/${type}/edit?id=${id}`);
+	await navigateTo(`/admin/${type}/edit/${id}`);
 }
 </script>
 
