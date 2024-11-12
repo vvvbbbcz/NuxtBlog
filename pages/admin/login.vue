@@ -1,12 +1,40 @@
 <script setup lang="ts">
+import sha256sum from "~/utils/sha256sum";
+
 definePageMeta({
 	layout: 'login'
 });
 
 const input = ref(false);
 
+const {loggedIn, fetch} = useUserSession();
+
+if (loggedIn.value) {
+	await navigateTo('/admin');
+}
+
 const username = ref('');
 const password = ref('');
+
+async function login() {
+	if (!username.value || !password.value) {
+		return;
+	}
+
+	await $fetch('/api/auth/login', {
+		method: 'POST',
+		body: {
+			username: username.value,
+			password: await sha256sum(password.value)
+		}
+	});
+
+	await fetch();
+
+	if (loggedIn.value) {
+		await navigateTo('/admin');
+	}
+}
 
 onMounted(() => {
 	input.value = true;

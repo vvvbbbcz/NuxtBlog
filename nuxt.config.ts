@@ -13,6 +13,11 @@ export default defineNuxtConfig({
 		'nuxt-mongoose',
 		'nuxt-auth-utils'
 	],
+	runtimeConfig: {
+		session: {
+			maxAge: 60 * 60 * 24 // 1 day
+		}
+	},
 	app: {
 		head: {
 			htmlAttrs: {

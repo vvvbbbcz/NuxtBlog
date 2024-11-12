@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import moment from "moment";
+const {loggedIn, clear} = useUserSession();
 
 async function logout() {
-	const res = await $fetch('/api/admin/article/fromDraft', {
-		method: 'PATCH',
-		body: {
-			id: 0,
-			publishDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-		}
-	})
+	await clear();
+	if (!loggedIn.value) {
+		await navigateTo('/admin/login');
+	}
 }
 </script>
 
