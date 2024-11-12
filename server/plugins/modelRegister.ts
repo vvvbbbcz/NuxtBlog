@@ -8,14 +8,14 @@ import User from "~/server/utils/models/User";
 import consola from "consola";
 
 export default defineNitroPlugin((): void => {
-    const models = [
-        Article,
-        BlogInfo,
-        DeletedArticle,
-        Draft,
-        Picture,
-        Tag,
-        User
-    ];
-    consola.info(`Registered ${models.length} Mongoose model(s)`);
+	const models = [
+		Article,
+		BlogInfo,
+		DeletedArticle,
+		Draft,
+		Picture,
+		Tag,
+		User
+	];
+	consola.info(`Registered ${models.length} Mongoose model(s)`);
 })
