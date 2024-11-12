@@ -10,7 +10,7 @@ function filter(body) {
 		content: body.content,
 		date: body.date,
 		tagId: body.tagId,
-		author: body.author,
+		author: body.author._id,
 		visible: body.visible,
 	}
 }
@@ -25,7 +25,6 @@ export async function createArticle(id, requestBody) {
 	model.publishDate = requestBody.date;
 	model.updateDate = requestBody.date;
 	model.visible = requestBody.visible;
-	model.author = 0; // TODO
 
 	return model;
 }

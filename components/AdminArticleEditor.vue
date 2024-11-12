@@ -17,7 +17,9 @@ const article = ref({
 	markdown: '',
 	content: '',
 	date: '',
-	author: 0,
+	author: {
+		_id: 0
+	},
 	visible: true,
 });
 
@@ -99,7 +101,10 @@ async function publish() {
 }
 
 async function update(draft: any) {
+	const {user} = useUserSession();
+
 	article.value.markdown = vditor.getValue();
+	article.value.author._id = user.value?.id;
 
 	if (!draft) {
 		article.value.content = vditor.getHTML();

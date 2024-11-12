@@ -7,7 +7,7 @@ function filter(body) {
         title: body.title,
         markdown: body.markdown,
         tagId: body.tagId,
-        author: body.author,
+        author: body.author._id,
         visible: body.visible,
     }
 }
@@ -15,7 +15,6 @@ function filter(body) {
 export async function createArticle(id, requestBody) {
     const model = new Draft(requestBody);
     model._id = id;
-    model.author = 0; // TODO
 
     return model;
 }
