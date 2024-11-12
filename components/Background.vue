@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {data} = await useFetch('/api/getBlogInfo');
+const {data} = useNuxtData('blogInfo');
 const bg = data.value ? data.value.background : '';
 </script>
 
