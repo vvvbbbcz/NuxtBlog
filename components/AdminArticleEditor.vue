@@ -88,18 +88,6 @@ const saveStatus = ref({
 	}
 });
 
-async function convertToDraft() {
-	await update(true);
-}
-
-async function saveDraft() {
-	await update(true);
-}
-
-async function publish() {
-	await update(false);
-}
-
 async function update(draft: any) {
 	const {user} = useUserSession();
 
@@ -186,13 +174,13 @@ onMounted(() => {
 			</el-form>
 			<el-container class="publish-settings">
 				<el-button-group>
-					<el-button v-if="props.draft" type="primary" @click="saveDraft">
+					<el-button v-if="props.draft" type="primary" @click="update(true)">
 						保存草稿
 					</el-button>
-					<el-button v-else type="primary" @click="convertToDraft">
+					<el-button v-else type="primary" @click="update(true)">
 						转为草稿
 					</el-button>
-					<el-button type="primary" @click="publish">
+					<el-button type="primary" @click="update(false)">
 						发布
 					</el-button>
 				</el-button-group>
