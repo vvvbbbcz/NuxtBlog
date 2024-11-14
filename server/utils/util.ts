@@ -1,5 +1,16 @@
 import crypto from "node:crypto";
 
+const status = {
+	error: {
+		status: 'error'
+	},
+	success: {
+		status: 'success'
+	}
+}
+
+export {status}
+
 export function flush(data: any) {
 	for (const tag of data.tagId) {
 		if (tag._id) {

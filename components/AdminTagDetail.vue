@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const props = defineProps(['row', 'column', '$index']);
+import type {FormInstance, FormRules} from "element-plus";
+
+const props = defineProps(['refresh', 'row', 'column', '$index']);
 
 const editing = ref<boolean>(false);
-const name = ref<string>(props.row.name);
-const urlName = ref<string>(props.row.urlName);
 
 const {data: articles, execute, status} = await useLazyFetch(`/api/admin/tag/fetchArticle?id=${props.row._id}`, {
 	immediate: false
@@ -18,6 +18,20 @@ function fetch() {
 }
 
 const hide = ref<boolean>(false);
+
+interface TagForm {
+	name: string
+	urlName: string
+}
+const newTag = ref<TagForm>({
+	name: props.row.name,
+	urlName: props.row.urlName
+});
+const tagForm = ref<FormInstance>();
+const rule = ref<FormRules<TagForm>>({
+	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+	urlName: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
+});
 
 const saveStatus = ref({
 	type: 'warning',
@@ -40,37 +54,51 @@ const saveStatus = ref({
 	}
 });
 
-async function save(create: boolean) {
-	const apiType = create ? 'create' : 'update';
-	const method = create ? 'POST' : 'PATCH';
-	const {status}: any = await $fetch(`/api/admin/tag/${apiType}`, {
-		method: method,
-		body: {
-			_id: props.row._id,
-			name: name.value,
-			urlName: urlName.value
+async function save(form: FormInstance) {
+	await form.validate(async (valid) => {
+		if (valid) {
+			const {status}: any = await $fetch(`/api/admin/tag/update`, {
+				method: 'PATCH',
+				body: {
+					_id: props.row._id,
+					name: newTag.value.name,
+					urlName: newTag.value.urlName
+				}
+			}).catch(error => {
+				saveStatus.value.fail(error);
+			});
+			if (status === 'success') {
+				saveStatus.value.success();
+				props.row.name = newTag.value.name;
+				props.row.urlName = newTag.value.urlName;
+			} else if (status === 404) {
+				saveStatus.value.fail('找不到标签');
+			}
 		}
-	}).catch(error => {
-		saveStatus.value.fail(error);
 	});
-	if (status === 'success') {
-		saveStatus.value.success();
-		props.row.name = name.value;
-		props.row.urlName = urlName.value;
-	} else if (status === 404) {
-		saveStatus.value.fail('找不到标签');
-	}
-	console.log(status);
 }
 
-function remove() {
-	// TODO
+const removeFailed = ref<boolean>(false);
+async function remove() {
+	removeFailed.value = false;
+	const {status}: any = await $fetch(`/api/admin/tag/remove`, {
+		method: 'DELETE',
+		body: {
+			_id: props.row._id
+		}
+	}).catch(() => {
+		removeFailed.value = true;
+	});
+	if (status === 'success') {
+		await props.refresh();
+	} else if (status === 'error') {
+		removeFailed.value = true;
+	}
 }
 </script>
 
 <template>
 	<div v-if="!editing" class="detail">
-		<p>ID: {{ props.row._id }}</p>
 		<span>文章: </span>
 		<el-button v-if="(status !== 'success') || hide" @click="">
 			显示（暂不支持）
@@ -78,6 +106,7 @@ function remove() {
 		<el-button v-else @click="hide = true">
 			隐藏
 		</el-button>
+
 		<el-table v-if="(status === 'success') && !hide" :data="articles" style="width: 100%">
 			<el-table-column prop="title" label="标题" min-width="100">
 				<template #default="props">
@@ -96,13 +125,14 @@ function remove() {
 			</el-table-column>
 		</el-table>
 	</div>
+
 	<div v-else>
-		<el-form label-width="auto">
-			<el-form-item label="名称">
-				<el-input v-model="name"/>
+		<el-form ref="tagForm" :model="newTag" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
+			<el-form-item label="名称" prop="name">
+				<el-input v-model="newTag.name"/>
 			</el-form-item>
-			<el-form-item label="URL">
-				<el-input v-model="urlName"/>
+			<el-form-item label="URL" prop="urlName">
+				<el-input v-model="newTag.urlName"/>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -118,7 +148,7 @@ function remove() {
 		<el-button @click="editing = false">
 			退出编辑
 		</el-button>
-		<el-button type="primary" @click="save(false)">
+		<el-button type="primary" @click="save(tagForm)">
 			保存
 		</el-button>
 	</el-button-group>
