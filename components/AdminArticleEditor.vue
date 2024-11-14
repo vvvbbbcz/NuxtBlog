@@ -134,11 +134,9 @@ onMounted(() => {
 				<el-form-item label="标题">
 					<el-input v-if="input" v-model="article.title"/>
 				</el-form-item>
-				{{ tagsStatus }}
 				<el-form-item label="URL">
 					<el-input v-if="input" v-model="article.urlName"/>
 				</el-form-item>
-				{{ tagList }}
 				<el-form-item label="标签">
 					<el-select
 						v-if="input"
