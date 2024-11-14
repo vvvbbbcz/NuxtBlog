@@ -37,7 +37,7 @@ export function flush(data: any) {
 
 export function adminFlush(data: any) {
 	for (const tag of data.tagId) {
-		if (tag._id) {
+		if (tag._id !== undefined) {
 			tag.articles = undefined;
 			tag.urlName = undefined;
 			tag.__v = undefined;
@@ -47,7 +47,7 @@ export function adminFlush(data: any) {
 	data.__v = undefined;
 
 	const author = data.author;
-	if (author._id) {
+	if (author._id !== undefined) {
 		author.username = undefined;
 		author.email = undefined;
 		author.admin = undefined;
