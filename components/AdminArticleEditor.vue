@@ -16,6 +16,7 @@ const article = ref({
 	title: '',
 	markdown: '',
 	content: '',
+	tagId: [],
 	date: '',
 	author: {
 		_id: 0
@@ -25,46 +26,36 @@ const article = ref({
 
 if (props.id) {
 	const type = props.draft ? 'draft' : 'article';
-	const {data} = await useFetch(`/api/admin/${type}/get?id=${props.id}`);
-	if (data && data.value) {
-		article.value = data.value;
+	const {data: articleData} = await useFetch(`/api/admin/${type}/get?id=${props.id}`);
+	if (articleData && articleData.value) {
+		article.value = articleData.value;
 	}
 }
 
-
-const loading = ref(false)
-const tags = ref([{}]);
-
+const {data: tagList, execute: startFetchTags, status: tagsStatus} = await useLazyFetch('/api/admin/tag/editorList', {
+	key: 'tagList',
+	immediate: false,
+});
+const fetchedTags = ref<boolean>(false);
 async function fetchTags() {
-	const {data} = await $fetch(`/api/admin/tag/editorList`, {method: 'GET'});
-
-	if (data.value) {
-		tags.value = data.value;
+	if (fetchedTags.value) {
+		useNuxtData('tagList');
 	} else {
-		tags.value.push({
-			_id: null,
-			name: '无法获取标签列表'
-		});
+		await startFetchTags();
+		if (tagsStatus.value === 'success') {
+			fetchedTags.value = true;
+		}
 	}
 }
 
-const selectedTags = ref([{}]);
-const selectTag = (tag: any) => {
-	if (tag._id != null) {
-		selectedTags.value.push(tag);
-	}
-}
+const selectedTags = ref<any>(article.value.tagId);
 
-const newTagName = ref('')
-const confirmNewTag = () => {
+const newTagName = ref<string>('')
+async function confirmNewTag() {
 	if (newTagName.value) {
 		// useFetch('/api/addTag') // TODO
-		clear()
+		newTagName.value = '';
 	}
-}
-
-function clear() {
-	newTagName.value = ''
 }
 
 const saveStatus = ref({
@@ -93,6 +84,7 @@ async function update(draft: any) {
 
 	article.value.markdown = vditor.getValue();
 	article.value.author._id = user.value?.id;
+	article.value.tagId = selectedTags.value;
 
 	if (!draft) {
 		article.value.content = vditor.getHTML();
@@ -142,30 +134,41 @@ onMounted(() => {
 				<el-form-item label="标题">
 					<el-input v-if="input" v-model="article.title"/>
 				</el-form-item>
+				{{ tagsStatus }}
 				<el-form-item label="URL">
 					<el-input v-if="input" v-model="article.urlName"/>
 				</el-form-item>
+				{{ tagList }}
 				<el-form-item label="标签">
 					<el-select
 						v-if="input"
+						v-model="selectedTags"
 						multiple
 						filterable
+						remote
 						collapse-tags
-						placeholder="暂不支持"
-						:loading="loading"
-						style="width: 100%"
+						collapse-tags-tooltip
+						:max-collapse-tags="5"
+						remote-show-suffix
+						:remote-method="fetchTags"
+						:loading="tagsStatus === 'pending'"
 					>
+						<el-option
+							v-for="item in tagList"
+							:label="item.name"
+							:value="item._id"
+						/>
 						<template #loading>
 							<svg class="circular" viewBox="0 0 50 50">
 								<circle class="path" cx="25" cy="25" r="20" fill="none"/>
 							</svg>
 						</template>
 						<template #footer>
-							<el-input v-if="input" class="tag-input"/>
+							<el-input v-if="input" v-model="newTagName" class="tag-input" placeholder="添加标签（暂不支持）"/>
 							<el-button type="primary" @click="confirmNewTag">
 								添加
 							</el-button>
-							<el-button @click="clear">
+							<el-button @click="newTagName = ''">
 								取消
 							</el-button>
 						</template>

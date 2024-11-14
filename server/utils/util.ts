@@ -4,7 +4,7 @@ export function flush(data: any) {
 	for (const tag of data.tagId) {
 		if (tag._id) {
 			tag._id = undefined;
-			tag.articleID = undefined;
+			tag.articles = undefined;
 			tag.__v = undefined;
 		}
 	}
@@ -27,7 +27,7 @@ export function flush(data: any) {
 export function adminFlush(data: any) {
 	for (const tag of data.tagId) {
 		if (tag._id) {
-			tag.articleID = undefined;
+			tag.articles = undefined;
 			tag.urlName = undefined;
 			tag.__v = undefined;
 		}

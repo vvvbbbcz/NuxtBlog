@@ -10,7 +10,7 @@ function removeUnnecessary(data) {
 export default defineEventHandler(async (event) => {
 	const id = parseInt(getQuery(event).id);
 	if (!isNaN(id)) {
-		const data = await Draft.findById(id).populate(['tagId', 'author']).exec().catch(err => {
+		const data = await Draft.findById(id).populate('author').exec().catch(err => {
 			console.error(err);
 		});
 		if (data) {

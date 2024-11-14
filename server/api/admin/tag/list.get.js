@@ -2,7 +2,6 @@ import Tag from "~/server/utils/models/Tag";
 
 function removeUnnecessary(data) {
 	for (const tag of data) {
-		tag.urlName = undefined;
 		tag.__v = undefined;
 	}
 
