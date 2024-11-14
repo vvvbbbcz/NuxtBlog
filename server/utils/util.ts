@@ -2,9 +2,11 @@ import crypto from "node:crypto";
 
 export function flush(data: any) {
 	for (const tag of data.tagId) {
-		tag._id = undefined;
-		tag.articleID = undefined;
-		tag.__v = undefined;
+		if (tag._id) {
+			tag._id = undefined;
+			tag.articleID = undefined;
+			tag.__v = undefined;
+		}
 	}
 
 	data._id = undefined;
@@ -13,27 +15,33 @@ export function flush(data: any) {
 	data.__v = undefined;
 
 	const author = data.author;
-	author._id = undefined;
-	author.admin = undefined;
-	author.__v = undefined;
+	if (author._id) {
+		author._id = undefined;
+		author.admin = undefined;
+		author.__v = undefined;
+	}
 
 	return data;
 }
 
 export function adminFlush(data: any) {
 	for (const tag of data.tagId) {
-		tag.articleID = undefined;
-		tag.urlName = undefined;
-		tag.__v = undefined;
+		if (tag._id) {
+			tag.articleID = undefined;
+			tag.urlName = undefined;
+			tag.__v = undefined;
+		}
 	}
 
 	data.__v = undefined;
 
 	const author = data.author;
-	author.username = undefined;
-	author.email = undefined;
-	author.admin = undefined;
-	author.__v = undefined;
+	if (author._id) {
+		author.username = undefined;
+		author.email = undefined;
+		author.admin = undefined;
+		author.__v = undefined;
+	}
 
 	return data;
 }
