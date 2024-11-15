@@ -1,115 +1,62 @@
 <script setup lang="ts">
-import {passwordStrength} from "check-password-strength";
-import sha256sum from "~/utils/sha256sum";
+import {ElMessage as message, ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
 
 definePageMeta({
 	layout: 'admin',
 	middleware: ['auth'],
 });
 
-const input = ref(false);
-const saveFailed = ref(false);
-const data = ref({
-	name: '',
-	icon: 0,
-	separator: '',
-	background: '',
-	username: '',
-	nickname: '',
-	email: '',
-	password: '',
-});
-const password = ref('');
-const confirmPassword = ref('');
-const pwdStrength = ref({
-	type: 'danger',
-	msg: '过弱'
-});
+const {data: fetchedData}: any = await useFetch(`/api/admin/blogInfo/get`);
 
-function checkStrength() {
-	const {id} = passwordStrength(password.value);
-	switch (id) {
-		case 0:
-			pwdStrength.value.type = 'danger';
-			pwdStrength.value.msg = '过弱';
-			break;
-		case 1:
-			pwdStrength.value.type = 'warning';
-			pwdStrength.value.msg = '弱';
-			break;
-		case 2:
-			pwdStrength.value.type = 'warning';
-			pwdStrength.value.msg = '中';
-			break;
-		case 3:
-			pwdStrength.value.type = 'success';
-			pwdStrength.value.msg = '强';
-			break;
-	}
-}
+const data = ref(fetchedData.value);
+const form = ref<FormInstance>();
+const rule = ref<FormRules<typeof data>>({
+	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+	separator: [{required: true, message: '请输入分隔符', trigger: 'blur'}],
+})
 
-async function save() {
-	if (password.value !== confirmPassword.value) {
-		saveFailed.value = true;
-		return;
-	}
-
-	data.value.password = await sha256sum(password.value);
-	const {status}: any = await $fetch(`/api/admin/blogInfo/create`, {
-		method: 'POST',
-		body: data.value
-	}).catch(() => {
-		saveFailed.value = true;
+async function save(form: FormInstance) {
+	await form.validate(async (valid) => {
+		if (valid) {
+			const {status}: any = await $fetch(`/api/admin/blogInfo/update`, {
+				method: 'PATCH',
+				body: data.value
+			}).catch(error => {
+				notify({type: 'error', title: '保存失败', message: error});
+			});
+			if (status === 'success') {
+				message({type: 'success', message: '保存成功'});
+			} else if (status === 'error') {
+				message({type: 'error', message: '保存失败'});
+			}
+		}
 	});
-	if (status === 'success') {
-		await navigateTo('/admin/login');
-	}
 }
 
+const mounted = ref(false);
 onMounted(() => {
-	input.value = true;
+	mounted.value = true;
 });
 </script>
 
 <template>
 	<el-card>
-		<el-form label-width="auto">
+		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<h2>网站信息</h2>
-			<el-form-item label="博客名称">
-				<el-input v-if="input" v-model="data.name"/>
+			<el-form-item prop="name" label="博客名称">
+				<el-input v-if="mounted" v-model="data.name"/>
 			</el-form-item>
-			<el-form-item label="分隔符">
-				<el-input v-if="input" v-model="data.separator"/>
+			<el-form-item prop="separator" label="分隔符">
+				<el-input v-if="mounted" v-model="data.separator"/>
 			</el-form-item>
-
-			<h2>管理员信息</h2>
-			<el-form-item label="用户名">
-				<el-input v-if="input" v-model="data.username"/>
-			</el-form-item>
-			<el-form-item label="昵称">
-				<el-input v-if="input" v-model="data.nickname"/>
-			</el-form-item>
-			<el-form-item label="邮箱">
-				<el-input v-if="input" v-model="data.email"/>
-			</el-form-item>
-			<el-form-item class="pw-input" label="密码">
-				<el-input v-if="input" v-model="password" type="password" @input="checkStrength" show-password/>
-			</el-form-item>
-			<div class="pw-text">
-				<el-text :type="pwdStrength.type">密码强度：{{ pwdStrength.msg }}</el-text>
-			</div>
-			<el-form-item class="pw-input" label="确认密码">
-				<el-input v-if="input" v-model="confirmPassword" type="password" show-password/>
-			</el-form-item>
-			<div class="pw-text">
-				<el-text v-if="input" type="danger" v-show="password !== confirmPassword">两次密码不一致</el-text>
-			</div>
 		</el-form>
 		<div style="margin-left: auto">
-			<el-button type="primary" @click="save">
+			<el-button type="primary" @click="save(form)">
 				保存
 			</el-button>
-			<el-text v-if="saveFailed" type="danger">保存失败</el-text>
+			<el-button @click="form?.resetFields()">
+				重置
+			</el-button>
 		</div>
 	</el-card>
 </template>

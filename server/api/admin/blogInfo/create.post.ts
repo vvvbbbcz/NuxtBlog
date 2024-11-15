@@ -2,7 +2,7 @@ import BlogInfo from "~/server/utils/models/BlogInfo";
 import User from "~/server/utils/models/User";
 import {apiStatus} from "~/server/utils/util";
 
-function filter(body: any) {
+async function filter(body: any) {
 	return {
 		blogInfo: {
 			name: body.name,
@@ -14,7 +14,7 @@ function filter(body: any) {
 			username: body.username,
 			nickname: body.nickname,
 			email: body.email,
-			password: body.password,
+			password: await hashPassword(body.password),
 		}
 	}
 }
@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
 		return apiStatus.error;
 	}
 
-	const body = filter(await readBody(event));
+	const body = await filter(await readBody(event));
 
 	const blogInfo = await createBlogInfo(body.blogInfo);
 	const infoResult = await blogInfo.save().catch(error => {
@@ -75,5 +75,5 @@ export default defineEventHandler(async (event) => {
 	}
 
 	setResponseStatus(event, 201);
-	return apiStatus.error;
+	return apiStatus.success;
 })

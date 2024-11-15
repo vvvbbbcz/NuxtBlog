@@ -1,24 +1,24 @@
-import {sha256sum} from "~/server/utils/util";
 import User from "~/server/utils/models/User";
 
 function filter(body: any) {
 	return {
 		username: body.username,
-		password: sha256sum(body.password)
+		password: body.password
 	};
 }
 
 export default defineEventHandler(async (event) => {
-	const body = filter(await readBody(event));
+	const body = await filter(await readBody(event));
 
 	if (process.env.INSTALL) {
+		// 'installer'
+		const hashedPassword = await hashPassword('9c0d294c05fc1d88d698034609bb81c0c69196327594e4c69d2915c80fd9850c')
 		const isValid = (body.username === 'installer') &&
-			(body.password === '3f756651bff16fd0195c6170de995c64abbf710c5773f0788b659c435b7f6da1'); // 'installer'
+			(await verifyPassword(hashedPassword, body.password));
 		if (!isValid) {
 			setResponseStatus(event, 422);
 			return null;
 		}
-
 
 		await setUserSession(event, {
 			user: {
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 			loggedInAt: new Date()
 		});
 	} else {
-		const user = await User.findOne({username: body.username}).select('+password').exec().catch(error => {
+		const user: any = await User.findOne({username: body.username}).select('+password').exec().catch(error => {
 			console.error(error);
 		});
 		if (!user) {
@@ -36,8 +36,7 @@ export default defineEventHandler(async (event) => {
 			return null;
 		}
 
-		const isValid = body.password === user.password;
-		if (!isValid) {
+		if (!await verifyPassword(user.password, body.password)) {
 			setResponseStatus(event, 422);
 			return null;
 		}

@@ -1,15 +1,11 @@
 import {model, Schema} from 'mongoose'
-import {sha256sum} from "~/server/utils/util";
 
 const schema = new Schema({
 	_id: {type: Number},
 	username: {type: String},
 	password: {
 		type: String,
-		select: false,
-		set(value: string) {
-			return sha256sum(value);
-		}
+		select: false
 	},
 	nickname: {type: String},
 	email: {type: String},
