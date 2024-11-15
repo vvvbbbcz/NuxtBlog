@@ -24,5 +24,5 @@ export default defineEventHandler(async (event) => {
 		}
 	}
 	setResponseStatus(event, 400);
-	return apiStatus.success;
+	return apiStatus.error;
 });
