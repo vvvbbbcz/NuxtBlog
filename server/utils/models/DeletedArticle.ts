@@ -1,6 +1,6 @@
 import {model, Schema} from 'mongoose'
-import {draft} from "~/server/utils/models/Draft";
+import {article} from "~/server/utils/models/Article";
 
-const schema = new Schema(draft);
+const schema = new Schema(article);
 
 export default model('DeletedArticle', schema);

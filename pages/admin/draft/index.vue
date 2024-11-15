@@ -5,7 +5,9 @@ definePageMeta({
 </script>
 
 <template>
-	<AdminArticleList draft/>
+	<el-card>
+		<AdminArticleList type="draft"/>
+	</el-card>
 </template>
 
 <style scoped>

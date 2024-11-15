@@ -1,11 +1,11 @@
-import Article from "~/server/utils/models/Article";
-import DeletedArticle from "~/server/utils/models/DeletedArticle";
+import DeletedDraft from "~/server/utils/models/DeletedDraft";
+import Draft from "~/server/utils/models/Draft";
 import {status} from "~/server/utils/util";
 
 export default defineEventHandler(async (event) => {
 	const id = parseInt((await readBody(event))._id);
 	if (!isNaN(id)) {
-		const model = await Article.findByIdAndDelete(id).exec().catch(error => {
+		const model: any = await DeletedDraft.findByIdAndDelete(id).exec().catch(error => {
 			console.error(error);
 		});
 		if (!model) {
@@ -13,8 +13,8 @@ export default defineEventHandler(async (event) => {
 			return status.error;
 		}
 
-		const result = await DeletedArticle.create({...model._doc}).catch(async error => {
-			await Article.create({...model._doc}).catch(error => {
+		const result = await Draft.create({...model._doc}).catch(async error => {
+			await DeletedDraft.create({...model._doc}).catch(error => {
 				console.error(error);
 			});
 			console.error(error);
