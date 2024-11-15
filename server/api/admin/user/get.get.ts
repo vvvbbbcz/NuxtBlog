@@ -5,6 +5,7 @@ import {getUserSession} from "#imports";
 function removeUnnecessary(data: any) {
 	data._id = undefined;
 	data.admin = undefined;
+	data.__v = undefined;
 
 	return data;
 }
