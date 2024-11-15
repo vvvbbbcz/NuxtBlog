@@ -1,7 +1,8 @@
 import BlogInfo from "~/server/utils/models/BlogInfo";
 import Article from "~/server/utils/models/Article";
 import {apiStatus} from "~/server/utils/util";
-import trimHtml from "trim-html";
+import truncate from "html-truncate";
+
 
 function filter(body: any) {
 	return {
@@ -22,7 +23,7 @@ export async function createArticle(id: number, body: any) {
 	// model.content = await Vditor.md2html(model.markdown, {
 	// 	cdn: "/vditor"
 	// });
-	model.abstract = trimHtml(model.content, {limit: 200}).html;
+	model.abstract = truncate(body.content, 200, {ellipsis: false});
 	model.publishDate = body.date;
 	model.updateDate = body.date;
 	model.visible = body.visible;

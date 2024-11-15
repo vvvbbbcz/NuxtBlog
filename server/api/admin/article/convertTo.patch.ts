@@ -1,7 +1,7 @@
 import Article from "~/server/utils/models/Article";
 import Draft from "~/server/utils/models/Draft";
 import {apiStatus} from "~/server/utils/util";
-import trimHtml from "trim-html";
+import truncate from "html-truncate";
 
 function filter(body: any) {
 	return {
@@ -19,7 +19,7 @@ function filter(body: any) {
 
 export async function createArticle(draft: any, body: any) {
 	const model = new Article({...draft._doc, ...body});
-	model.abstract = trimHtml(model.content, {limit: 200}).html;
+	model.abstract = truncate(body.content, 200, {ellipsis: false});
 	model.publishDate = body.date;
 	model.updateDate = body.date;
 

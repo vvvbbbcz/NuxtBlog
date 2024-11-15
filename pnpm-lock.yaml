@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@types/html-truncate':
+        specifier: ^1.2.4
+        version: 1.2.4
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -20,6 +23,9 @@ importers:
       highlight.js:
         specifier: ^11.10.0
         version: 11.10.0
+      html-truncate:
+        specifier: ^1.2.2
+        version: 1.2.2
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -32,9 +38,6 @@ importers:
       nuxt-mongoose:
         specifier: ^1.0.6
         version: 1.0.6(@nuxt/devtools@1.6.0(rollup@4.25.0)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.58.9(rollup@4.25.0)(webpack@5.96.1))(@vue/compiler-core@3.5.12)(async-validator@4.2.5)(axios@1.7.7)(magicast@0.3.5)(nuxt@3.14.159(@parcel/watcher@2.5.0)(@types/node@22.9.0)(ioredis@5.4.1)(less@4.2.0)(magicast@0.3.5)(rollup@4.25.0)(terser@5.36.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(terser@5.36.0))(webpack-sources@3.2.3))(postcss@8.4.48)(rollup@4.25.0)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(terser@5.36.0))(vue@3.5.12(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.96.1)
-      trim-html:
-        specifier: ^0.1.9
-        version: 0.1.9
       vditor:
         specifier: ^3.10.7
         version: 3.10.7
@@ -992,6 +995,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/html-truncate@1.2.4':
+    resolution: {integrity: sha512-tZysECytmk7mi1yNuOXnu4dgitNf4Mstfu2oTYJ3iFoC4xSMMXnUPS/uj2QOx96SEnRFOZsNQozojxlHQY3avA==}
 
   '@types/http-proxy@1.17.15':
     resolution: {integrity: sha512-25g5atgiVNTIv0LBDTg1H74Hvayx0ajtJPLLcYE3whFv75J0pWNtOBzaXJQgDTmrX1bx5U9YC2w/n65BN1HwRQ==}
@@ -2166,6 +2172,9 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
+
+  html-truncate@1.2.2:
+    resolution: {integrity: sha512-oiXb65RDxSYY8eXJKJiKHHpI7LyQbMG8LbSuvvWLLxAKNywJ7aaq0M1ynj2QJs0odQNggEEg/dTFVtH3lG0ClQ==}
 
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
@@ -3445,9 +3454,6 @@ packages:
   tr46@4.1.1:
     resolution: {integrity: sha512-2lv/66T7e5yNyhAAC4NaKe5nVavzuGJQVVtRYLyQ2OI8tsJ61PMLlelehb0wi2Hx6+hT/OJUWZcw8MjlSRnxvw==}
     engines: {node: '>=14'}
-
-  trim-html@0.1.9:
-    resolution: {integrity: sha512-Wjr79dz+FGKeDApfZ9o8YRC4RZDX3/lj0QeTLfEoyZr5b/ZFkvSCg7cWYkVdwoRLe7PBHTCFUSmTztAqa9UGAQ==}
 
   truncatise@0.0.8:
     resolution: {integrity: sha512-cXzueh9pzBCsLzhToB4X4gZCb3KYkrsAcBAX97JnazE74HOl3cpBJYEV7nabHeG/6/WXCU5Yujlde/WPBUwnsg==}
@@ -4930,6 +4936,8 @@ snapshots:
 
   '@types/estree@1.0.6': {}
 
+  '@types/html-truncate@1.2.4': {}
+
   '@types/http-proxy@1.17.15':
     dependencies:
       '@types/node': 22.9.0
@@ -6340,6 +6348,8 @@ snapshots:
   hookable@5.5.3: {}
 
   html-tags@3.3.1: {}
+
+  html-truncate@1.2.2: {}
 
   http-errors@2.0.0:
     dependencies:
@@ -7785,8 +7795,6 @@ snapshots:
   tr46@4.1.1:
     dependencies:
       punycode: 2.3.1
-
-  trim-html@0.1.9: {}
 
   truncatise@0.0.8: {}
 

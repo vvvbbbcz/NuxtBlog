@@ -1,5 +1,5 @@
 import Article from "~/server/utils/models/Article";
-import trimHtml from "trim-html";
+import truncate from "html-truncate";
 import {apiStatus} from "~/server/utils/util";
 
 function filter(body: any) {
@@ -8,7 +8,7 @@ function filter(body: any) {
 		urlName: body.urlName,
 		title: body.title,
 		markdown: body.markdown,
-		abstract: trimHtml(body.content, {limit: 200}).html,
+		abstract: truncate(body.content, 200, {ellipsis: false}),
 		content: body.content,
 		updateDate: body.date,
 		tagId: body.tagId,
