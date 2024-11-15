@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {FormInstance, FormRules} from "element-plus";
+import {ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
 
 const props = defineProps(['refresh', 'row', 'column', '$index']);
 
@@ -23,6 +23,7 @@ interface TagForm {
 	name: string
 	urlName: string
 }
+
 const newTag = ref<TagForm>({
 	name: props.row.name,
 	urlName: props.row.urlName
@@ -31,27 +32,6 @@ const tagForm = ref<FormInstance>();
 const rule = ref<FormRules<TagForm>>({
 	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
 	urlName: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
-});
-
-const saveStatus = ref({
-	type: 'warning',
-	msg: '未保存',
-	errMsg: '',
-	success: () => {
-		saveStatus.value.type = 'success';
-		saveStatus.value.msg = '保存成功';
-		saveStatus.value.errMsg = '';
-	},
-	fail: (error: string) => {
-		saveStatus.value.type = 'danger';
-		saveStatus.value.msg = '保存失败';
-		saveStatus.value.errMsg = error;
-	},
-	reset: () => {
-		saveStatus.value.type = 'warning';
-		saveStatus.value.msg = '未保存';
-		saveStatus.value.errMsg = '';
-	}
 });
 
 async function save(form: FormInstance) {
@@ -65,34 +45,33 @@ async function save(form: FormInstance) {
 					urlName: newTag.value.urlName
 				}
 			}).catch(error => {
-				saveStatus.value.fail(error);
+				notify({type: 'error', title: '保存失败', message: error});
 			});
 			if (status === 'success') {
-				saveStatus.value.success();
+				notify({type: 'success', title: '保存成功'});
 				props.row.name = newTag.value.name;
 				props.row.urlName = newTag.value.urlName;
-			} else if (status === 404) {
-				saveStatus.value.fail('找不到标签');
+			} else if (status === 'error') {
+				notify({type: 'error', title: '保存失败'});
 			}
 		}
 	});
 }
 
-const removeFailed = ref<boolean>(false);
 async function remove() {
-	removeFailed.value = false;
 	const {status}: any = await $fetch(`/api/admin/tag/remove`, {
 		method: 'DELETE',
 		body: {
 			_id: props.row._id
 		}
-	}).catch(() => {
-		removeFailed.value = true;
+	}).catch(error => {
+		notify({type: 'error', title: '删除失败', message: error});
 	});
 	if (status === 'success') {
+		notify({type: 'success', title: '删除成功'});
 		await props.refresh();
 	} else if (status === 'error') {
-		removeFailed.value = true;
+		notify({type: 'error', title: '删除失败'});
 	}
 }
 </script>
@@ -152,7 +131,6 @@ async function remove() {
 			保存
 		</el-button>
 	</el-button-group>
-	<el-text v-if="editing" :type="saveStatus.type">{{ `${saveStatus.msg} ${saveStatus.errMsg}` }}</el-text>
 </template>
 
 <style scoped>

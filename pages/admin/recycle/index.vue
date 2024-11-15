@@ -2,7 +2,8 @@
 import type {MenuItemRegistered} from "element-plus";
 
 definePageMeta({
-	layout: 'admin'
+	layout: 'admin',
+	middleware: ['auth'],
 });
 
 const page = ref<number>(1);

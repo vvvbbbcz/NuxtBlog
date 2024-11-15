@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {ElNotification as notify} from "element-plus";
+
 const props = defineProps({
 	type: String,
 	recycle: Boolean
@@ -11,21 +13,20 @@ async function edit(id: number) {
 	await navigateTo(`/admin/${props.type}/edit/${id}`);
 }
 
-const removeFailed = ref<boolean>(false);
 async function remove(id: number) {
-	removeFailed.value = false;
 	const {status}: any = await $fetch(`/api/admin${recycleRoute}/${props.type}/remove`, {
 		method: 'DELETE',
 		body: {
 			_id: id
 		}
-	}).catch(() => {
-		removeFailed.value = true;
+	}).catch(error => {
+		notify({type: 'error', title: '删除失败', message: error});
 	});
 	if (status === 'success') {
+		notify({type: 'success', title: '删除成功'});
 		await refresh();
 	} else if (status === 'error') {
-		removeFailed.value = true;
+		notify({type: 'error', title: '删除失败'});
 	}
 }
 
@@ -35,10 +36,14 @@ async function restore(id: number) {
 		body: {
 			_id: id
 		}
-	}).catch(() => {
+	}).catch(error => {
+		notify({type: 'error', title: '还原失败', message: error});
 	});
 	if (status === 'success') {
+		notify({type: 'success', title: '还原成功'});
 		await refresh();
+	} else if (status === 'error') {
+		notify({type: 'error', title: '还原失败'});
 	}
 }
 
@@ -57,7 +62,6 @@ onMounted(() => {
 						<el-button type="danger" @click="remove(scope.row._id)">
 							彻底删除
 						</el-button>
-						<el-text v-if="removeFailed" type="danger">删除失败</el-text>
 					</div>
 
 					<div v-else>
@@ -67,7 +71,6 @@ onMounted(() => {
 						<el-button type="danger" @click="remove(scope.row._id)">
 							删除
 						</el-button>
-						<el-text v-if="removeFailed" type="danger">删除失败</el-text>
 					</div>
 				</div>
 			</template>

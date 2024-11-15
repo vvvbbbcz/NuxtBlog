@@ -3,7 +3,8 @@ import {passwordStrength} from "check-password-strength";
 import sha256sum from "~/utils/sha256sum";
 
 definePageMeta({
-	layout: 'admin'
+	layout: 'admin',
+	middleware: ['auth'],
 });
 
 const input = ref(false);

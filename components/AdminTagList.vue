@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type {FormInstance, FormRules} from "element-plus";
+import {ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
 
 const {data: tags, refresh: refreshTags} = await useFetch(`/api/admin/tag/list`);
 
@@ -8,6 +8,7 @@ interface TagForm {
 	name: string
 	urlName: string
 }
+
 const newTag = ref<TagForm>({
 	name: '',
 	urlName: ''
@@ -18,21 +19,21 @@ const rule = ref<FormRules<TagForm>>({
 	urlName: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
 });
 
-const saveFailed = ref<boolean>(false);
-
 async function createTag(form: FormInstance) {
-	saveFailed.value = false;
 	await form.validate(async (valid) => {
 		if (valid) {
-			const {status} = await $fetch(`/api/admin/tag/create`, {
+			const {status}: any = await $fetch(`/api/admin/tag/create`, {
 				method: 'POST',
 				body: newTag.value
+			}).catch(error => {
+				notify({type: 'error', title: '创建失败', message: error});
 			});
 			if (status === 'success') {
 				form.resetFields();
+				notify({type: 'success', title: '创建成功'});
 				await refreshTags();
 			} else if (status === 'error') {
-				saveFailed.value = true;
+				notify({type: 'error', title: '创建失败'});
 			}
 		}
 	});
@@ -60,13 +61,13 @@ onMounted(() => {
 		<el-button @click="tagForm?.resetFields()">
 			重置
 		</el-button>
-		<el-text v-if="saveFailed" type="danger">保存失败</el-text>
 
 		<el-table v-if="mounted" :data="tags" style="margin-top: 1rem">
 			<el-table-column type="expand">
 				<template #default="props">
 					<div class="table-expand">
-						<AdminTagDetail :refresh="refreshTags" :row="props.row" :column="props.column" :$index="props.$index"/>
+						<AdminTagDetail :refresh="refreshTags" :row="props.row" :column="props.column"
+										:$index="props.$index"/>
 					</div>
 				</template>
 			</el-table-column>
