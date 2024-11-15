@@ -1,7 +1,8 @@
 import Article from "~/server/utils/models/Article";
 import trimHtml from "trim-html";
+import {apiStatus} from "~/server/utils/util";
 
-function filter(body) {
+function filter(body: any) {
 	return  {
 		_id: body._id,
 		urlName: body.urlName,
@@ -22,13 +23,9 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!model) {
 		setResponseStatus(event, 404);
-		return {
-			status: "fail"
-		};
+		return apiStatus.error;
 	} else {
 		setResponseStatus(event, 200);
-		return {
-			status: "success"
-		}; // TODO
+		return apiStatus.success;
 	}
 });

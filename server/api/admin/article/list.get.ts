@@ -1,7 +1,7 @@
 import Article from "~/server/utils/models/Article";
 import {adminFlush} from "~/server/utils/util";
 
-function removeUnnecessary(data) {
+function removeUnnecessary(data: any[]) {
 	for (const item of data) {
 		adminFlush(item);
 		item.urlName = undefined;
@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
 		.limit(20)
 		.sort({_id: -1})
 		.populate(['tagId', 'author'])
-		.exec().catch(err => {
-			console.error(err);
+		.exec().catch(error => {
+			console.error(error);
 		});
 	if (data) {
 		return removeUnnecessary(data);

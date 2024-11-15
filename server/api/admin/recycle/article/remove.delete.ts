@@ -1,5 +1,5 @@
 import DeletedArticle from "~/server/utils/models/DeletedArticle";
-import {status} from "~/server/utils/util";
+import {apiStatus} from "~/server/utils/util";
 
 export default defineEventHandler(async (event) => {
 	const id = parseInt((await readBody(event))._id);
@@ -9,11 +9,11 @@ export default defineEventHandler(async (event) => {
 		});
 		if (!model) {
 			setResponseStatus(event, 404);
-			return status.error;
+			return apiStatus.error;
 		}
 
-		return status.success;
+		return apiStatus.success;
 	}
 	setResponseStatus(event, 400);
-	return status.error;
+	return apiStatus.error;
 });

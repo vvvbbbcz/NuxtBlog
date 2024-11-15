@@ -1,7 +1,8 @@
 import BlogInfo from "~/server/utils/models/BlogInfo";
 import User from "~/server/utils/models/User";
+import {apiStatus} from "~/server/utils/util";
 
-function filter(body) {
+function filter(body: any) {
 	return {
 		blogInfo: {
 			name: body.name,
@@ -18,7 +19,7 @@ function filter(body) {
 	}
 }
 
-export async function createBlogInfo(body) {
+export async function createBlogInfo(body: any) {
 	const model = new BlogInfo(body);
 	model.owner = 0;
 	model.articleID = 0;
@@ -29,7 +30,7 @@ export async function createBlogInfo(body) {
 	return model;
 }
 
-export async function createAdmin(body) {
+export async function createAdmin(body: any) {
 	const model = new User(body);
 	model._id = 0;
 	model.avatar = 0;
@@ -41,7 +42,7 @@ export async function createAdmin(body) {
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
 		setResponseStatus(event, 405);
-		return null;
+		return apiStatus.error;
 	}
 
 	// check if installed
@@ -50,7 +51,7 @@ export default defineEventHandler(async (event) => {
 	});
 	if (info) {
 		setResponseStatus(event, 405);
-		return null;
+		return apiStatus.error;
 	}
 
 	const body = filter(await readBody(event));
@@ -61,7 +62,7 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!infoResult) {
 		setResponseStatus(event, 500);
-		return {error: "save blog info failed, may be database error."};
+		return apiStatus.error;
 	}
 
 	const admin = await createAdmin(body.admin);
@@ -70,9 +71,9 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!adminResult) {
 		setResponseStatus(event, 500);
-		return {error: "save blog info failed, may be database error."};
+		return apiStatus.error;
 	}
 
 	setResponseStatus(event, 201);
-	return null; // TODO
+	return apiStatus.error;
 })

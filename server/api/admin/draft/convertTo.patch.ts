@@ -1,7 +1,8 @@
 import Article from "~/server/utils/models/Article";
 import Draft from "~/server/utils/models/Draft";
+import {apiStatus} from "~/server/utils/util";
 
-function filter(body) {
+function filter(body: any) {
 	return {
 		_id: body._id,
 		urlName: body.urlName,
@@ -13,21 +14,19 @@ function filter(body) {
 	}
 }
 
-export async function createDraft(article, body) {
-	const model = new Draft({...article._doc, ...body});
-
-	return model;
+export async function createDraft(article: any, body: any) {
+	return new Draft({...article._doc, ...body});
 }
 
 export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
 
-	const article = await Article.findByIdAndDelete(body._id).exec().catch(error => {
+	const article: any = await Article.findByIdAndDelete(body._id).exec().catch(error => {
 		console.error(error);
 	});
 	if (!article) {
 		setResponseStatus(event, 404);
-		return null;
+		return apiStatus.error;
 	}
 	
 	const draft = await createDraft(article, body);
@@ -39,8 +38,11 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!result) {
 		setResponseStatus(event, 500);
-		return {error: "save article failed, may be database error."};
+		return apiStatus.error;
 	}
 
-	return {id: body.id};
+	return {
+		...apiStatus.success,
+		data: {id: body._id}
+	};
 });

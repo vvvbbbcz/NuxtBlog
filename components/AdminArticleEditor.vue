@@ -95,7 +95,7 @@ async function update(draft: any) {
 	const apiType = props.id ? (props.draft === draft ? 'update' : 'convertTo') : 'create';
 	const method = props.id ? 'PATCH' : 'POST';
 
-	const {status}: any = await $fetch(`/api/admin/${aimArticleType}/${apiType}`, {
+	const {data, status}: any = await $fetch(`/api/admin/${aimArticleType}/${apiType}`, {
 		method: method,
 		body: article.value
 	}).catch(error => {
@@ -103,6 +103,11 @@ async function update(draft: any) {
 	});
 	if (status === 'success') {
 		saveStatus.value.success();
+		if (!props.id || props.draft !== draft) { // create or convert
+			await navigateTo(`/admin/${aimArticleType}/edit/${data.id}`);
+		}
+	} else if (status === 'error') {
+		saveStatus.value.fail(data);
 	}
 }
 

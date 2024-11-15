@@ -1,16 +1,16 @@
 import Article from "~/server/utils/models/Article";
 import DeletedArticle from "~/server/utils/models/DeletedArticle";
-import {status} from "~/server/utils/util";
+import {apiStatus} from "~/server/utils/util";
 
 export default defineEventHandler(async (event) => {
 	const id = parseInt((await readBody(event))._id);
 	if (!isNaN(id)) {
-		const model = await Article.findByIdAndDelete(id).exec().catch(error => {
+		const model: any = await Article.findByIdAndDelete(id).exec().catch(error => {
 			console.error(error);
 		});
 		if (!model) {
 			setResponseStatus(event, 404);
-			return status.error;
+			return apiStatus.error;
 		}
 
 		const result = await DeletedArticle.create({...model._doc}).catch(async error => {
@@ -21,11 +21,11 @@ export default defineEventHandler(async (event) => {
 		});
 		if (!result) {
 			setResponseStatus(event, 500);
-			return status.error;
+			return apiStatus.error;
 		}
 
-		return status.success;
+		return apiStatus.success;
 	}
 	setResponseStatus(event, 400);
-	return status.error;
+	return apiStatus.error;
 });

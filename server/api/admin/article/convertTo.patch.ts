@@ -1,8 +1,9 @@
 import Article from "~/server/utils/models/Article";
 import Draft from "~/server/utils/models/Draft";
+import {apiStatus} from "~/server/utils/util";
 import trimHtml from "trim-html";
 
-function filter(body) {
+function filter(body: any) {
 	return {
 		_id: body._id,
 		urlName: body.urlName,
@@ -16,7 +17,7 @@ function filter(body) {
 	}
 }
 
-export async function createArticle(draft, body) {
+export async function createArticle(draft: any, body: any) {
 	const model = new Article({...draft._doc, ...body});
 	model.abstract = trimHtml(model.content, {limit: 200}).html;
 	model.publishDate = body.date;
@@ -28,14 +29,14 @@ export async function createArticle(draft, body) {
 export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
 
-	const draft = await Draft.findByIdAndDelete(body._id).exec().catch(error => {
+	const draft: any = await Draft.findByIdAndDelete(body._id).exec().catch(error => {
 		console.error(error);
 	});
 	if (!draft) {
 		setResponseStatus(event, 404);
-		return null;
+		return apiStatus.error;
 	}
-	
+
 	const article = await createArticle(draft, body);
 	const result = await article.save().catch(async error => {
 		await Draft.create({...draft._doc}).catch(error => {
@@ -45,8 +46,11 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!result) {
 		setResponseStatus(event, 500);
-		return {error: "save article failed, may be database error."};
+		return apiStatus.error;
 	}
 
-	return {id: body._id};
+	return {
+		...apiStatus.success,
+		data: {id: body._id}
+	};
 });

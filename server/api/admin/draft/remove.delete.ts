@@ -1,16 +1,16 @@
 import Draft from "~/server/utils/models/Draft";
 import DeletedDraft from "~/server/utils/models/DeletedDraft";
-import {status} from "~/server/utils/util";
+import {apiStatus} from "~/server/utils/util";
 
 export default defineEventHandler(async (event) => {
 	const id = parseInt((await readBody(event))._id);
 	if (!isNaN(id)) {
-		const model = await Draft.findByIdAndDelete(id).exec().catch(error => {
+		const model: any = await Draft.findByIdAndDelete(id).exec().catch(error => {
 			console.error(error);
 		});
 		if (!model) {
 			setResponseStatus(event, 404);
-			return status.error;
+			return apiStatus.error;
 		}
 
 		const result = await DeletedDraft.create({...model._doc}).catch(async error => {
@@ -21,11 +21,11 @@ export default defineEventHandler(async (event) => {
 		});
 		if (!result) {
 			setResponseStatus(event, 500);
-			return status.error;
+			return apiStatus.error;
 		}
 
-		return status.success;
+		return apiStatus.success;
 	}
 	setResponseStatus(event, 400);
-	return status.error;
+	return apiStatus.error;
 });

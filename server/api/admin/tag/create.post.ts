@@ -1,6 +1,6 @@
 import BlogInfo from "~/server/utils/models/BlogInfo";
 import Tag from "~/server/utils/models/Tag";
-import {status} from "~/server/utils/util";
+import {apiStatus} from "~/server/utils/util";
 
 function filter(body: any) {
 	return {
@@ -17,23 +17,23 @@ function createTag(id: number, body: any) {
 }
 
 export default defineEventHandler(async (event) => {
-	const info = await BlogInfo.findOne().exec().catch(error => {
+	const info: any = await BlogInfo.findOne().exec().catch(error => {
 		console.error(error);
 	});
 	if (!info) {
 		setResponseStatus(event, 500);
-		return status.error;
+		return apiStatus.error;
 	}
 
 	const body = filter(await readBody(event));
 	const model = createTag(info.tagID++, body);
 
-	const infoResult = await info.save().catch(error => {
+	const infoResult = await info.save().catch((error: any) => {
 		console.error(error);
 	});
 	if (!infoResult) {
 		setResponseStatus(event, 500);
-		return status.error;
+		return apiStatus.error;
 	}
 
 	const tagResult = await model.save().catch(error => {
@@ -41,8 +41,8 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!tagResult) {
 		setResponseStatus(event, 500);
-		return status.error;
+		return apiStatus.error;
 	}
 
-	return status.success; // TODO
+	return apiStatus.success;
 })

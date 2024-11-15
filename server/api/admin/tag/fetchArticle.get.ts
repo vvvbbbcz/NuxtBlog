@@ -17,8 +17,8 @@ export default defineEventHandler(async (event) => {
 	const query = getQuery(event).id;
 	const id = parseInt(Array.isArray(query) ? query[0] : query);
 	const data = await Tag.findById(id).populate('articles')
-		.exec().catch(err => {
-			console.error(err);
+		.exec().catch(error => {
+			console.error(error);
 		});
 	if (data) {
 		return removeUnnecessary(data.articles);

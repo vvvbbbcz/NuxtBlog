@@ -7,7 +7,7 @@ const schema = new Schema({
 	password: {
 		type: String,
 		select: false,
-		set(value) {
+		set(value: string) {
 			return sha256sum(value);
 		}
 	},

@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-const status = {
+const apiStatus = {
 	error: {
 		status: 'error'
 	},
@@ -9,7 +9,7 @@ const status = {
 	}
 }
 
-export {status}
+export {apiStatus}
 
 export function flush(data: any) {
 	for (const tag of data.tagId) {
