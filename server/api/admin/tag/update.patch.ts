@@ -15,9 +15,9 @@ export default defineEventHandler(async (event) => {
 	});
 	if (!model) {
 		setResponseStatus(event, 404);
-		return {status: 404};
+		return apiStatus.error;
 	} else {
 		setResponseStatus(event, 200);
-		return {status: 'success'};
+		return apiStatus.success;
 	}
 });
