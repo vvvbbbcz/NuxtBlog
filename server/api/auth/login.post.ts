@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
 		await setUserSession(event, {
 			user: {
-				id: 0,
+				id: -1,
 				username: 'installer',
 			},
 			loggedInAt: new Date()

@@ -2,9 +2,9 @@
 
 <template>
 	<el-aside width="12rem" class="margin-1rem">
-		<el-card class="border-radius-1rem" :body-style="{padding: 0}">
+		<el-card :body-style="{padding: 0}">
 			<el-menu class="border-none" router unique-opened>
-				<el-menu-item class="first-item" index="/admin/settings">
+				<el-menu-item index="/admin/settings">
 					<template #title>
 						博客设置
 					</template>
@@ -41,7 +41,7 @@
 					</el-menu-item>
 				</el-sub-menu>
 
-				<el-sub-menu class="last-item" index="3">
+				<el-sub-menu index="3">
 					<template #title>
 						文件管理
 					</template>
@@ -53,6 +53,21 @@
 					<el-menu-item index="/admin/picture">
 						<template #title>
 							图片列表
+						</template>
+					</el-menu-item>
+				</el-sub-menu>
+				<el-sub-menu index="4">
+					<template #title>
+						用户管理
+					</template>
+					<el-menu-item index="/admin/user/settings">
+						<template #title>
+							个人设置
+						</template>
+					</el-menu-item>
+					<el-menu-item index="/admin/user">
+						<template #title>
+							用户列表
 						</template>
 					</el-menu-item>
 				</el-sub-menu>
