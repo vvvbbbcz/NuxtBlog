@@ -1,28 +1,19 @@
 import Article from "~/server/utils/models/Article";
-import {adminFlush, apiStatus} from "~/server/utils/util";
-
-function removeUnnecessary(data: any) {
-	adminFlush(data);
-	data.abstract = undefined;
-	data.content = undefined;
-
-	return data;
-}
+import {apiStatus} from "~/server/utils/util";
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event).id;
 	const id = parseInt(Array.isArray(query) ? query[0] : query);
 	if (!isNaN(id)) {
-		const data = await Article.findById(id).populate('author').exec().catch(error => {
-			console.error(error);
-		});
+		const data = await Article.findOne({_id: id, deleted: false})
+			.select(['-_id', 'urlName', 'title', 'tagId', 'visible'])
+			.populate('markdown', ['-_id', 'markdown'])
+			.lean();
 		if (data) {
-			return removeUnnecessary(data);
+			return data;
 		} else {
-			setResponseStatus(event, 404);
-			return apiStatus.error;
+			return apiStatus.error(event, 404);
 		}
 	}
-	setResponseStatus(event, 400);
-	return apiStatus.error;
+	return apiStatus.error(event, 400);
 });

@@ -9,71 +9,44 @@ async function filter(body: any) {
 			icon: body.icon,
 			separator: body.separator,
 			background: body.background,
+			owner: 0,
+			articleID: 0,
+			tagID: 0,
+			pictureID: 0,
+			userID: 1
 		},
 		admin: {
+			_id: 0,
 			username: body.username,
 			nickname: body.nickname,
 			email: body.email,
 			password: await hashPassword(body.password),
+			avatar: 0,
+			admin: true
 		}
 	}
 }
 
 export async function createBlogInfo(body: any) {
-	const model = new BlogInfo(body);
-	model.owner = 0;
-	model.articleID = 0;
-	model.tagID = 0;
-	model.pictureID = 0;
-	model.userID = 1;
-
-	return model;
+	return new BlogInfo(body);
 }
 
 export async function createAdmin(body: any) {
-	const model = new User(body);
-	model._id = 0;
-	model.avatar = 0;
-	model.admin = true;
-
-	return model;
+	return new User(body);
 }
 
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
-		setResponseStatus(event, 405);
-		return apiStatus.error;
+		return apiStatus.error(event, 405);
 	}
 
 	// check if installed
-	const info = await BlogInfo.findOne().exec().catch(error => {
-		console.error(error);
-	});
-	if (info) {
-		setResponseStatus(event, 405);
-		return apiStatus.error;
+	if (await BlogInfo.findOne().exec()) {
+		return apiStatus.error(event, 405);
 	}
 
 	const body = await filter(await readBody(event));
+	await Promise.all([BlogInfo.create(body.blogInfo), User.create(body.admin)]);
 
-	const blogInfo = await createBlogInfo(body.blogInfo);
-	const infoResult = await blogInfo.save().catch(error => {
-		console.error(error);
-	});
-	if (!infoResult) {
-		setResponseStatus(event, 500);
-		return apiStatus.error;
-	}
-
-	const admin = await createAdmin(body.admin);
-	const adminResult = await admin.save().catch(error => {
-		console.error(error);
-	});
-	if (!adminResult) {
-		setResponseStatus(event, 500);
-		return apiStatus.error;
-	}
-
-	setResponseStatus(event, 201);
-	return apiStatus.success;
+	return apiStatus.successWith(event, 201);
 })

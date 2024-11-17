@@ -2,66 +2,63 @@ import BlogInfo from "~/server/utils/models/BlogInfo";
 import Article from "~/server/utils/models/Article";
 import {apiStatus} from "~/server/utils/util";
 import truncate from "html-truncate";
+import Markdown from "~/server/utils/models/Markdown";
+import ArticleContent from "~/server/utils/models/ArticleContent";
 
 
-function filter(body: any) {
-	return {
-		urlName: body.urlName,
-		title: body.title,
-		markdown: body.markdown,
-		content: body.content,
-		date: body.date,
-		tagId: body.tagId,
-		author: body.author._id,
-		visible: body.visible,
+function filter(id: number, body: any) {
+	const data = {
+		article: {
+			_id: id,
+			urlName: body.urlName,
+			title: body.title,
+			markdown: id,
+			abstract: '',
+			content: id,
+			tagId: body.tagId,
+			publishDate: body.date,
+			updateDate: body.date,
+			author: body.author,
+			visible: body.visible,
+			draft: body.draft,
+			deleted: false,
+		},
+		markdown: {
+			_id: id,
+			markdown: body.markdown
+		},
+		content: {
+			_id: id,
+			content: ''
+		}
 	}
-}
 
-export async function createArticle(id: number, body: any) {
-	const model = new Article(body);
-	model._id = id;
-	// model.content = await Vditor.md2html(model.markdown, {
-	// 	cdn: "/vditor"
-	// });
-	model.abstract = truncate(body.content, 200, {ellipsis: false});
-	model.publishDate = body.date;
-	model.updateDate = body.date;
-	model.visible = body.visible;
+	if (!body.draft) {
+		data.article.abstract = truncate(body.content, 200, {ellipsis: false});
+		data.content.content = body.content;
+		// model.content = await Vditor.md2html(model.markdown, {
+		// 	cdn: "/vditor"
+		// });
+	}
 
-	return model;
+	return data;
 }
 
 export default defineEventHandler(async (event) => {
-	const info: any = await BlogInfo.findOne().exec().catch(error => {
-		console.error(error);
-	});
+	const info: any = await BlogInfo.findOne().exec();
 	if (!info) {
-		setResponseStatus(event, 500);
-		return apiStatus.error;
+		return apiStatus.error(event, 500);
 	}
 
-	const body = filter(await readBody(event));
-	const model = await createArticle(info.articleID++, body);
+	const id = info.articleID++;
+	const body = filter(id, await readBody(event))
 
-	const infoResult = await info.save().catch((error: any) => {
-		console.error(error);
-	});
-	if (!infoResult) {
-		setResponseStatus(event, 500);
-		return apiStatus.error;
-	}
+	await Promise.all([
+		Article.create(body.article),
+		Markdown.create(body.markdown),
+		ArticleContent.create(body.content),
+		info.save()
+	]);
 
-	const articleResult = await model.save().catch(error => {
-		console.error(error);
-	});
-	if (!articleResult) {
-		setResponseStatus(event, 500);
-		return apiStatus.error;
-	}
-
-	setResponseStatus(event, 201);
-	return {
-		...apiStatus.success,
-		data: {id: model._id}
-	};
+	return apiStatus.successWith(event, 201, {id: id});
 })

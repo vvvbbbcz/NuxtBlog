@@ -1,18 +1,12 @@
 import BlogInfo from '~/server/utils/models/BlogInfo';
 
 export default defineEventHandler(async (event) => {
-	const data = await BlogInfo.findOne().exec().catch(error => {
-		console.error(error);
-	});
+	const data = await BlogInfo.findOne()
+		.select(['-_id', 'name', 'icon', 'separator', 'background'])
+		.lean();
 	if (data) {
-		return {
-			name: data.name,
-			icon: data.icon,
-			separator: data.separator,
-			background: data.background
-		};
+		return data;
 	} else {
-		setResponseStatus(event, 500);
-		return null;
+		return apiStatus.error(event, 500);
 	}
 })

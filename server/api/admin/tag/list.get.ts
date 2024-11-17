@@ -9,15 +9,9 @@ function removeUnnecessary(data: any[]) {
 }
 
 export default defineEventHandler(async (event) => {
-	const data = await Tag.find()
+	return Tag.find()
 		.limit(20)
 		.sort({_id: -1})
-		.exec().catch(error => {
-			console.error(error);
-		});
-	if (data) {
-		return removeUnnecessary(data);
-	} else {
-		return [];
-	}
+		.select(['urlName', 'name'])
+		.lean();
 });

@@ -10,14 +10,14 @@ function filter(body: any) {
 
 export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
-	const model = await Tag.findByIdAndUpdate(body._id, body).exec().catch(error => {
-		console.error(error);
-	});
-	if (!model) {
-		setResponseStatus(event, 404);
-		return apiStatus.error;
-	} else {
-		setResponseStatus(event, 200);
-		return apiStatus.success;
+	const id = parseInt(body._id);
+	if (!isNaN(id)) {
+		const tag = await Tag.updateOne({_id: id}, body).exec();
+		if (tag.matchedCount < 1) {
+			return apiStatus.error(event, 404);
+		} else {
+			return apiStatus.success;
+		}
 	}
+	return apiStatus.error(event, 400);
 });

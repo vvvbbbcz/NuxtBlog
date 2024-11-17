@@ -1,18 +1,18 @@
-import Article from "~/server/utils/models/Article";
-import Tag from "~/server/utils/models/Tag";
-import BlogInfo from "~/server/utils/models/BlogInfo";
-import DeletedArticle from "~/server/utils/models/DeletedArticle";
-import Draft from "~/server/utils/models/Draft";
-import Picture from "~/server/utils/models/Picture";
-import User from "~/server/utils/models/User";
 import consola from "consola";
+import Article from "~/server/utils/models/Article";
+import ArticleContent from "~/server/utils/models/ArticleContent";
+import BlogInfo from "~/server/utils/models/BlogInfo";
+import Markdown from "~/server/utils/models/Markdown";
+import Picture from "~/server/utils/models/Picture";
+import Tag from "~/server/utils/models/Tag";
+import User from "~/server/utils/models/User";
 
 export default defineNitroPlugin((): void => {
 	const models = [
 		Article,
+		ArticleContent,
 		BlogInfo,
-		DeletedArticle,
-		Draft,
+		Markdown,
 		Picture,
 		Tag,
 		User

@@ -12,14 +12,11 @@ function filter(body: any) {
 
 export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
-	const model = await BlogInfo.findOneAndUpdate({}, body).exec().catch(error => {
-		console.error(error);
-	});
-	if (!model) {
+	const result = await BlogInfo.updateOne({}, body).exec();
+	if (result.matchedCount < 1) {
 		setResponseStatus(event, 404);
-		return apiStatus.error;
+		return apiStatus.error(event, 404);
 	} else {
-		setResponseStatus(event, 200);
 		return apiStatus.success;
 	}
 });

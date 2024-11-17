@@ -8,7 +8,7 @@ function filter(body: any) {
 }
 
 export default defineEventHandler(async (event) => {
-	const body = await filter(await readBody(event));
+	const body = filter(await readBody(event));
 
 	if (process.env.INSTALL) {
 		// 'installer'
@@ -16,8 +16,7 @@ export default defineEventHandler(async (event) => {
 		const isValid = (body.username === 'installer') &&
 			(await verifyPassword(hashedPassword, body.password));
 		if (!isValid) {
-			setResponseStatus(event, 422);
-			return null;
+			return apiStatus.error(event, 422);
 		}
 
 		await setUserSession(event, {
@@ -28,17 +27,16 @@ export default defineEventHandler(async (event) => {
 			loggedInAt: new Date()
 		});
 	} else {
-		const user: any = await User.findOne({username: body.username}).select('+password').exec().catch(error => {
-			console.error(error);
-		});
+		const user: any = await User.findOne({username: body.username})
+			.select(['username', 'password'])
+			.lean();
+
 		if (!user) {
-			setResponseStatus(event, 422);
-			return null;
+			return apiStatus.error(event, 422);
 		}
 
 		if (!await verifyPassword(user.password, body.password)) {
-			setResponseStatus(event, 422);
-			return null;
+			return apiStatus.error(event, 422);
 		}
 
 		await setUserSession(event, {
@@ -49,4 +47,5 @@ export default defineEventHandler(async (event) => {
 			loggedInAt: new Date()
 		});
 	}
+	return apiStatus.success;
 });
