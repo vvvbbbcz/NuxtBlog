@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import {ElMessage as message} from "element-plus";
+
 const {loggedIn, clear} = useUserSession();
 
 async function logout() {
 	await clear();
+	message({type: 'success', message: '退出成功'});
 	if (!loggedIn.value) {
 		await navigateTo('/admin/login');
 	}

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import sha256sum from "~/utils/sha256sum";
+import {ElMessage as message, type FormInstance, type FormRules} from "element-plus";
 
 definePageMeta({
 	layout: 'login'
 });
 
-const input = ref(false);
 
 const {loggedIn, fetch} = useUserSession();
 
@@ -13,31 +13,47 @@ if (loggedIn.value) {
 	await navigateTo('/admin');
 }
 
-const username = ref('');
-const password = ref('');
+const data = ref<{ username: string, password: string }>({
+	username: '',
+	password: ''
+});
+const form = ref<FormInstance>();
+const rule = ref<FormRules<typeof data>>({
+	username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+	password: [{required: true, message: '请输入密码', trigger: 'blur'}],
+});
 
 async function login() {
-	if (!username.value || !password.value) {
-		return;
-	}
+	await form.value?.validate(async (valid) => {
+		if (valid) {
+			const {status}: any = await $fetch('/api/auth/login', {
+				method: 'POST',
+				body: {
+					username: data.value.username,
+					password: await sha256sum(data.value.password)
+				}
+			}).catch(() => {
+				message({type: 'error', message: '登录失败'});
+			});
+			if (status === 'success') {
+				message({type: 'success', message: '登录成功'});
+			} else if (status === 'error') {
+				message({type: 'error', message: '登录失败'});
+				return;
+			}
 
-	await $fetch('/api/auth/login', {
-		method: 'POST',
-		body: {
-			username: username.value,
-			password: await sha256sum(password.value)
+			await fetch();
+
+			if (loggedIn.value) {
+				await navigateTo('/admin');
+			}
 		}
 	});
-
-	await fetch();
-
-	if (loggedIn.value) {
-		await navigateTo('/admin');
-	}
 }
 
+const mounted = ref(false);
 onMounted(() => {
-	input.value = true;
+	mounted.value = true;
 });
 </script>
 
@@ -46,12 +62,12 @@ onMounted(() => {
 		<h1>
 			<SiteBrand/>
 		</h1>
-		<el-form label-width="auto">
-			<el-form-item label="用户名">
-				<el-input v-if="input" v-model="username"></el-input>
+		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
+			<el-form-item prop="username" label="用户名">
+				<el-input v-if="mounted" v-model="data.username"></el-input>
 			</el-form-item>
-			<el-form-item label="密码">
-				<el-input v-if="input" v-model="password" type="password" show-password></el-input>
+			<el-form-item prop="password" label="密码">
+				<el-input v-if="mounted" v-model="data.password" type="password" show-password></el-input>
 			</el-form-item>
 		</el-form>
 		<el-button type="primary" @click="login">
