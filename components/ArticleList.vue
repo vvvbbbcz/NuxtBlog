@@ -30,6 +30,8 @@ function toArticle(name: string) {
 }
 
 .title {
+	text-align: center;
+	font-size: 2rem;
 	margin: 0;
 }
 </style>
