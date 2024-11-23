@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import {ElNotification as notify} from "element-plus";
+import {ElMessage as message, ElNotification as notify} from "element-plus";
 
 const props = defineProps({
 	type: String,
 	recycle: Boolean
 });
-
-const recycleRoute = props.recycle ? '/recycle' : '';
-const {data: articles, refresh} = await useFetch(`/api/admin${recycleRoute}/${props.type}/list`);
+const {data: articles, refresh} = await useFetch(`/api/admin/${props.recycle ? 'recycle' : 'article'}/${props.type}List`);
 
 async function edit(id: number) {
-	await navigateTo(`/admin/${props.type}/edit/${id}`);
+	await navigateTo(`/admin/article/edit/${id}`);
 }
 
 async function remove(id: number) {
-	const {status}: any = await $fetch(`/api/admin${recycleRoute}/${props.type}/remove`, {
+	const {status, error}: any = await $fetch(`/api/admin/${props.recycle ? 'recycle' : 'article'}/remove`, {
 		method: 'DELETE',
 		body: {
 			_id: id
@@ -23,15 +21,15 @@ async function remove(id: number) {
 		notify({type: 'error', title: '删除失败', message: error});
 	});
 	if (status === 'success') {
-		notify({type: 'success', title: '删除成功'});
+		message({type: 'success', message: '删除成功'});
 		await refresh();
 	} else if (status === 'error') {
-		notify({type: 'error', title: '删除失败'});
+		notify({type: 'error', title: '删除失败', message: error.value.message});
 	}
 }
 
 async function restore(id: number) {
-	const {status}: any = await $fetch(`/api/admin${recycleRoute}/${props.type}/restore`, {
+	const {status, error}: any = await $fetch(`/api/admin/recycle/restore`, {
 		method: 'PATCH',
 		body: {
 			_id: id
@@ -40,10 +38,10 @@ async function restore(id: number) {
 		notify({type: 'error', title: '还原失败', message: error});
 	});
 	if (status === 'success') {
-		notify({type: 'success', title: '还原成功'});
+		message({type: 'success', message: '还原成功'});
 		await refresh();
 	} else if (status === 'error') {
-		notify({type: 'error', title: '还原失败'});
+		notify({type: 'error', title: '还原失败', message: error.value});
 	}
 }
 

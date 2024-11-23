@@ -12,7 +12,7 @@ body {
 }
 </style>
 <script setup lang="ts">
-const {data} = await useFetch('/api/getBlogInfo', {key: 'blogInfo'});
+const {data} = await useAsyncData('blogInfo', () => $fetch('/api/getBlogInfo'));
 const title = data.value ? data.value.name : '获取标题失败';
 useHead({
 	title: `${title}`,

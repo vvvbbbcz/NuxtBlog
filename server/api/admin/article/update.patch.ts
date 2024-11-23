@@ -18,7 +18,7 @@ function filter(body: any) {
 			deleted: false,
 		},
 		markdown: {
-			markdown: body.markdown
+			markdown: body.markdown.markdown
 		},
 		content: {
 			content: ''

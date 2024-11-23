@@ -2,41 +2,67 @@
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 import moment from "moment";
-import {ElNotification as notify} from "element-plus";
+import {ElMessage as message, ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
 
 const props = defineProps({
 	id: Number,
-	draft: Boolean
 });
 
-const mounted = ref(false);
+interface Article {
+	_id: number | undefined,
+	urlName: string,
+	title: string,
+	markdown: {
+		markdown: string
+	},
+	content: string,
+	tagId: number[],
+	date: string,
+	author: number,
+	visible: boolean,
+	draft: boolean
+}
 
-const article = ref({
+const article = ref<Article>({
 	_id: props.id,
 	urlName: '',
 	title: '',
-	markdown: '',
+	markdown: {
+		markdown: ''
+	},
 	content: '',
 	tagId: [],
 	date: '',
-	author: {
-		_id: 0
-	},
+	author: 0,
 	visible: true,
+	draft: true,
+});
+const form = ref<FormInstance>();
+const rule = ref<FormRules<Article>>({
+	urlName: [{required: true, message: '请输入 URL 标题', trigger: 'blur'}],
+	title: [{required: true, message: '请输入标题', trigger: 'blur'}],
 });
 
+
 if (props.id) {
-	const type = props.draft ? 'draft' : 'article';
-	const {data: articleData} = await useFetch(`/api/admin/${type}/get?id=${props.id}`);
-	if (articleData && articleData.value) {
+	const {data: articleData, status, error}: any =
+		await useFetch('/api/admin/article/get', {
+			query: {
+				id: props.id
+			}
+		});
+	if (status.value === 'success') {
 		article.value = articleData.value;
+	} else if (status.value === 'error') {
+		notify({type: 'error', title: '获取文章失败', message: error.value.message});
 	}
 }
 
-const {data: tagList, execute: startFetchTags, status: tagsStatus} = await useLazyFetch('/api/admin/tag/editorList', {
-	key: 'tagList',
-	immediate: false,
-});
+const {data: tagList, execute: startFetchTags, status: tagsStatus} =
+	await useLazyFetch('/api/admin/tag/editorList', {
+		key: 'tagList',
+		immediate: false,
+	});
 const fetchedTags = ref<boolean>(false);
 
 async function fetchTags() {
@@ -62,46 +88,48 @@ async function confirmNewTag() {
 
 const unsaved = ref<boolean>(false);
 
-async function update(draft: any) {
-	const {user}: any = useUserSession();
+async function update(draft: boolean) {
+	await form.value?.validate(async (valid) => {
+		if (valid) {
+			const {user}: any = useUserSession();
 
-	article.value.markdown = vditor.getValue();
-	article.value.author._id = user.value.id;
-	article.value.tagId = selectedTags.value;
+			article.value.markdown.markdown = vditor.getValue();
+			article.value.author = user.value.id;
+			article.value.tagId = selectedTags.value;
+			article.value.draft = draft;
 
-	if (!draft) {
-		article.value.content = vditor.getHTML();
-		article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
-	}
+			if (!draft) {
+				article.value.content = vditor.getHTML();
+				article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
+			}
 
-	const aimArticleType = draft ? 'draft' : 'article';
-	const apiType = props.id ? (props.draft === draft ? 'update' : 'convertTo') : 'create';
-	const method = props.id ? 'PATCH' : 'POST';
-
-	const {data, status}: any = await $fetch(`/api/admin/${aimArticleType}/${apiType}`, {
-		method: method,
-		body: article.value
-	}).catch(error => {
-		notify({type: 'error', title: '创建失败', message: error});
-	});
-	if (status === 'success') {
-		notify({type: 'success', title: '创建成功'});
-		unsaved.value = false;
-		if (!props.id || props.draft !== draft) { // create or convert
-			await navigateTo(`/admin/${aimArticleType}/edit/${data.id}`);
+			const {data, status, error}: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
+				method: props.id ? 'PATCH' : 'POST',
+				body: article.value
+			}).catch(error => {
+				notify({type: 'error', title: '保存失败', message: error});
+			});
+			if (status === 'success') {
+				message({type: 'success', message: '保存成功'});
+				unsaved.value = false;
+				if (!props.id) { // create
+					await navigateTo(`/admin/article/edit/${data.id}`);
+				}
+			} else if (status === 'error') {
+				notify({type: 'error', title: '保存失败', message: error.value.message});
+			}
 		}
-	} else if (status === 'error') {
-		notify({type: 'error', title: '创建失败'});
-	}
+	});
 }
 
+const mounted = ref(false);
 let vditor: Vditor;
-onMounted(() => {
+onMounted(async () => {
 	mounted.value = true;
 
 	vditor = new Vditor('vditor', {
 		height: '100%',
-		value: article.value.markdown,
+		value: article.value.markdown.markdown,
 		toolbarConfig: {
 			pin: true,
 		},
@@ -119,14 +147,14 @@ onMounted(() => {
 <template>
 	<el-card class="border-none height-100" :body-class="'height-100 border-box'">
 		<el-container class="height-100" direction="vertical">
-			<el-form label-width="auto">
-				<el-form-item label="标题">
-					<el-input v-if="mounted" v-model="article.title"/>
+			<el-form ref="form" :model="article" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
+				<el-form-item prop="title" label="标题">
+					<el-input v-if="mounted" v-model="article.title" @change="unsaved = true"/>
 				</el-form-item>
-				<el-form-item label="URL">
-					<el-input v-if="mounted" v-model="article.urlName"/>
+				<el-form-item prop="urlName" label="URL">
+					<el-input v-if="mounted" v-model="article.urlName" @change="unsaved = true"/>
 				</el-form-item>
-				<el-form-item label="标签">
+				<el-form-item prop="tagId" label="标签">
 					<el-select
 						v-if="mounted"
 						v-model="selectedTags"
@@ -139,6 +167,7 @@ onMounted(() => {
 						remote-show-suffix
 						:remote-method="fetchTags"
 						:loading="tagsStatus === 'pending'"
+						@change="unsaved = true"
 					>
 						<el-option
 							v-for="item in tagList"
@@ -165,7 +194,7 @@ onMounted(() => {
 			</el-form>
 			<el-container class="options">
 				<el-button-group>
-					<el-button v-if="props.draft" type="primary" @click="update(true)">
+					<el-button v-if="article.draft" type="primary" @click="update(true)">
 						保存草稿
 					</el-button>
 					<el-button v-else type="primary" @click="update(true)">

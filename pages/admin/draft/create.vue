@@ -6,7 +6,7 @@ definePageMeta({
 </script>
 
 <template>
-	<AdminArticleEditor draft/>
+	<AdminArticleEditor/>
 </template>
 
 <style scoped>

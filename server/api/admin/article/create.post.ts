@@ -25,7 +25,7 @@ function filter(id: number, body: any) {
 		},
 		markdown: {
 			_id: id,
-			markdown: body.markdown
+			markdown: body.markdown.markdown
 		},
 		content: {
 			_id: id,
