@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import 'highlight.js/styles/default.css';
 
-const {data: articles, status} = useFetch(`/api/article/list`, {
-	lazy: true
-});
+const {data: articles, status} = useLazyFetch(`/api/article/list`);
 
 function toArticle(name: string) {
 	navigateTo(`/article/${name}`);
