@@ -4,7 +4,9 @@
 
 <template>
 	<el-footer class="margin-1rem border-radius-1rem">
-		&copy; <SiteBrand/>
+		<p>
+			&copy; <SiteBrand/>
+		</p>
 	</el-footer>
 </template>
 
