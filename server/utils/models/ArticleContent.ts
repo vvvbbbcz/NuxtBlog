@@ -6,4 +6,4 @@ const schema = new Schema({
 	content: {type: String},
 });
 
-export default model('ArticleHtml', schema);
+export default model('ArticleContent', schema);
