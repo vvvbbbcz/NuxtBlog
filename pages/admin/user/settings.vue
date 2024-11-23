@@ -15,7 +15,7 @@ function flip(item: MenuItemRegistered) {
 }
 
 const {user}: any = useUserSession();
-const {data}: any = await useFetch(`/api/admin/user/get?id=${user.value.id}`);
+const {data}: any = await useFetch(`/api/admin/user/get`, {query: {id: user.value.id}});
 
 const info = ref<any>(data.value);
 const infoForm = ref<FormInstance>();

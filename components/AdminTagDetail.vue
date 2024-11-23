@@ -5,7 +5,10 @@ const props = defineProps(['refresh', 'row', 'column', '$index']);
 
 const editing = ref<boolean>(false);
 
-const {data: articles, execute, status} = await useLazyFetch(`/api/admin/tag/fetchArticle?id=${props.row._id}`, {
+const {data: articles, execute, status} = await useLazyFetch(`/api/admin/tag/fetchArticle`, {
+	query: {
+		id: props.row._id,
+	},
 	immediate: false
 });
 

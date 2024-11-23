@@ -4,9 +4,7 @@ import 'highlight.js/styles/default.css';
 const route = useRoute();
 
 const name = route.params.name;
-const {data: article, status, error} = await useFetch(`/api/article/get?name=${name}`, {
-	lazy: true
-});
+const {data: article, status, error} = await useFetch(`/api/article/get`, {query: {name: name}, lazy: true});
 </script>
 
 <template>

@@ -46,11 +46,7 @@ const rule = ref<FormRules<Article>>({
 
 if (props.id) {
 	const {data: articleData, status, error}: any =
-		await useFetch('/api/admin/article/get', {
-			query: {
-				id: props.id
-			}
-		});
+		await useFetch('/api/admin/article/get', {query: {id: props.id}});
 	if (status.value === 'success') {
 		article.value = articleData.value;
 	} else if (status.value === 'error') {
