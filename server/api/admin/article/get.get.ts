@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 	const id = parseInt(Array.isArray(query) ? query[0] : query);
 	if (!isNaN(id)) {
 		const data = await Article.findOne({_id: id, deleted: false})
-			.select(['urlName', 'title', 'tagId', 'visible'])
+			.select(['urlName', 'title', 'tagId', 'draft', 'visible'])
 			.populate('markdown', ['-_id', 'markdown'])
 			.lean();
 		if (data) {

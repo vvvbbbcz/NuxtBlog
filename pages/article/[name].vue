@@ -20,16 +20,16 @@ const {data: article, status, error} = await useFetch(`/api/article/get?name=${n
 			<p>文章不存在</p>
 		</div>
 		<div v-else>
-			<h1 class="main-title">{{ article.title }}</h1>
+			<h1 class="main-title">{{ article?.title }}</h1>
 			<el-container class="gap-2">
-				<a v-for="tag in article.tagId" :href="`/tag?name=${tag.urlName}`">
+				<a v-for="tag in article?.tagId" :href="`/tag?name=${tag.urlName}`">
 					<el-tag type="primary">
 						{{ tag.name }}
 					</el-tag>
 				</a>
 			</el-container>
 			<hr/>
-			<div v-html="article.content"></div>
+			<div v-html="article?.content.content"></div>
 		</div>
 	</el-card>
 </template>
