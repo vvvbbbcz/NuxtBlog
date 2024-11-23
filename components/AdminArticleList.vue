@@ -57,9 +57,21 @@ onMounted(() => {
 			<template #default="scope">
 				<div class="table-expand">
 					<div v-if="props.recycle">
-						<el-button type="danger" @click="remove(scope.row._id)">
-							彻底删除
-						</el-button>
+						<el-popconfirm title="确认删除？" @confirm="remove(scope.row._id)">
+							<template #reference>
+								<el-button type="danger">
+									彻底删除
+								</el-button>
+							</template>
+							<template #actions="{ confirm, cancel }">
+								<el-button size="small" type="primary" @click="cancel">
+									取消
+								</el-button>
+								<el-button type="danger" size="small" plain @click="confirm">
+									确认
+								</el-button>
+							</template>
+						</el-popconfirm>
 					</div>
 
 					<div v-else>
