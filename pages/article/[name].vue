@@ -4,15 +4,16 @@ import 'highlight.js/styles/default.css';
 const route = useRoute();
 
 const name = route.params.name;
-const {data: article, status, error} = await useLazyFetch(`/api/article/get`, {query: {name: name}});
+const {data: article, error} = await useFetch(`/api/article/get`, {query: {name: name}});
+
+useHead({
+	title: article.value?.title,
+});
 </script>
 
 <template>
 	<el-card v-highlight>
-		<div v-if="status === 'pending'">
-			Loading
-		</div>
-		<div v-else-if="error?.statusCode === 404">
+		<div v-if="error?.statusCode === 404">
 			<h1 class="main-title">404 Not Found</h1>
 			<hr/>
 			<p>文章不存在</p>

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+	title: '后台管理',
+});
+
 const {loggedIn} = useUserSession();
 
 if (!loggedIn.value) {

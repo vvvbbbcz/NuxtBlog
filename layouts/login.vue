@@ -1,5 +1,7 @@
 <script setup lang="ts">
-
+useHead({
+	title: '登录',
+});
 </script>
 
 <template>
