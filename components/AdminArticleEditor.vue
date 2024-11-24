@@ -141,7 +141,7 @@ onMounted(async () => {
 </script>
 
 <template>
-	<el-card class="border-none height-100" :body-class="'height-100 border-box'">
+	<el-card class="height-100" :body-class="'height-100 border-box'">
 		<el-container class="height-100" direction="vertical">
 			<el-form ref="form" :model="article" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 				<el-form-item prop="title" label="标题">
