@@ -10,7 +10,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@types/ali-oss": "^6.16.11",
     "@types/html-truncate": "^1.2.4",
+    "ali-oss": "^6.21.0",
     "axios": "^1.7.7",
     "check-password-strength": "^2.0.10",
     "element-plus": "^2.8.7",

@@ -2,14 +2,16 @@ import {model, Schema} from 'mongoose'
 
 const schema = new Schema({
 	_id: {type: Number},
-	// 内容
-	src: {type: String},
+	// 文件名
+	name: {type: String},
 	// 时间
 	date: {type: String},
-	// （外部图床图片）URL
+	// URL
 	url: {type: String},
 	// 上传者的用户id
-	uid: {type: Number, ref: 'User'}
+	uid: {type: Number, ref: 'User'},
+	// 是否公开
+	visible: {type: Boolean, default: true}
 })
 
 export default model('Picture', schema)
