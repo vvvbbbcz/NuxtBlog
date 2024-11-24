@@ -3,8 +3,8 @@ import 'highlight.js/styles/default.css';
 
 const {data: articles, status} = useLazyFetch(`/api/article/list`);
 
-function toArticle(name: string) {
-	navigateTo(`/article/${name}`);
+function toArticle(year: string, name: string) {
+	navigateTo(`/article/${year}/${name}`);
 }
 </script>
 
@@ -15,7 +15,7 @@ function toArticle(name: string) {
 		</el-card>
 	</div>
 	<el-card v-else class="list-item" v-for="article in articles">
-		<el-link @click="toArticle(`${article.urlName}`)">
+		<el-link @click="toArticle(`${article.year}`, `${article.urlName}`)">
 			<h1 class="title">{{ article.title }}</h1>
 		</el-link>
 		<div v-highlight v-html="article.abstract"/>

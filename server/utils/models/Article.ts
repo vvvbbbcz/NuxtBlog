@@ -16,6 +16,8 @@ const article = {
 	cover: {type: Number, ref: 'Picture'},
 	// 标签
 	tagId: [{type: Number, ref: 'Tag'}],
+	// 发布年份
+	year: {type: Number},
 	// 发布日期
 	publishDate: {type: String},
 	// 更新日期
@@ -31,5 +33,7 @@ const article = {
 }
 
 const schema = new Schema(article);
+
+schema.index({year: -1, urlName: 1})
 
 export default model('Article', schema);

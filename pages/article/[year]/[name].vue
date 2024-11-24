@@ -3,8 +3,9 @@ import 'highlight.js/styles/default.css';
 
 const route = useRoute();
 
+const year = route.params.year;
 const name = route.params.name;
-const {data: article, error} = await useFetch(`/api/article/get`, {query: {name: name}});
+const {data: article, error} = await useFetch(`/api/article/get`, {query: {year: year, name: name}});
 
 useHead({
 	title: article.value?.title,

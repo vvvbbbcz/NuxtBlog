@@ -20,7 +20,8 @@ interface Article {
 	date: string,
 	author: number,
 	visible: boolean,
-	draft: boolean
+	draft: boolean,
+	publish: boolean
 }
 
 const article = ref<Article>({
@@ -36,6 +37,7 @@ const article = ref<Article>({
 	author: 0,
 	visible: true,
 	draft: true,
+	publish: false,
 });
 const form = ref<FormInstance>();
 const rule = ref<FormRules<Article>>({
@@ -48,7 +50,7 @@ if (props.id) {
 	const {data: articleData, status, error}: any =
 		await useFetch('/api/admin/article/get', {query: {id: props.id}});
 	if (status.value === 'success') {
-		article.value = articleData.value;
+		Object.assign(article.value, articleData.value);
 	} else if (status.value === 'error') {
 		notify({type: 'error', title: '获取文章失败', message: error.value.message});
 	}
@@ -89,15 +91,19 @@ async function update(draft: boolean) {
 		if (valid) {
 			const {user}: any = useUserSession();
 
+			article.value.publish = false;
+			if (!draft) {
+				console.log('aaa');
+				article.value.content = vditor.getHTML();
+				article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
+				if (article.value.draft) {
+					article.value.publish = true;
+				}
+			}
 			article.value.markdown.markdown = vditor.getValue();
 			article.value.author = user.value.id;
 			article.value.tagId = selectedTags.value;
 			article.value.draft = draft;
-
-			if (!draft) {
-				article.value.content = vditor.getHTML();
-				article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
-			}
 
 			const {data, status, error}: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
 				method: props.id ? 'PATCH' : 'POST',

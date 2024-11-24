@@ -7,6 +7,7 @@ import ArticleContent from "~/server/utils/models/ArticleContent";
 
 
 function filter(id: number, body: any) {
+	const year = parseInt(body.date.split('-', 1)[0]);
 	const data = {
 		article: {
 			_id: id,
@@ -16,6 +17,7 @@ function filter(id: number, body: any) {
 			abstract: '',
 			content: id,
 			tagId: body.tagId,
+			year: isNaN(year) ? 0 : year,
 			publishDate: body.date,
 			updateDate: body.date,
 			author: body.author,

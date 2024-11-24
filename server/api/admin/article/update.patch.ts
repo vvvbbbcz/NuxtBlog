@@ -33,7 +33,8 @@ function filter(body: any) {
 		data.content.content = body.content;
 	}
 
-	if (body.publish) {
+	if (body.publish) { // publish from draft
+		Object.defineProperty(data.article, 'year', {value: body.date.split('-', 1)[0], enumerable: true});
 		Object.defineProperty(data.article, 'publishDate', {value: body.date, enumerable: true});
 	}
 
