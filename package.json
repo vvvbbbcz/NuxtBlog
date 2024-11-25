@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "engines": {
-    "node": ">=20.6.0"
+    "node": "^20.6.0"
   },
   "dependencies": {
     "@types/html-truncate": "^1.2.4",
