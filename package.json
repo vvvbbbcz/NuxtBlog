@@ -9,6 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "engines": {
+    "node": ">=20.6.0"
+  },
   "dependencies": {
     "@types/html-truncate": "^1.2.4",
     "axios": "^1.7.7",
