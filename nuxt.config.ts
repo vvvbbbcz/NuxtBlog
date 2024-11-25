@@ -6,7 +6,6 @@ export default defineNuxtConfig({
 	},
 	modules: [
 		'@element-plus/nuxt',
-		'nuxt-mongoose',
 		'nuxt-auth-utils'
 	],
 	runtimeConfig: {
