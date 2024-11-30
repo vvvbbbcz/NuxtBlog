@@ -8,7 +8,7 @@ const name = route.params.name;
 const {data: article, error} = await useFetch(`/api/article/get`, {query: {year: year, name: name}});
 
 useHead({
-	title: article.value?.title,
+	title: article.value?.ti,
 });
 </script>
 
@@ -20,16 +20,16 @@ useHead({
 			<p>文章不存在</p>
 		</div>
 		<div v-else>
-			<h1 class="main-title">{{ article?.title }}</h1>
+			<h1 class="main-title">{{ article?.ti }}</h1>
 			<el-container class="gap-2">
-				<a v-for="tag in article?.tagId" :href="`/tag?name=${tag.urlName}`">
+				<a v-for="tag in article?.tg" :href="`/tag?name=${tag.urlName}`">
 					<el-tag type="primary">
 						{{ tag.name }}
 					</el-tag>
 				</a>
 			</el-container>
 			<hr/>
-			<div v-html="article?.content.content"></div>
+			<div v-html="article?.ht"></div>
 		</div>
 	</el-card>
 </template>

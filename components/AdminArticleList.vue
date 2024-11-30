@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import {ElMessage as message, ElNotification as notify} from "element-plus";
+import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 
-const props = defineProps({
-	type: String,
-	recycle: Boolean
-});
-const {data: articles, refresh} = await useFetch(`/api/admin/${props.recycle ? 'recycle' : 'article'}/${props.type}List`);
+const props = defineProps<{ type: 'article' | 'draft' | 'recycle' }>();
 
-async function edit(id: number) {
-	await navigateTo(`/admin/article/edit/${id}`);
+const {data: articles, refresh} = await useFetch(`/api/admin/article/${props.type}List`);
+
+async function edit(_id: number) {
+	await navigateTo(`/admin/article/edit/${_id}`);
 }
 
-async function remove(id: number) {
-	const {status, error}: any = await $fetch(`/api/admin/${props.recycle ? 'recycle' : 'article'}/remove`, {
+async function remove(_id: number) {
+	const apiType = props.type === 'recycle' ? 'delete' : 'remove';
+	const {status, error}: any = await $fetch(`/api/admin/article/${apiType}`, {
 		method: 'DELETE',
-		body: {
-			_id: id
-		}
+		body: {_id: _id}
 	}).catch(error => {
 		notify({type: 'error', title: '删除失败', message: error});
 	});
@@ -28,12 +26,10 @@ async function remove(id: number) {
 	}
 }
 
-async function restore(id: number) {
-	const {status, error}: any = await $fetch(`/api/admin/recycle/restore`, {
+async function restore(_id: number) {
+	const {status, error}: any = await $fetch(`/api/admin/article/restore`, {
 		method: 'PATCH',
-		body: {
-			_id: id
-		}
+		body: {_id: _id}
 	}).catch(error => {
 		notify({type: 'error', title: '还原失败', message: error});
 	});
@@ -56,7 +52,7 @@ onMounted(() => {
 		<el-table-column type="expand">
 			<template #default="scope">
 				<div class="table-expand">
-					<div v-if="props.recycle">
+					<div v-if="props.type === 'recycle'">
 						<el-popconfirm title="确认删除？" @confirm="remove(scope.row._id)">
 							<template #reference>
 								<el-button type="danger">
@@ -76,7 +72,7 @@ onMounted(() => {
 
 					<div v-else>
 						<div class="detail">
-							<AdminArticleDetail :row="scope.row" :column="scope.column" :$index="scope.$index"/>
+							<ArticleInfoForm :info="scope.row"/>
 						</div>
 						<el-button type="danger" @click="remove(scope.row._id)">
 							删除
@@ -85,29 +81,30 @@ onMounted(() => {
 				</div>
 			</template>
 		</el-table-column>
-		<el-table-column prop="title" label="标题" min-width="150">
+		<el-table-column prop="ti" label="标题" min-width="150">
 			<template #default="scope">
-				<h1>{{ scope.row.title }}</h1>
+				<h1>{{ scope.row.ti }}</h1>
 			</template>
 		</el-table-column>
-		<el-table-column prop="author" label="作者" min-width="100">
+		<el-table-column prop="au" label="作者" min-width="100">
 			<template #default="scope">
-				{{ scope.row.author.nickname }}
+				{{ scope.row.au.ti }}
 			</template>
 		</el-table-column>
-		<el-table-column v-if="props.type === 'article'" prop="publishDate" label="发布时间" min-width="100">
+		<el-table-column v-if="props.type === 'article'" prop="pu" label="发布时间" min-width="100">
 		</el-table-column>
-		<el-table-column v-if="props.type === 'article'" prop="updateDate" label="更新时间" min-width="100">
+		<el-table-column v-if="props.type === 'article'" prop="up" label="更新时间" min-width="100">
 		</el-table-column>
-		<el-table-column prop="visible" label="可见性" min-width="70">
+		<el-table-column prop="vi" label="可见性" min-width="70">
 			<template #default="scope">
-				<el-tag v-if="scope.row.visible" type="primary">公开</el-tag>
-				<el-tag v-else type="info">私密</el-tag>
+				<el-tag v-if="scope.row.vi === 0" type="primary">公开</el-tag>
+				<el-tag v-else-if="scope.row.vi === 1" type="info">私密</el-tag>
+				<el-tag v-else-if="scope.row.vi === 2" type="success">加密</el-tag>
 			</template>
 		</el-table-column>
 		<el-table-column fixed="right" label="操作" width="85">
 			<template #default="scope">
-				<el-button v-if="props.recycle" type="primary" @click="restore(scope.row._id)">
+				<el-button v-if="props.type === 'recycle'" type="primary" @click="restore(scope.row._id)">
 					还原
 				</el-button>
 				<el-button v-else type="primary" @click="edit(scope.row._id)">

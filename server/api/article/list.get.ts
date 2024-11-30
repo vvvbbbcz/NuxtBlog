@@ -1,11 +1,11 @@
-import Article from "~/server/utils/models/Article";
+import Article from "~/server/utils/models/BlogData";
 
-export default defineEventHandler(async (event) => {
-	return Article.find({visible: true, draft: false, deleted: false})
+export default defineEventHandler(async () => {
+	return Article.find({_id: {$gt: 0}, vi: 0, dr: false, de: false})
 		.limit(10)
 		.sort({_id: -1})
-		.select(['-_id', 'urlName', 'title', 'abstract', 'cover', 'year', 'publishDate', 'updateDate'])
-		.populate('tagId', ['-_id', 'urlName', 'name'])
-		.populate('author', ['-_id', 'username', 'nickname', 'avatar'])
+		.select(['-_id', 'ur', 'ti', 'ab', 'co', 'yr', 'pu', 'up'])
+		.populate('tg', ['-_id', 'ur', 'ti'])
+		.populate('au', ['-_id', 'ur', 'ti', 'co'])
 		.lean();
 });

@@ -1,24 +1,35 @@
-import BlogInfo from "~/server/utils/models/BlogInfo";
-import Tag from "~/server/utils/models/Tag";
-import {apiStatus} from "~/server/utils/util";
+import Tag from "~/server/utils/models/BlogData";
+import apiStatus from "~/server/utils/apiStatus";
+import filters from "~/server/utils/filters";
 
 function filter(id: number, body: any) {
 	return {
 		_id: id,
-		urlName: body.urlName,
-		name: body.name
+		ur: body.ur,
+		ti: body.ti,
+		yr: 1,
 	}
 }
 
 export default defineEventHandler(async (event) => {
-	const info: any = await BlogInfo.findOne().exec();
-	if (!info) {
-		return apiStatus.error(event, 500);
+	const data = await Tag
+		.findOne(filters.tag)
+		.sort({_id: 1})
+		.select('_id')
+		.lean();
+
+	if (data?._id && (data._id <= -100000)) {
+		return apiStatus.error(event, {data: 'Tag is full'});
 	}
 
-	const id = info.tagID++;
+	const id = data?._id ? (data._id - 1) : -1001;
 	const body = filter(id, await readBody(event));
-	await Promise.all([Tag.create(body), info.save()]);
 
-	return apiStatus.successWith(event, 201, {id: id});
+	try {
+		await Tag.create(body);
+	} catch (error) {
+		return apiStatus.error(event, {data: error});
+	}
+
+	return apiStatus.success(event, {code: 201, data: {id: id}});
 })

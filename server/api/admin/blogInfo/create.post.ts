@@ -1,52 +1,42 @@
-import BlogInfo from "~/server/utils/models/BlogInfo";
-import User from "~/server/utils/models/User";
-import {apiStatus} from "~/server/utils/util";
+import BlogData from "~/server/utils/models/BlogData";
+import apiStatus from "~/server/utils/apiStatus";
 
 async function filter(body: any) {
 	return {
 		blogInfo: {
-			name: body.name,
-			icon: body.icon,
-			separator: body.separator,
-			background: body.background,
-			owner: 0,
-			articleID: 0,
-			tagID: 0,
-			pictureID: 0,
-			userID: 1
+			_id: 0,
+			blogInfo: {
+				name: body.name,
+				icon: body.icon,
+				separator: body.separator,
+				background: body.background,
+			},
 		},
 		admin: {
-			_id: 0,
-			username: body.username,
-			nickname: body.nickname,
-			email: body.email,
-			password: await hashPassword(body.password),
-			avatar: 0,
-			admin: true
+			_id: -1,
+			ur: body.ur,
+			ti: body.ti,
+			md: body.md,
+			pw: await hashPassword(body.pw),
+			co: body.co,
+			yr: 0,
+			vi: 0
 		}
 	}
 }
 
-export async function createBlogInfo(body: any) {
-	return new BlogInfo(body);
-}
-
-export async function createAdmin(body: any) {
-	return new User(body);
-}
-
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
-		return apiStatus.error(event, 405);
+		return apiStatus.error(event, {code: 405});
 	}
 
 	// check if installed
-	if (await BlogInfo.findOne().exec()) {
-		return apiStatus.error(event, 405);
+	if (await BlogData.exists({_id: 0}).exec()) {
+		return apiStatus.error(event, {code: 405});
 	}
 
 	const body = await filter(await readBody(event));
-	await Promise.all([BlogInfo.create(body.blogInfo), User.create(body.admin)]);
+	await Promise.all([BlogData.create(body.blogInfo), BlogData.create(body.admin)]);
 
-	return apiStatus.successWith(event, 201);
+	return apiStatus.success(event, {code: 201});
 })

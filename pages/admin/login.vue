@@ -13,14 +13,14 @@ if (loggedIn.value) {
 	await navigateTo('/admin');
 }
 
-const data = ref<{ username: string, password: string }>({
-	username: '',
-	password: ''
+const data = ref<{ ur: string, pw: string }>({
+	ur: '',
+	pw: ''
 });
 const form = ref<FormInstance>();
 const rule = ref<FormRules<typeof data>>({
-	username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
-	password: [{required: true, message: '请输入密码', trigger: 'blur'}],
+	ur: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+	pw: [{required: true, message: '请输入密码', trigger: 'blur'}],
 });
 
 async function login() {
@@ -29,8 +29,8 @@ async function login() {
 			const {status}: any = await $fetch('/api/auth/login', {
 				method: 'POST',
 				body: {
-					username: data.value.username,
-					password: await sha256sum(data.value.password)
+					ur: data.value.ur,
+					pw: await sha256sum(data.value.pw)
 				}
 			}).catch(() => {
 				message({type: 'error', message: '登录失败'});
@@ -63,11 +63,11 @@ onMounted(() => {
 			<SiteBrand/>
 		</h1>
 		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
-			<el-form-item prop="username" label="用户名">
-				<el-input v-if="mounted" v-model="data.username"></el-input>
+			<el-form-item prop="ur" label="用户名">
+				<el-input v-if="mounted" v-model="data.ur"></el-input>
 			</el-form-item>
-			<el-form-item prop="password" label="密码">
-				<el-input v-if="mounted" v-model="data.password" type="password" show-password></el-input>
+			<el-form-item prop="pw" label="密码">
+				<el-input v-if="mounted" v-model="data.pw" type="password" show-password></el-input>
 			</el-form-item>
 		</el-form>
 		<el-button type="primary" @click="login">

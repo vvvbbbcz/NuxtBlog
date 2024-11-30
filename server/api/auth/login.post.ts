@@ -1,9 +1,9 @@
-import User from "~/server/utils/models/User";
+import User from "~/server/utils/models/BlogData";
 
 function filter(body: any) {
 	return {
-		username: body.username,
-		password: body.password
+		ur: body.ur,
+		pw: body.pw
 	};
 }
 
@@ -12,40 +12,42 @@ export default defineEventHandler(async (event) => {
 
 	if (process.env.INSTALL) {
 		// 'installer'
-		const hashedPassword = await hashPassword('9c0d294c05fc1d88d698034609bb81c0c69196327594e4c69d2915c80fd9850c')
-		const isValid = (body.username === 'installer') &&
-			(await verifyPassword(hashedPassword, body.password));
+		const hashedPassword =
+			await hashPassword('9c0d294c05fc1d88d698034609bb81c0c69196327594e4c69d2915c80fd9850c')
+		const isValid = (body.ur === 'installer') &&
+			(await verifyPassword(hashedPassword, body.pw));
 		if (!isValid) {
-			return apiStatus.error(event, 422);
+			return apiStatus.error(event, {code: 422});
 		}
 
 		await setUserSession(event, {
 			user: {
-				id: -1,
-				username: 'installer',
+				_id: 0,
+				ur: 'installer',
 			},
 			loggedInAt: new Date()
 		});
 	} else {
-		const user: any = await User.findOne({username: body.username})
-			.select(['username', 'password'])
+		const user = await User
+			.findOne({_id: {$gt: -1001, $lt: 0}, ur: body.ur})
+			.select(['pw'])
 			.lean();
 
-		if (!user) {
-			return apiStatus.error(event, 422);
+		if (!user || !user.pw) {
+			return apiStatus.error(event, {code: 422});
 		}
 
-		if (!await verifyPassword(user.password, body.password)) {
-			return apiStatus.error(event, 422);
+		if (!await verifyPassword(user.pw, body.pw)) {
+			return apiStatus.error(event, {code: 422});
 		}
 
 		await setUserSession(event, {
 			user: {
-				id: user._id,
-				username: body.username,
+				_id: user._id,
+				ur: body.ur,
 			},
 			loggedInAt: new Date()
 		});
 	}
-	return apiStatus.success;
+	return apiStatus.success();
 });

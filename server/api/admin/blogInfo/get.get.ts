@@ -1,13 +1,14 @@
-import BlogInfo from "~/server/utils/models/BlogInfo";
-import {apiStatus} from "~/server/utils/util";
+import BlogData from "~/server/utils/models/BlogData";
+import apiStatus from "~/server/utils/apiStatus";
 
 export default defineEventHandler(async (event) => {
-	const data = await BlogInfo.findOne()
-		.select(['-_id', 'name', 'icon', 'separator', 'background'])
+	const data = await BlogData
+		.findOne({_id: 0})
+		.select(['-_id', 'blogInfo'])
 		.lean();
-	if (data) {
-		return data;
+	if (data?.blogInfo) {
+		return data.blogInfo;
 	} else {
-		return apiStatus.error(event, 404);
+		return apiStatus.error(event, {code: 404});
 	}
 });

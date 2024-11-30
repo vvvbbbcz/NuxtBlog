@@ -11,14 +11,14 @@ function toArticle(year: string, name: string) {
 <template>
 	<div v-if="status === 'pending'">
 		<el-card>
-			Loading
+			<el-skeleton animated/>
 		</el-card>
 	</div>
 	<el-card v-else class="list-item" v-for="article in articles">
-		<el-link @click="toArticle(`${article.year}`, `${article.urlName}`)">
-			<h1 class="title">{{ article.title }}</h1>
+		<el-link @click="toArticle(`${article.yr}`, `${article.ur}`)">
+			<h1 class="title">{{ article.ti }}</h1>
 		</el-link>
-		<div v-highlight v-html="article.abstract"/>
+		<div v-highlight v-html="article.ab"/>
 	</el-card>
 </template>
 

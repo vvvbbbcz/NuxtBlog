@@ -1,9 +1,10 @@
-import Tag from "~/server/utils/models/Tag";
+import Tag from "~/server/utils/models/BlogData";
+import filters from "~/server/utils/filters";
 
-export default defineEventHandler(async (event) => {
-	return Tag.find()
+export default defineEventHandler(async () => {
+	return Tag.find(filters.tag)
 		.limit(20)
 		.sort({_id: -1})
-		.select('name')
+		.select('ti')
 		.lean();
 });

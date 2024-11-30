@@ -1,41 +1,34 @@
-import Article from "~/server/utils/models/Article";
+import Article from "~/server/utils/models/BlogData";
 import truncate from "html-truncate";
-import {apiStatus} from "~/server/utils/util";
-import Markdown from "~/server/utils/models/Markdown";
-import ArticleContent from "~/server/utils/models/ArticleContent";
+import apiStatus from "~/server/utils/apiStatus";
 
 function filter(body: any) {
 	const data = {
 		_id: body._id,
 		article: {
-			urlName: body.urlName,
-			title: body.title,
-			tagId: body.tagId,
-			updateDate: body.date,
-			author: body.author._id,
-			visible: body.visible,
-			draft: body.draft,
-			deleted: false,
-		},
-		markdown: {
-			markdown: body.markdown.markdown
-		},
-		content: {
-			content: ''
+			ur: body.ur,
+			ti: body.ti,
+			md: body.md,
+			tg: body.tg,
+			up: body.date,
+			au: body.au,
+			pw: body.pw,
+			vi: body.vi,
+			dr: body.dr,
 		}
 	}
 
-	if (!body.draft) {
-		Object.defineProperty(data.article, 'abstract', {
-			value: truncate(body.content, 200, {ellipsis: false}),
+	if (!body.dr) {
+		Object.defineProperty(data.article, 'ab', {
+			value: truncate(body.ht, 200, {ellipsis: false}),
 			enumerable: true
 		});
-		data.content.content = body.content;
+		Object.defineProperty(data.article, 'ht', {value: body.ht, enumerable: true});
 	}
 
 	if (body.publish) { // publish from draft
-		Object.defineProperty(data.article, 'year', {value: body.date.split('-', 1)[0], enumerable: true});
-		Object.defineProperty(data.article, 'publishDate', {value: body.date, enumerable: true});
+		Object.defineProperty(data.article, 'yr', {value: body.date.split('-', 1)[0], enumerable: true});
+		Object.defineProperty(data.article, 'pu', {value: body.date, enumerable: true});
 	}
 
 	return data;
@@ -44,21 +37,13 @@ function filter(body: any) {
 export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
 	const id = parseInt(body._id);
-	if (!isNaN(id)) {
+
+	if (!isNaN(id) && id > 0) {
 		const result = await Article.updateOne({_id: id}, body.article).exec();
 		if (result.matchedCount < 1) {
-			return apiStatus.error(event, 404);
-		} else {
-			if (body.article.draft) {
-				await Markdown.updateOne({_id: id}, body.markdown)
-			} else {
-				await Promise.all([
-					Markdown.updateOne({_id: id}, body.markdown),
-					ArticleContent.updateOne({_id: id}, body.content)
-				]);
-			}
-			return apiStatus.success;
+			return apiStatus.error(event, {code: 404});
 		}
+		return apiStatus.success();
 	}
-	return apiStatus.error(event, 400);
+	return apiStatus.error(event, {code: 400});
 });

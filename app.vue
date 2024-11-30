@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const {data} = await useAsyncData('blogInfo', () => $fetch('/api/getBlogInfo'));
-const title = data.value ? data.value.name : '获取标题失败';
-const separator = data.value ? data.value.separator : '-';
+const {data}: any = await useAsyncData('blogInfo', () => $fetch('/api/getBlogInfo'));
+const title = data.value?.name ? data.value.name : 'NuxtBlog';
+const separator = data.value?.separator ? data.value.separator : '-';
 useHead({
 	titleTemplate: (titleChunk) => {
 		return titleChunk ? `${titleChunk} ${separator} ${title}` : title;

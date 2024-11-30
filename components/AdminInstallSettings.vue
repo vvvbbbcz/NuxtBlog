@@ -10,22 +10,22 @@ const data = ref({
 	icon: 0,
 	separator: '',
 	background: '',
-	username: '',
-	nickname: '',
-	email: '',
-	password: '',
+	ur: '',
+	ti: '',
+	md: '',
+	pw: '',
 	confirmPassword: '',
 });
 const form = ref<FormInstance>();
 const rule = ref<FormRules<typeof data>>({
 	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
 	separator: [{required: true, message: '请输入分隔符', trigger: 'blur'}],
-	username: [{required: true, validator: validateUsername, trigger: 'blur'}],
-	nickname: [{required: true, message: '请输入昵称', trigger: 'blur'}],
-	email: [{required: true, validator: validateEmail, trigger: 'blur'}],
-	password: [{required: true, validator: validatePassword, trigger: 'blur'}],
+	ur: [{required: true, validator: validateUsername, trigger: 'blur'}],
+	ti: [{required: true, message: '请输入昵称', trigger: 'blur'}],
+	md: [{required: true, validator: validateEmail, trigger: 'blur'}],
+	pw: [{required: true, validator: validatePassword, trigger: 'blur'}],
 	confirmPassword: [{required: true, validator: validateConfirmPassword, trigger: 'blur'}],
-})
+});
 
 function validateUsername(rule: any, value: any, callback: any) {
 	if (!isUsername(value)) {
@@ -44,6 +44,7 @@ function validateEmail(rule: any, value: any, callback: any) {
 }
 
 function validatePassword(rule: any, value: any, callback: any) {
+	console.log(value)
 	if (!passwordStrength(value).id) { // strength bigger than 0
 		callback(new Error('密码强度太弱'))
 	} else {
@@ -52,7 +53,7 @@ function validatePassword(rule: any, value: any, callback: any) {
 }
 
 function validateConfirmPassword(rule: any, value: any, callback: any) {
-	if (value !== data.value.password) {
+	if (value !== data.value.pw) {
 		callback(new Error('密码不一致'))
 	} else {
 		callback()
@@ -64,7 +65,7 @@ async function save() {
 		method: 'POST',
 		body: {
 			...data.value,
-			password: await sha256sum(data.value.password),
+			pw: await sha256sum(data.value.pw),
 			confirmPassword: undefined,
 		}
 	}).catch(error => {
@@ -95,17 +96,17 @@ onMounted(() => {
 		</el-form-item>
 
 		<h2>管理员信息</h2>
-		<el-form-item prop="username" label="用户名">
-			<el-input v-if="mounted" v-model="data.username"/>
+		<el-form-item prop="ur" label="用户名">
+			<el-input v-if="mounted" v-model="data.ur"/>
 		</el-form-item>
-		<el-form-item prop="nickname" label="昵称">
-			<el-input v-if="mounted" v-model="data.nickname"/>
+		<el-form-item prop="ti" label="昵称">
+			<el-input v-if="mounted" v-model="data.ti"/>
 		</el-form-item>
-		<el-form-item prop="email" label="邮箱">
-			<el-input v-if="mounted" v-model="data.email"/>
+		<el-form-item prop="md" label="邮箱">
+			<el-input v-if="mounted" v-model="data.md"/>
 		</el-form-item>
-		<el-form-item prop="password" label="密码">
-			<el-input v-if="mounted" v-model="data.password" type="password" show-password/>
+		<el-form-item prop="pw" label="密码">
+			<el-input v-if="mounted" v-model="data.pw" type="password" show-password/>
 		</el-form-item>
 		<el-form-item prop="confirmPassword" label="确认密码">
 			<el-input v-if="mounted" v-model="data.confirmPassword" type="password" show-password/>

@@ -1,19 +1,19 @@
-import Article from "~/server/utils/models/Article";
-import {apiStatus} from "~/server/utils/util";
+import Article from "~/server/utils/models/BlogData";
+import apiStatus from "~/server/utils/apiStatus";
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event).id;
 	const id = parseInt(Array.isArray(query) ? query[0] : query);
-	if (!isNaN(id)) {
-		const data = await Article.findOne({_id: id, deleted: false})
-			.select(['urlName', 'title', 'tagId', 'draft', 'visible'])
-			.populate('markdown', ['-_id', 'markdown'])
+
+	if (!isNaN(id) && id > 0) {
+		const data = await Article.findOne({_id: id, de: false})
+			.select(['ur', 'ti', 'md', 'tg', 'pw', 'vi', 'dr'])
 			.lean();
 		if (data) {
 			return data;
 		} else {
-			return apiStatus.error(event, 404);
+			return apiStatus.error(event, {code: 404});
 		}
 	}
-	return apiStatus.error(event, 400);
+	return apiStatus.error(event, {code: 400});
 });

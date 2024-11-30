@@ -5,12 +5,8 @@ const props = defineProps(['refresh', 'row', 'column', '$index']);
 
 const editing = ref<boolean>(false);
 
-const {data: articles, execute, status} = await useLazyFetch(`/api/admin/tag/fetchArticle`, {
-	query: {
-		id: props.row._id,
-	},
-	immediate: false
-});
+const {data: articles, execute, status} =
+	await useLazyFetch(`/api/admin/tag/fetchArticle`, {query: {id: props.row._id}, immediate: false});
 
 function fetch() {
 	if (status.value === 'success') {
@@ -23,42 +19,40 @@ function fetch() {
 const hide = ref<boolean>(false);
 
 interface TagForm {
-	name: string
-	urlName: string
+	ur: string
+	ti: string
 }
 
 const newTag = ref<TagForm>({
-	name: props.row.name,
-	urlName: props.row.urlName
+	ur: props.row.ur,
+	ti: props.row.ti,
 });
 const tagForm = ref<FormInstance>();
 const rule = ref<FormRules<TagForm>>({
-	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-	urlName: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
+	ur: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
+	ti: [{required: true, message: '请输入名称', trigger: 'blur'}],
 });
 
-async function save(form: FormInstance) {
-	await form.validate(async (valid) => {
-		if (valid) {
-			const {status}: any = await $fetch(`/api/admin/tag/update`, {
-				method: 'PATCH',
-				body: {
-					_id: props.row._id,
-					name: newTag.value.name,
-					urlName: newTag.value.urlName
-				}
-			}).catch(error => {
-				notify({type: 'error', title: '保存失败', message: error});
-			});
-			if (status === 'success') {
-				notify({type: 'success', title: '保存成功'});
-				props.row.name = newTag.value.name;
-				props.row.urlName = newTag.value.urlName;
-			} else if (status === 'error') {
-				notify({type: 'error', title: '保存失败'});
+async function save() {
+	if (await tagForm.value?.validate()) {
+		const {status}: any = await $fetch(`/api/admin/tag/update`, {
+			method: 'PATCH',
+			body: {
+				_id: props.row._id,
+				ur: newTag.value.ur,
+				ti: newTag.value.ti,
 			}
+		}).catch(error => {
+			notify({type: 'error', title: '保存失败', message: error});
+		});
+		if (status === 'success') {
+			notify({type: 'success', title: '保存成功'});
+			props.row.ur = newTag.value.ur;
+			props.row.ti = newTag.value.ti;
+		} else if (status === 'error') {
+			notify({type: 'error', title: '保存失败'});
 		}
-	});
+	}
 }
 
 async function remove() {
@@ -82,26 +76,23 @@ async function remove() {
 <template>
 	<div v-if="!editing" class="detail">
 		<span>文章: </span>
-		<el-button v-if="(status !== 'success') || hide" @click="">
-			显示（暂不支持）
-		</el-button>
-		<el-button v-else @click="hide = true">
-			隐藏
+		<el-button @click="fetch()">
+			获取 / 刷新
 		</el-button>
 
-		<el-table v-if="(status === 'success') && !hide" :data="articles" style="width: 100%">
-			<el-table-column prop="title" label="标题" min-width="100">
+		<el-table v-if="(status === 'success')" :data="articles || []" style="width: 100%">
+			<el-table-column prop="ti" label="标题" min-width="100">
 				<template #default="props">
-					<h1>{{ props.row.title }}</h1>
+					<h1>{{ props.row.ti }}</h1>
 				</template>
 			</el-table-column>
 			<el-table-column fixed="right" label="操作" width="200">
 				<template #default>
 					<el-button type="primary">
-						编辑
+						编辑（暂不支持）
 					</el-button>
 					<el-button type="danger">
-						移除
+						移除（暂不支持）
 					</el-button>
 				</template>
 			</el-table-column>
@@ -110,11 +101,11 @@ async function remove() {
 
 	<div v-else>
 		<el-form ref="tagForm" :model="newTag" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
-			<el-form-item label="名称" prop="name">
-				<el-input v-model="newTag.name"/>
+			<el-form-item label="名称" prop="ti">
+				<el-input v-model="newTag.ti"/>
 			</el-form-item>
-			<el-form-item label="URL" prop="urlName">
-				<el-input v-model="newTag.urlName"/>
+			<el-form-item label="URL" prop="ur">
+				<el-input v-model="newTag.ur"/>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -142,7 +133,7 @@ async function remove() {
 		<el-button @click="editing = false">
 			退出编辑
 		</el-button>
-		<el-button type="primary" @click="save(tagForm)">
+		<el-button type="primary" @click="save()">
 			保存
 		</el-button>
 	</el-button-group>

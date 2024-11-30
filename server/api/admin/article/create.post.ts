@@ -1,43 +1,30 @@
-import BlogInfo from "~/server/utils/models/BlogInfo";
-import Article from "~/server/utils/models/Article";
-import {apiStatus} from "~/server/utils/util";
+import Article from "~/server/utils/models/BlogData";
+import apiStatus from "~/server/utils/apiStatus";
 import truncate from "html-truncate";
-import Markdown from "~/server/utils/models/Markdown";
-import ArticleContent from "~/server/utils/models/ArticleContent";
 
 
 function filter(id: number, body: any) {
 	const year = parseInt(body.date.split('-', 1)[0]);
 	const data = {
-		article: {
-			_id: id,
-			urlName: body.urlName,
-			title: body.title,
-			markdown: id,
-			abstract: '',
-			content: id,
-			tagId: body.tagId,
-			year: isNaN(year) ? 0 : year,
-			publishDate: body.date,
-			updateDate: body.date,
-			author: body.author,
-			visible: body.visible,
-			draft: body.draft,
-			deleted: false,
-		},
-		markdown: {
-			_id: id,
-			markdown: body.markdown.markdown
-		},
-		content: {
-			_id: id,
-			content: ''
-		}
+		_id: id,
+		ur: body.ur,
+		ti: body.ti,
+		md: body.md,
+		ab: '',
+		ht: body.ht,
+		tg: body.tg,
+		yr: isNaN(year) ? 0 : year,
+		pu: body.date,
+		up: body.date,
+		au: body.au,
+		pw: body.pw,
+		vi: body.vi,
+		dr: body.dr,
+		de: false,
 	}
 
-	if (!body.draft) {
-		data.article.abstract = truncate(body.content, 200, {ellipsis: false});
-		data.content.content = body.content;
+	if (!body.dr) {
+		data.ab = truncate(body.ht, 200, {ellipsis: false});
 		// model.content = await Vditor.md2html(model.markdown, {
 		// 	cdn: "/vditor"
 		// });
@@ -47,20 +34,20 @@ function filter(id: number, body: any) {
 }
 
 export default defineEventHandler(async (event) => {
-	const info: any = await BlogInfo.findOne().exec();
-	if (!info) {
-		return apiStatus.error(event, 500);
-	}
+	const data = await Article
+		.findOne({_id: {$gt: 0}})
+		.sort({_id: -1})
+		.select('_id')
+		.lean();
 
-	const id = info.articleID++;
+	const id = data?._id ? (data._id + 1) : 1;
 	const body = filter(id, await readBody(event))
 
-	await Promise.all([
-		Article.create(body.article),
-		Markdown.create(body.markdown),
-		ArticleContent.create(body.content),
-		info.save()
-	]);
+	try {
+		await Article.create(body);
+	} catch (error) {
+		return apiStatus.error(event, {data: error});
+	}
 
-	return apiStatus.successWith(event, 201, {id: id});
+	return apiStatus.success(event, {code: 201, data: {_id: id}});
 })
