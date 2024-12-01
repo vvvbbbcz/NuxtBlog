@@ -9,7 +9,7 @@ const {user}: any = useUserSession();
 
 <template>
 	<el-card>
-		<AdminInstallSettings v-if="user._id == 0"/>
+		<AdminInstallSettings v-if="user._id === 0"/>
 	</el-card>
 </template>
 
