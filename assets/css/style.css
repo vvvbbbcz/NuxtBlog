@@ -2,6 +2,10 @@
     min-height: 100vh;
 }
 
+.content h1 {
+    font-size: 1.7rem;
+}
+
 .border-box {
     box-sizing: border-box;
 }

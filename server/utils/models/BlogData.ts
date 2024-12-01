@@ -31,6 +31,7 @@ const schema = new Schema({
 	up: String, // update date
 	au: {type: Number, ref: 'BlogData'}, // author / picture uploader
 	pw: {type: String, select: false}, // article password / user password
+	iv: [{type: Number}], // aes iv
 	// article visible: 0-public, 1-private, >1-encrypted
 	// user admin level (0-root, 1-admin, 2-editor, 3-author, 4-contributor, >4-user)
 	vi: Number,

@@ -4,6 +4,7 @@ import "vditor/dist/index.css";
 import moment from "moment";
 import {ElMessage as message, ElNotification as notify} from "element-plus";
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
+import {aesEncrypt, generateIV} from "~/utils/aesCrypto";
 
 const props = defineProps({
 	id: Number,
@@ -19,6 +20,7 @@ interface Article {
 	date: string,
 	au: number,
 	pw: string,
+	iv: number[]
 	vi: number,
 	dr: boolean,
 	publish: boolean
@@ -34,6 +36,7 @@ const article = ref<Article>({
 	date: '',
 	au: 0,
 	pw: '',
+	iv: [],
 	vi: 0,
 	dr: true,
 	publish: false,
@@ -58,7 +61,13 @@ async function update(draft: boolean) {
 
 		article.value.publish = false;
 		if (!draft) {
-			article.value.ht = vditor.getHTML();
+			if (article.value.vi === 2) {
+				const iv = generateIV();
+				article.value.iv = Array.from(iv);
+				article.value.ht = await aesEncrypt(article.value.pw, iv, vditor.getHTML());
+			} else {
+				article.value.ht = vditor.getHTML();
+			}
 			if (article.value.dr) {
 				article.value.publish = true;
 			}

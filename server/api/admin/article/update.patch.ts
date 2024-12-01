@@ -19,11 +19,14 @@ function filter(body: any) {
 	}
 
 	if (!body.dr) {
-		Object.defineProperty(data.article, 'ab', {
-			value: truncate(body.ht, 200, {ellipsis: false}),
-			enumerable: true
-		});
+		if (body.vi === 0) {
+			Object.defineProperty(data.article, 'ab', {
+				value: truncate(body.ht, 200, {ellipsis: false}),
+				enumerable: true
+			});
+		}
 		Object.defineProperty(data.article, 'ht', {value: body.ht, enumerable: true});
+		Object.defineProperty(data.article, 'iv', {value: body.iv, enumerable: true});
 	}
 
 	if (body.publish) { // publish from draft

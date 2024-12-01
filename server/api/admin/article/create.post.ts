@@ -18,12 +18,13 @@ function filter(id: number, body: any) {
 		up: body.date,
 		au: body.au,
 		pw: body.pw,
+		iv: body.iv,
 		vi: body.vi,
 		dr: body.dr,
 		de: false,
 	}
 
-	if (!body.dr) {
+	if (!body.dr && body.vi === 0) {
 		data.ab = truncate(body.ht, 200, {ellipsis: false});
 		// model.content = await Vditor.md2html(model.markdown, {
 		// 	cdn: "/vditor"
