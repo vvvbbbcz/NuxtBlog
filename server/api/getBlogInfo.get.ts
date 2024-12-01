@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
 		const data = await BlogInfo
 			.findOne({_id: 0})
 			.select(['-_id', 'blogInfo'])
+			.populate('blogInfo.background', ['-_id', 'ur'])
 			.lean();
 		if (data?.blogInfo) {
 			return data.blogInfo;
