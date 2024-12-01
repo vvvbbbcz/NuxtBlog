@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import {ElMessage as message} from "element-plus";
+import {useDark, useToggle} from "@vueuse/core";
+import {Moon, Sunny} from "@element-plus/icons-vue";
 
 const {loggedIn, clear} = useUserSession();
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 async function logout() {
 	await clear();
@@ -13,28 +18,30 @@ async function logout() {
 </script>
 
 <template>
-	<el-header class="margin-1rem">
-		<el-menu mode="horizontal" class="border-radius-1rem" router>
-			<el-menu-item class="first-item" index="/">
+	<div class="menu">
+		<el-menu mode="horizontal" class="b-no" router>
+			<el-menu-item class="first" index="/">
 				返回博客主页
 			</el-menu-item>
-			<el-button type="primary" @click="logout">退出</el-button>
 		</el-menu>
-	</el-header>
+		<el-button type="primary" class="m-l-1" @click="logout">退出</el-button>
+		<el-button class="m-l-1 m-r-1" :icon="isDark ? Sunny : Moon" circle @click="toggleDark()"/>
+	</div>
 </template>
 
 <style scoped>
-.el-menu {
+.menu {
+	display: flex;
 	align-items: center;
-	justify-content: space-between;
-}
-
-.el-header {
-	padding: 0 !important;
 }
 
 .el-menu {
-	border: 1px solid var(--el-menu-border-color);
+	width: 100%;
+	background-color: unset;
+}
+
+.el-menu-item.first {
+	border-radius: 1rem 0 0 1rem;
 }
 
 .el-menu-item {
@@ -43,13 +50,5 @@ async function logout() {
 
 .el-menu-item.is-active {
 	color: var(--el-menu-text-color) !important;
-}
-
-.el-button {
-	margin-right: 1rem;
-}
-
-.first-item {
-	border-radius: 1rem 0 0 1rem;
 }
 </style>

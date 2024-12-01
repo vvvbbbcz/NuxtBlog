@@ -115,8 +115,8 @@ onMounted(async () => {
 </script>
 
 <template>
-	<el-card class="height-100 border-box" :body-class="'height-100 border-box'">
-		<el-container class="height-100" direction="vertical">
+	<el-card class="h-100p border-box" :body-class="'h-100p border-box'">
+		<el-container class="h-100p" direction="vertical">
 			<ArticleInfoForm ref="form" :info="article" @change="unsaved = true"/>
 			<el-container class="options">
 				<el-button-group>

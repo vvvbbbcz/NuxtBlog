@@ -2,37 +2,55 @@
 </script>
 
 <template>
-	<el-container direction="vertical" class="min-100vh">
-		<Header/>
+	<el-container direction="vertical" class="mh-100vh">
+		<el-header class="m-1 b-r-1 b-1px">
+			<MainMenu/>
+		</el-header>
 		<el-container>
-			<AsideLeft class="aside-left"/>
+			<el-aside width="15%" class="as-l m-1">
+				<AsideLeft/>
+			</el-aside>
 			<el-main>
 				<slot/>
 			</el-main>
-			<AsideRight class="aside-right"/>
+			<el-aside width="15%" class="as-r m-1">
+				<AsideRight/>
+			</el-aside>
 		</el-container>
-		<Footer/>
+		<el-footer class="m-1 b-r-1 b-1px">
+			<Footer/>
+		</el-footer>
 	</el-container>
 	<Background/>
 </template>
 
 <style scoped>
+.el-header {
+	padding: 0;
+	box-sizing: content-box;
+}
+
 .el-aside {
+	text-align: center;
 	min-width: 12rem;
 }
 
+.el-footer {
+	text-align: center;
+}
+
 @media screen and (max-width: 70em) {
-	.aside-left {
+	.as-l {
 		width: 20%;
 	}
 
-	.aside-right {
+	.as-r {
 		display: none;
 	}
 }
 
 @media screen and (max-width: 55em) {
-	.aside-left {
+	.as-l {
 		display: none;
 	}
 }

@@ -11,21 +11,36 @@ if (!loggedIn.value) {
 </script>
 
 <template>
-	<el-container direction="vertical" class="min-100vh">
-		<AdminHeader/>
+	<el-container direction="vertical" class="mh-100vh">
+		<el-header class="m-1 b-r-1 b-1px">
+			<AdminHeader/>
+		</el-header>
 		<el-container>
-			<AdminAside/>
-			<el-main class="margin-1rem">
+			<el-aside width="12rem" class="m-1">
+				<AdminMenu/>
+			</el-aside>
+			<el-main class="m-1">
 				<slot/>
 			</el-main>
 		</el-container>
-		<Footer/>
+		<el-footer class="m-1 b-r-1">
+			<Footer/>
+		</el-footer>
 	</el-container>
 	<Background/>
 </template>
 
 <style scoped>
+.el-header {
+	padding: 0;
+	box-sizing: content-box;
+}
+
 .el-main {
 	padding: 0;
+}
+
+.el-footer {
+	text-align: center;
 }
 </style>

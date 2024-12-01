@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import {Moon, Sunny} from "@element-plus/icons-vue";
+import {useDark, useToggle} from "@vueuse/core";
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
-	<el-header class="margin-1rem">
-		<el-menu mode="horizontal" class="border-radius-1rem" router>
-			<el-menu-item class="first-item" index="/">
+	<div class="menu">
+		<el-menu mode="horizontal" class="b-no" router>
+			<el-menu-item class="brand" index="/">
 				<SiteBrand/>
 			</el-menu-item>
 			<el-menu-item index="/">
@@ -17,23 +22,27 @@
 				关于
 			</el-menu-item>
 		</el-menu>
-	</el-header>
+		<el-button class="m-l-1 m-r-1" :icon="isDark ? Sunny : Moon" circle @click="toggleDark()"/>
+	</div>
 </template>
 
 <style scoped>
 a {
 	text-decoration: none;
-	color: var(--el-menu-text-color);
-	display: inline-block;
-	padding: 0 var(--el-menu-base-level-padding);
 }
 
-.el-header {
-	padding: 0 !important;
+.menu {
+	display: flex;
+	align-items: center;
 }
 
 .el-menu {
-	border: 1px solid var(--el-menu-border-color);
+	width: 100%;
+	background-color: unset;
+}
+
+.el-menu-item.brand {
+	border-radius: 1rem 0 0 1rem;
 }
 
 .el-menu-item {
@@ -42,13 +51,5 @@ a {
 
 .el-menu-item.is-active {
 	color: var(--el-menu-text-color) !important;
-}
-
-.el-menu-item.external {
-	padding: 0;
-}
-
-.first-item {
-	border-radius: 1rem 0 0 1rem;
 }
 </style>

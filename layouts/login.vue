@@ -5,7 +5,7 @@ useHead({
 </script>
 
 <template>
-	<el-container class="min-100vh">
+	<el-container class="mh-100vh">
 		<el-card body-style="box-sizing: border-box; height: 100%;">
 			<slot/>
 		</el-card>
