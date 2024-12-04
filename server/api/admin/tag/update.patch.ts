@@ -16,10 +16,10 @@ export default defineEventHandler(async (event) => {
 	if (!isNaN(id)) {
 		const tag = await Tag.updateOne({_id: id}, body.tag).exec();
 		if (tag.matchedCount < 1) {
-			return apiStatus.error(event, 404);
+			throw createError({statusCode: 404, statusMessage: 'Tag Not Found'});
 		} else {
 			return apiStatus.success();
 		}
 	}
-	return apiStatus.error(event, 400);
+	throw createError({statusCode: 400, statusMessage: 'Invalid ID'});
 });

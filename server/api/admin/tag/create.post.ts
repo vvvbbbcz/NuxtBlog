@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
 		.lean();
 
 	if (data?._id && (data._id <= -100000)) {
-		return apiStatus.error(event, {data: 'Tag is full'});
+		throw createError({statusCode: 405, statusMessage: 'Tags are full'});
 	}
 
 	const id = data?._id ? (data._id - 1) : -1001;
@@ -27,8 +27,8 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		await Tag.create(body);
-	} catch (error) {
-		return apiStatus.error(event, {data: error});
+	} catch (error: any) {
+		throw createError({statusCode: 500, statusMessage: error});
 	}
 
 	return apiStatus.success(event, {code: 201, data: {id: id}});

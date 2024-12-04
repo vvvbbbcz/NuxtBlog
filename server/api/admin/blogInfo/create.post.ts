@@ -27,12 +27,12 @@ async function filter(body: any) {
 
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
-		return apiStatus.error(event, {code: 405});
+		throw createError({statusCode: 405, statusMessage: 'Not in install mode'});
 	}
 
 	// check if installed
 	if (await BlogData.exists({_id: 0}).exec()) {
-		return apiStatus.error(event, {code: 405});
+		throw createError({statusCode: 405, statusMessage: 'Installed'});
 	}
 
 	const body = await filter(await readBody(event));

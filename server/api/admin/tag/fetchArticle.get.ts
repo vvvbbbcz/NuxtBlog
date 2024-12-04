@@ -1,5 +1,4 @@
 import Article from "~/server/utils/models/BlogData";
-import apiStatus from "~/server/utils/apiStatus";
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event).id;
@@ -10,5 +9,5 @@ export default defineEventHandler(async (event) => {
 			.populate('au', ['co', 'ti'])
 			.lean();
 	}
-	return apiStatus.error(event, {code: 400});
+	throw createError({statusCode: 400, statusMessage: 'Invalid ID'});
 });

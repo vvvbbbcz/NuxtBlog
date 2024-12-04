@@ -1,5 +1,4 @@
 import User from "~/server/utils/models/BlogData";
-import apiStatus from "~/server/utils/apiStatus";
 import {getUserSession} from "#imports";
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +7,7 @@ export default defineEventHandler(async (event) => {
 	if (!isNaN(id) && id >= -1000 && id <= -1) {
 		const {user}: any = await getUserSession(event);
 		if (user._id !== id) {
-			return apiStatus.error(event, {code: 404});
+			throw createError({statusCode: 404, statusMessage: 'User Not Found'});
 		}
 
 		const data = await User
@@ -18,8 +17,8 @@ export default defineEventHandler(async (event) => {
 		if (data) {
 			return data;
 		} else {
-			return apiStatus.error(event, {code: 404});
+			throw createError({statusCode: 404, statusMessage: 'User Not Found'});
 		}
 	}
-	return apiStatus.error(event, {code: 400});
+	throw createError({statusCode: 400, statusMessage: 'Invalid ID'});
 });

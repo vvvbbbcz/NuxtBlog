@@ -1,5 +1,4 @@
 import BlogInfo from "~/server/utils/models/BlogData";
-import apiStatus from "~/server/utils/apiStatus";
 import mongoose from "mongoose";
 
 export default defineEventHandler(async (event) => {
@@ -13,5 +12,5 @@ export default defineEventHandler(async (event) => {
 			return data.blogInfo;
 		}
 	}
-	return apiStatus.error(event);
+	throw createError({statusCode: 500});
 })

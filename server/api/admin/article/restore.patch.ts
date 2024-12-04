@@ -7,10 +7,10 @@ export default defineEventHandler(async (event) => {
 		const result = await Article.updateOne({_id: id}, {de: false}).exec();
 
 		if (result.matchedCount < 1) {
-			return apiStatus.error(event, {code: 404});
+			throw createError({statusCode: 404, statusMessage: 'Article Not Found'});
 		}
 
 		return apiStatus.success();
 	}
-	return apiStatus.error(event, {code: 400});
+	throw createError({statusCode: 400, statusMessage: 'Invalid ID'});
 });

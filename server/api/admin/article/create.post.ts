@@ -46,8 +46,8 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		await Article.create(body);
-	} catch (error) {
-		return apiStatus.error(event, {data: error});
+	} catch (error: any) {
+		throw createError({statusCode: 500, statusMessage: error});
 	}
 
 	return apiStatus.success(event, {code: 201, data: {_id: id}});

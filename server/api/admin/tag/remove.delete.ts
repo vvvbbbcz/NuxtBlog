@@ -6,10 +6,10 @@ export default defineEventHandler(async (event) => {
 	if (!isNaN(id) && id >= -100000 && id <= -1001) {
 		const result = await Tag.deleteOne({_id: id}).exec();
 		if (result.deletedCount < 1) {
-			return apiStatus.error(event, {code: 404});
+			throw createError({statusCode: 404, statusMessage: 'Tag Not Found'});
 		}
 
 		return apiStatus.success();
 	}
-	return apiStatus.error(event, {code: 400});
+	throw createError({statusCode: 400, statusMessage: 'Invalid ID'});
 });

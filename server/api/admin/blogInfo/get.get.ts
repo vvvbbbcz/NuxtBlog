@@ -1,5 +1,4 @@
 import BlogData from "~/server/utils/models/BlogData";
-import apiStatus from "~/server/utils/apiStatus";
 
 export default defineEventHandler(async (event) => {
 	const data = await BlogData
@@ -9,6 +8,6 @@ export default defineEventHandler(async (event) => {
 	if (data?.blogInfo) {
 		return data.blogInfo;
 	} else {
-		return apiStatus.error(event, {code: 404});
+		throw createError({statusCode: 404, statusMessage: 'Not Found'});
 	}
 });

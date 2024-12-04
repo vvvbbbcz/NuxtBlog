@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 		const isValid = (body.ur === 'installer') &&
 			(await verifyPassword(hashedPassword, body.pw));
 		if (!isValid) {
-			return apiStatus.error(event, {code: 422});
+			throw createError({statusCode: 422});
 		}
 
 		await setUserSession(event, {
@@ -35,11 +35,11 @@ export default defineEventHandler(async (event) => {
 			.lean();
 
 		if (!user || !user.pw) {
-			return apiStatus.error(event, {code: 422});
+			throw createError({statusCode: 422});
 		}
 
 		if (!await verifyPassword(user.pw, body.pw)) {
-			return apiStatus.error(event, {code: 422});
+			throw createError({statusCode: 422});
 		}
 
 		await setUserSession(event, {

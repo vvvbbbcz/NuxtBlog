@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
 	const result = await BlogInfo.updateOne({_id: 0}, body).exec();
 	if (result.matchedCount < 1) {
-		return apiStatus.error(event, {code: 404});
+		throw createError({statusCode: 404, statusMessage: 'Not Found'});
 	} else {
 		return apiStatus.success();
 	}
