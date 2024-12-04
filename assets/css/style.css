@@ -37,12 +37,14 @@
 
 .el-header .el-menu:not(.el-menu--collapse) .el-sub-menu__title {
     padding-right: var(--el-menu-base-level-padding);
-    border-radius: 0 1rem 1rem 0;
-    height: 100%;
 }
 
 .el-header .el-menu--horizontal > .el-sub-menu.is-active .el-sub-menu__title {
     border-bottom: none;
+}
+
+.el-header .el-menu--horizontal>.el-sub-menu .el-sub-menu__title:hover {
+    background-color: unset;
 }
 
 .b-r-1 {

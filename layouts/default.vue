@@ -39,7 +39,7 @@
 	text-align: center;
 }
 
-@media screen and (max-width: 70em) {
+@media screen and (max-width: 65em) {
 	.as-l {
 		width: 20%;
 	}
@@ -49,7 +49,7 @@
 	}
 }
 
-@media screen and (max-width: 55em) {
+@media screen and (max-width: 50em) {
 	.as-l {
 		display: none;
 	}

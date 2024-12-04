@@ -12,7 +12,7 @@ const toggleDark = useToggle(isDark)
 			<el-menu-item class="brand" index="/">
 				<SiteBrand/>
 			</el-menu-item>
-			<el-menu-item index="/">
+			<el-menu-item class="item-1" index="/">
 				博客
 			</el-menu-item>
 			<el-menu-item class="external">
@@ -37,11 +37,11 @@ a {
 }
 
 .el-menu {
-	width: 100%;
+	width: calc(100% - 4rem);
 	background-color: unset;
 }
 
-.el-menu-item.brand {
+.brand {
 	border-radius: 1rem 0 0 1rem;
 }
 
@@ -51,5 +51,15 @@ a {
 
 .el-menu-item.is-active {
 	color: var(--el-menu-text-color) !important;
+}
+
+@media screen and (max-width: 40em) {
+	.brand {
+		display: none;
+	}
+
+	.item-1 {
+		border-radius: 1rem 0 0 1rem;
+	}
 }
 </style>
