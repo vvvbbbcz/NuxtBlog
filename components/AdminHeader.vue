@@ -21,10 +21,10 @@ async function logout() {
 	<div class="menu">
 		<el-menu mode="horizontal" class="b-no" router>
 			<el-menu-item class="first" index="/">
-				返回博客主页
+				返回主页
 			</el-menu-item>
 		</el-menu>
-		<el-button type="primary" class="m-l-1" @click="logout">退出</el-button>
+		<el-button type="primary" @click="logout">退出</el-button>
 		<el-button class="m-l-1 m-r-1" :icon="isDark ? Sunny : Moon" circle @click="toggleDark()"/>
 	</div>
 </template>
@@ -33,10 +33,11 @@ async function logout() {
 .menu {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .el-menu {
-	width: 100%;
+	width: calc(100% - 8rem);
 	background-color: unset;
 }
 

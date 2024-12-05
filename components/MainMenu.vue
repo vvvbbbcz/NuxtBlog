@@ -12,7 +12,7 @@ const toggleDark = useToggle(isDark)
 			<el-menu-item class="brand" index="/">
 				<SiteBrand/>
 			</el-menu-item>
-			<el-menu-item class="item-1" index="/">
+			<el-menu-item index="/">
 				博客
 			</el-menu-item>
 			<el-menu-item class="external">
@@ -34,6 +34,7 @@ a {
 .menu {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .el-menu {
@@ -56,10 +57,6 @@ a {
 @media screen and (max-width: 40em) {
 	.brand {
 		display: none;
-	}
-
-	.item-1 {
-		border-radius: 1rem 0 0 1rem;
 	}
 }
 </style>

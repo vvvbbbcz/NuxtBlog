@@ -54,4 +54,14 @@
 		display: none;
 	}
 }
+
+@media screen and (max-width: 40em) {
+	.el-header {
+		margin: 0 !important;
+		border-radius: 0 !important;
+		border-top: none !important;
+		border-left: none !important;
+		border-right: none !important;
+	}
+}
 </style>
