@@ -42,7 +42,7 @@ const article = ref<Article>({
 	publish: false,
 });
 
-if (props.id) {
+if (props.id !== undefined) {
 	const {data: articleData, status, error}: any =
 		await useFetch('/api/admin/article/get', {query: {id: props.id}});
 	if (status.value === 'success') {
@@ -115,26 +115,24 @@ onMounted(async () => {
 </script>
 
 <template>
-	<el-card class="h-100p border-box" :body-class="'h-100p border-box'">
-		<el-container class="h-100p" direction="vertical">
-			<ArticleInfoForm ref="form" :info="article" @change="unsaved = true"/>
-			<el-container class="options">
-				<el-button-group>
-					<el-button v-if="article.dr" type="primary" @click="update(true)">
-						保存草稿
-					</el-button>
-					<el-button v-else type="primary" @click="update(true)">
-						转为草稿
-					</el-button>
-					<el-button type="primary" @click="update(false)">
-						发布
-					</el-button>
-				</el-button-group>
-				<el-text v-if="unsaved" type="warning">未保存</el-text>
-			</el-container>
-			<div id="vditor"></div>
-		</el-container>
-	</el-card>
+	<el-container class="h-100p" direction="vertical">
+		<ArticleInfoForm ref="form" :info="article" @change="unsaved = true"/>
+		<div class="m-b-1 d-fl a-i-c">
+			<el-button-group class="m-r-1">
+				<el-button v-if="article.dr" type="primary" @click="update(true)">
+					保存草稿
+				</el-button>
+				<el-button v-else type="primary" @click="update(true)">
+					转为草稿
+				</el-button>
+				<el-button type="primary" @click="update(false)">
+					发布
+				</el-button>
+			</el-button-group>
+			<el-text v-if="unsaved" class="m-l-1" type="warning">未保存</el-text>
+		</div>
+		<div id="vditor"></div>
+	</el-container>
 </template>
 
 <script>
@@ -142,21 +140,4 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.tag-input {
-	width: 100%;
-	margin-bottom: 0.5rem;
-}
-
-.options {
-	margin-bottom: 1rem;
-	align-items: center;
-}
-
-.el-button-group {
-	margin-right: 1rem;
-}
-
-.el-text {
-	margin-left: 1rem;
-}
 </style>
