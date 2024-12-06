@@ -13,10 +13,10 @@ if (isNaN(id)) {
 </script>
 
 <template>
-	<el-card v-if="error.valueOf()">
-		<h1>错误</h1>
+	<el-card class="h-100p border-box" :body-class="'h-100p border-box'">
+		<h1 v-if="error.valueOf()">错误</h1>
+		<ArticleEditor v-else :id="id"/>
 	</el-card>
-	<AdminArticleEditor v-else :id="id"/>
 </template>
 
 <style scoped>
