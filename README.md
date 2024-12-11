@@ -8,7 +8,7 @@ A full-stack blog based on Nuxt 3 and Mongoose.
 - [x] Dark Mode
 - [x] Code Highlight
 - [x] Post Encryption
-- [ ] Mobile Support
+- [x] Mobile Support
 - [ ] Custom Header and Footer
 - [ ] Custom CSS
 - [ ] Image Upload
