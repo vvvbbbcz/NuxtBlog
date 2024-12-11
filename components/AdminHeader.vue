@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {ElMessage as message} from "element-plus";
-import {useDark, useToggle} from "@vueuse/core";
 import {Moon, Sunny} from "@element-plus/icons-vue";
+import type {WritableComputedRef} from "vue";
 
 const {loggedIn, clear} = useUserSession();
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
+const toggleDark = inject('toggleDark') as (value?: (boolean | undefined)) => boolean;
 
 async function logout() {
 	await clear();

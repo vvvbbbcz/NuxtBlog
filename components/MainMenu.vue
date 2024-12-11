@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {Moon, Sunny} from "@element-plus/icons-vue";
-import {useDark, useToggle} from "@vueuse/core";
+import type {WritableComputedRef} from "vue";
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
+const toggleDark = inject('toggleDark') as (value?: (boolean | undefined)) => boolean;
 </script>
 
 <template>
