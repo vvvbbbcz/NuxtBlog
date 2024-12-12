@@ -17,7 +17,7 @@ interface Article {
 	md: string,
 	ht: string,
 	tg: number[],
-	date: string,
+	da: string,
 	au: number,
 	pw: string,
 	iv: number[]
@@ -33,7 +33,7 @@ const article = ref<Article>({
 	md: '',
 	ht: '',
 	tg: [],
-	date: '',
+	da: '',
 	au: 0,
 	pw: '',
 	iv: [],
@@ -73,7 +73,7 @@ async function update(draft: boolean) {
 			}
 		}
 		article.value.md = vditor.getValue();
-		article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
+		article.value.da = moment().format("YYYY-MM-DD HH:mm:ss");
 		article.value.au = user.value._id; // TODO
 		article.value.dr = draft;
 

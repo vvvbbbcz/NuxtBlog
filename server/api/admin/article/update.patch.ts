@@ -10,7 +10,6 @@ function filter(body: any) {
 			ti: body.ti,
 			md: body.md,
 			tg: body.tg,
-			up: body.date,
 			au: body.au,
 			pw: body.pw,
 			vi: body.vi,
@@ -26,12 +25,12 @@ function filter(body: any) {
 			});
 		}
 		Object.defineProperty(data.article, 'ht', {value: body.ht, enumerable: true});
+		Object.defineProperty(data.article, 'da', {value: body.da, enumerable: true});
 		Object.defineProperty(data.article, 'iv', {value: body.iv, enumerable: true});
 	}
 
 	if (body.publish) { // publish from draft
-		Object.defineProperty(data.article, 'yr', {value: body.date.split('-', 1)[0], enumerable: true});
-		Object.defineProperty(data.article, 'pu', {value: body.date, enumerable: true});
+		Object.defineProperty(data.article, 'yr', {value: body.da.split('-', 1)[0], enumerable: true});
 	}
 
 	return data;

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 	if (!isNaN(year) && name) {
 		const data = await Article
 			.findOne({_id: {$gt: 0}, ur: name, yr: year, vi: {$in: [0, 2]}, dr: false, de: false})
-			.select(['-_id', 'ti', 'ht', 'co', 'pu', 'up', 'iv', 'vi'])
+			.select(['-_id', 'ti', 'ht', 'co', 'da', 'iv', 'vi'])
 			.populate('tg', ['-_id', 'ur', 'ti'])
 			.populate('au', ['-_id', 'ur', 'ti', 'co'])
 			.lean();

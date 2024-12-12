@@ -27,8 +27,7 @@ const schema = new Schema({
 			return this._id >= -100000 && this._id !== 0;
 		}
 	},
-	pu: String, // publish date / picture upload date
-	up: String, // update date
+	da: String, // publish or update date / picture upload date
 	au: {type: Number, ref: 'BlogData'}, // author / picture uploader
 	pw: {type: String, select: false}, // article password / user password
 	iv: [{type: Number}], // aes iv

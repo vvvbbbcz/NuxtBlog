@@ -4,7 +4,7 @@ import truncate from "html-truncate";
 
 
 function filter(id: number, body: any) {
-	const year = parseInt(body.date.split('-', 1)[0]);
+	const year = parseInt(body.da.split('-', 1)[0]);
 	const data = {
 		_id: id,
 		ur: body.ur,
@@ -14,8 +14,7 @@ function filter(id: number, body: any) {
 		ht: body.ht,
 		tg: body.tg,
 		yr: isNaN(year) ? 0 : year,
-		pu: body.date,
-		up: body.date,
+		da: body.da,
 		au: body.au,
 		pw: body.pw,
 		iv: body.iv,

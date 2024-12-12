@@ -58,11 +58,7 @@ onMounted(() => {
 			<div class="d-fl j-c-c gap-_5 f-w">
 				<el-text>
 					<el-icon><Clock/></el-icon>
-					发布时间：{{ article?.pu }}
-				</el-text>
-				<el-text>
-					<el-icon><Clock/></el-icon>
-					上次编辑：{{ article?.up }}
+					更新时间：{{ article?.da }}
 				</el-text>
 			</div>
 			<hr/>

@@ -5,7 +5,7 @@ export default defineEventHandler(async () => {
 	return Article.find(filters.article)
 		.limit(20)
 		.sort({_id: -1})
-		.select(['ur', 'ti', 'pu', 'up', 'vi'])
+		.select(['ur', 'ti', 'da', 'vi'])
 		.populate('au', ['co', 'ti'])
 		.populate('tg', 'ti')
 		.lean();
