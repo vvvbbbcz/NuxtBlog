@@ -25,7 +25,7 @@ function filter(id: number, body: any) {
 	}
 
 	if (!body.dr && body.vi === 0) {
-		data.ab = truncate(body.ht, 200, {ellipsis: false});
+		data.ab = truncate(body.ht, 200);
 		// model.content = await Vditor.md2html(model.markdown, {
 		// 	cdn: "/vditor"
 		// });

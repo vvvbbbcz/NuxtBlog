@@ -21,7 +21,7 @@ function filter(body: any) {
 	if (!body.dr) {
 		if (body.vi === 0) {
 			Object.defineProperty(data.article, 'ab', {
-				value: truncate(body.ht, 200, {ellipsis: false}),
+				value: truncate(body.ht, 200),
 				enumerable: true
 			});
 		}
