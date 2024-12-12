@@ -23,7 +23,7 @@ if (!loggedIn.value) {
 				<slot/>
 			</el-main>
 		</el-container>
-		<el-footer class="m-1 b-r-1 b-1px">
+		<el-footer class="m-1 b-r-1 b-1px t-a-c">
 			<Footer/>
 		</el-footer>
 	</el-container>
@@ -42,11 +42,7 @@ if (!loggedIn.value) {
 	min-width: 9rem;
 }
 
-.el-footer {
-	text-align: center;
-}
-
-@media screen and (max-width: 40em) {
+@media screen and (max-width: 36em) {
 	.el-header {
 		margin: 0 !important;
 		border-radius: 0 !important;

@@ -7,17 +7,17 @@
 			<MainMenu/>
 		</el-header>
 		<el-container>
-			<el-aside width="15%" class="as-l m-1">
+			<el-aside width="15%" class="as-l m-1 t-a-c">
 				<AsideLeft/>
 			</el-aside>
 			<el-main>
 				<slot/>
 			</el-main>
-			<el-aside width="15%" class="as-r m-1">
+			<el-aside width="15%" class="as-r m-1 t-a-c">
 				<AsideRight/>
 			</el-aside>
 		</el-container>
-		<el-footer class="m-1 b-r-1 b-1px">
+		<el-footer class="m-1 b-r-1 b-1px t-a-c">
 			<Footer/>
 		</el-footer>
 	</el-container>
@@ -26,15 +26,10 @@
 
 <style scoped>
 .el-aside {
-	text-align: center;
 	min-width: 12rem;
 }
 
-.el-footer {
-	text-align: center;
-}
-
-@media screen and (max-width: 65em) {
+@media screen and (max-width: 64em) {
 	.as-l {
 		width: 20%;
 	}
@@ -44,13 +39,13 @@
 	}
 }
 
-@media screen and (max-width: 50em) {
+@media screen and (max-width: 48em) {
 	.as-l {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 40em) {
+@media screen and (max-width: 36em) {
 	.el-header {
 		margin: 0 !important;
 		border-radius: 0 !important;

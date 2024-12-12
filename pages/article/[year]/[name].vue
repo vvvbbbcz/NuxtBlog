@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import 'highlight.js/styles/default.css';
 import {aesDecrypt} from "~/utils/aesCrypto";
+import {Clock, CollectionTag, User} from "@element-plus/icons-vue";
 
 const route = useRoute();
 
@@ -38,14 +39,32 @@ onMounted(() => {
 			<p>文章不存在</p>
 		</div>
 		<div v-else>
-			<h1 class="main-title m-0">{{ article?.ti }}</h1>
-			<el-container class="gap-2">
-				<a v-for="tag in article?.tg" :href="`/tag?name=${tag.urlName}`">
-					<el-tag type="primary">
-						{{ tag.ti }}
-					</el-tag>
-				</a>
-			</el-container>
+			<h1 class="main-title m-0 m-b-1">{{ article?.ti }}</h1>
+			<div class="d-fl j-c-c gap-_5 f-w m-b-_5">
+				<el-text>
+					<el-icon><User/></el-icon>
+					作者：{{ article?.au?.ti }}
+				</el-text>
+				<el-text>
+					<el-icon><CollectionTag/></el-icon>
+					标签：
+					<a v-for="tag in article?.tg" :href="`/tag?name=${tag.urlName}`" class="m-r-_5">
+						<el-tag type="primary">
+							{{ tag.ti }}
+						</el-tag>
+					</a>
+				</el-text>
+			</div>
+			<div class="d-fl j-c-c gap-_5 f-w">
+				<el-text>
+					<el-icon><Clock/></el-icon>
+					发布时间：{{ article?.pu }}
+				</el-text>
+				<el-text>
+					<el-icon><Clock/></el-icon>
+					上次编辑：{{ article?.up }}
+				</el-text>
+			</div>
 			<hr/>
 			<div class="content" v-if="article?.vi === 2">
 				<h1>密码保护的文章</h1>
@@ -63,10 +82,5 @@ onMounted(() => {
 h1.main-title {
 	text-align: center;
 	font-size: 2rem;
-}
-
-.el-container {
-	justify-content: center;
-	gap: 0.5rem;
 }
 </style>

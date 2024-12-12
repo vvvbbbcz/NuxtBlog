@@ -31,6 +31,10 @@
     min-height: 100vh;
 }
 
+.t-a-c {
+    text-align: center;
+}
+
 .content h1 {
     font-size: 1.7rem;
 }
@@ -59,8 +63,16 @@
     margin-left: 1rem;
 }
 
+.m-r-_5 {
+    margin-right: 0.5rem;
+}
+
 .m-r-1 {
     margin-right: 1rem;
+}
+
+.m-b-_5 {
+    margin-bottom: 0.5rem;
 }
 
 .m-b-1 {
@@ -81,4 +93,20 @@
 
 .j-c-s {
     justify-content: space-between;
+}
+
+.j-c-c {
+    justify-content: center;
+}
+
+.gap-_5 {
+    gap: 0.5rem;
+}
+
+.gap-1 {
+    gap: 1rem;
+}
+
+.f-w {
+    flex-wrap: wrap;
 }

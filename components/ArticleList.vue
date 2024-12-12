@@ -25,7 +25,6 @@ function toArticle(year: string, name: string) {
 
 <style scoped>
 .title {
-	text-align: center;
 	font-size: 2rem;
 }
 </style>

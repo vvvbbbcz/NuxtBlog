@@ -103,7 +103,7 @@ onMounted(async () => {
 					</svg>
 				</template>
 				<template #footer>
-					<el-input v-model="newTagName" class="w-100p tag-input"
+					<el-input v-model="newTagName" class="w-100p m-b-_5"
 							  placeholder="添加标签（暂不支持）"/>
 					<el-button type="primary" @click="confirmNewTag">
 						添加
@@ -132,7 +132,4 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.tag-input {
-	margin-bottom: 0.5rem;
-}
 </style>
