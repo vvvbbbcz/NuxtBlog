@@ -40,27 +40,36 @@ onMounted(() => {
 		</div>
 		<div v-else>
 			<h1 class="main-title m-0 m-b-1">{{ article?.ti }}</h1>
-			<div class="d-fl j-c-c gap-_5 f-w m-b-_5">
-				<el-text>
-					<el-icon><User/></el-icon>
-					作者：{{ article?.au?.ti }}
-				</el-text>
-				<el-text>
-					<el-icon><CollectionTag/></el-icon>
-					标签：
-					<a v-for="tag in article?.tg" :href="`/tag?name=${tag.urlName}`" class="m-r-_5">
-						<el-tag type="primary">
+			<el-space size="small" class="j-c-c" wrap>
+				<div class="d-fl a-i-c">
+					<el-icon>
+						<User/>
+					</el-icon>
+					<el-text>
+						{{ article?.au?.ti }}
+					</el-text>
+				</div>
+				<div class="d-fl a-i-c">
+					<el-icon>
+						<CollectionTag/>
+					</el-icon>
+					<el-tag v-if="(article?.tg.length || 0) === 0" type="info">暂无</el-tag>
+					<el-space v-else size="small">
+						<el-tag type="primary" v-for="tag in article?.tg"
+								@click="$router.push(`/tag`)">
 							{{ tag.ti }}
 						</el-tag>
-					</a>
-				</el-text>
-			</div>
-			<div class="d-fl j-c-c gap-_5 f-w">
-				<el-text>
-					<el-icon><Clock/></el-icon>
-					更新时间：{{ article?.da }}
-				</el-text>
-			</div>
+					</el-space>
+				</div>
+				<div class="d-fl a-i-c">
+					<el-icon>
+						<Clock/>
+					</el-icon>
+					<el-text>
+						{{ article?.da }}
+					</el-text>
+				</div>
+			</el-space>
 			<hr/>
 			<div class="content" v-if="article?.vi === 2">
 				<h1>密码保护的文章</h1>
@@ -78,5 +87,13 @@ onMounted(() => {
 h1.main-title {
 	text-align: center;
 	font-size: 2rem;
+}
+
+.el-space {
+	display: flex;
+}
+
+.el-tag:not(.el-tag--info) {
+	cursor: pointer;
 }
 </style>
