@@ -77,7 +77,7 @@ async function update(draft: boolean) {
 		article.value.au = user.value._id; // TODO
 		article.value.dr = draft;
 
-		const {data, status, error}: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
+		const {data, status}: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
 			method: props.id ? 'PATCH' : 'POST',
 			body: article.value
 		}).catch(error => {
@@ -89,8 +89,6 @@ async function update(draft: boolean) {
 			if (!props.id) { // create
 				await navigateTo(`/admin/article/edit/${data._id}`);
 			}
-		} else if (status === 'error') {
-			notify({type: 'error', title: '保存失败', message: error.value.message});
 		}
 	}
 }

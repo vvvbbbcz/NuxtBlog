@@ -61,22 +61,21 @@ function validateConfirmPassword(rule: any, value: any, callback: any) {
 }
 
 async function save() {
-	const {status}: any = await $fetch(`/api/admin/blogInfo/create`, {
+	$fetch(`/api/admin/blogInfo/create`, {
 		method: 'POST',
 		body: {
 			...data.value,
 			pw: await sha256sum(data.value.pw),
 			confirmPassword: undefined,
 		}
+	}).then(async ({status}) => {
+		if (status === 'success') {
+			message({type: 'success', message: '保存成功'});
+			await navigateTo('/admin/login');
+		}
 	}).catch(error => {
 		notify({type: 'error', title: '保存失败', message: error});
 	});
-	if (status === 'success') {
-		message({type: 'success', message: '保存成功'});
-		await navigateTo('/admin/login');
-	} else if (status === 'error') {
-		message({type: 'error', message: '保存失败'});
-	}
 }
 
 const mounted = ref(false);

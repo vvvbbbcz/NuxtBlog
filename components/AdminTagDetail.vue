@@ -35,23 +35,22 @@ const rule = ref<FormRules<TagForm>>({
 
 async function save() {
 	if (await tagForm.value?.validate()) {
-		const {status}: any = await $fetch(`/api/admin/tag/update`, {
+		$fetch(`/api/admin/tag/update`, {
 			method: 'PATCH',
 			body: {
 				_id: props.row._id,
 				ur: newTag.value.ur,
 				ti: newTag.value.ti,
 			}
+		}).then(({status}) => {
+			if (status === 'success') {
+				notify({type: 'success', title: '保存成功'});
+				props.row.ur = newTag.value.ur;
+				props.row.ti = newTag.value.ti;
+			}
 		}).catch(error => {
 			notify({type: 'error', title: '保存失败', message: error});
 		});
-		if (status === 'success') {
-			notify({type: 'success', title: '保存成功'});
-			props.row.ur = newTag.value.ur;
-			props.row.ti = newTag.value.ti;
-		} else if (status === 'error') {
-			notify({type: 'error', title: '保存失败'});
-		}
 	}
 }
 

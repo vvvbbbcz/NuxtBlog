@@ -12,33 +12,31 @@ async function edit(_id: number) {
 
 async function remove(_id: number) {
 	const apiType = props.type === 'recycle' ? 'delete' : 'remove';
-	const {status, error}: any = await $fetch(`/api/admin/article/${apiType}`, {
+	$fetch(`/api/admin/article/${apiType}`, {
 		method: 'DELETE',
 		body: {_id: _id}
+	}).then(async ({status}) => {
+		if (status === 'success') {
+			message({type: 'success', message: '删除成功'});
+			await refresh();
+		}
 	}).catch(error => {
 		notify({type: 'error', title: '删除失败', message: error});
 	});
-	if (status === 'success') {
-		message({type: 'success', message: '删除成功'});
-		await refresh();
-	} else if (status === 'error') {
-		notify({type: 'error', title: '删除失败', message: error.value.message});
-	}
 }
 
 async function restore(_id: number) {
-	const {status, error}: any = await $fetch(`/api/admin/article/restore`, {
+	$fetch(`/api/admin/article/restore`, {
 		method: 'PATCH',
 		body: {_id: _id}
+	}).then(async ({status}) => {
+		if (status === 'success') {
+			message({type: 'success', message: '还原成功'});
+			await refresh();
+		}
 	}).catch(error => {
 		notify({type: 'error', title: '还原失败', message: error});
 	});
-	if (status === 'success') {
-		message({type: 'success', message: '还原成功'});
-		await refresh();
-	} else if (status === 'error') {
-		notify({type: 'error', title: '还原失败', message: error.value});
-	}
 }
 
 const mounted = ref<boolean>(false);
@@ -48,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<el-table v-if="mounted" :data="articles">
+	<el-table v-if="mounted" :data="articles || []">
 		<el-table-column type="expand">
 			<template #default="scope">
 				<div class="table-expand">

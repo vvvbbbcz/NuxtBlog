@@ -21,19 +21,18 @@ const rule = ref<FormRules<TagForm>>({
 
 async function createTag() {
 	if (await tagForm.value?.validate()) {
-		const {status}: any = await $fetch(`/api/admin/tag/create`, {
+		$fetch(`/api/admin/tag/create`, {
 			method: 'POST',
 			body: newTag.value
+		}).then(async ({status}) => {
+			if (status === 'success') {
+				tagForm.value?.resetFields();
+				notify({type: 'success', title: '创建成功'});
+				await refreshTags();
+			}
 		}).catch(error => {
 			notify({type: 'error', title: '创建失败', message: error});
 		});
-		if (status === 'success') {
-			tagForm.value?.resetFields();
-			notify({type: 'success', title: '创建成功'});
-			await refreshTags();
-		} else if (status === 'error') {
-			notify({type: 'error', title: '创建失败'});
-		}
 	}
 }
 

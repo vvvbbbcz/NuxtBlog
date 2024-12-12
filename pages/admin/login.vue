@@ -26,27 +26,25 @@ const rule = ref<FormRules<typeof data>>({
 async function login() {
 	await form.value?.validate(async (valid) => {
 		if (valid) {
-			const {status}: any = await $fetch('/api/auth/login', {
+			$fetch('/api/auth/login', {
 				method: 'POST',
 				body: {
 					ur: data.value.ur,
 					pw: await sha256sum(data.value.pw)
 				}
+			}).then(async ({status}) => {
+				if (status === 'success') {
+					message({type: 'success', message: '登录成功'});
+
+					await fetch();
+
+					if (loggedIn.value) {
+						await navigateTo('/admin');
+					}
+				}
 			}).catch(() => {
 				message({type: 'error', message: '登录失败'});
 			});
-			if (status === 'success') {
-				message({type: 'success', message: '登录成功'});
-			} else if (status === 'error') {
-				message({type: 'error', message: '登录失败'});
-				return;
-			}
-
-			await fetch();
-
-			if (loggedIn.value) {
-				await navigateTo('/admin');
-			}
 		}
 	});
 }

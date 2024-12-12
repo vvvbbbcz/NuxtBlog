@@ -18,17 +18,16 @@ const rule = ref<FormRules<typeof data>>({
 async function save(form: FormInstance) {
 	await form.validate(async (valid) => {
 		if (valid) {
-			const {status}: any = await $fetch(`/api/admin/blogInfo/update`, {
+			$fetch(`/api/admin/blogInfo/update`, {
 				method: 'PATCH',
 				body: data.value
+			}).then(({status}) => {
+				if (status === 'success') {
+					message({type: 'success', message: '保存成功'});
+				}
 			}).catch(error => {
 				notify({type: 'error', title: '保存失败', message: error});
 			});
-			if (status === 'success') {
-				message({type: 'success', message: '保存成功'});
-			} else if (status === 'error') {
-				message({type: 'error', message: '保存失败'});
-			}
 		}
 	});
 }
