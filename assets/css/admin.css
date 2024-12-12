@@ -1,0 +1,23 @@
+.w-100p {
+    width: 100%;
+}
+
+.m-t-1 {
+    margin-top: 1rem;
+}
+
+.m-l-a {
+    margin-left: auto;
+}
+
+.p-0 {
+    padding: 0;
+}
+
+.el-main.p-0 {
+    padding: 0;
+}
+
+.p-1 {
+    padding: 1rem;
+}

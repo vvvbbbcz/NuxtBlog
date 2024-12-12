@@ -21,14 +21,4 @@ const bg = data.value ? data.value.background.ur : '';
 	background-size: cover;
 	z-index: -100;
 }
-
-img {
-	display: inline-block;
-	position: relative;
-	width: 100%;
-	height: 100%;
-	vertical-align: middle;
-	z-index: -99;
-	object-fit: cover;
-}
 </style>

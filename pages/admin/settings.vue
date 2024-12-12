@@ -49,7 +49,7 @@ onMounted(() => {
 				<el-input v-if="mounted" v-model="data.separator"/>
 			</el-form-item>
 		</el-form>
-		<div style="margin-left: auto">
+		<div class="m-l-a">
 			<el-button type="primary" @click="save(form)">
 				保存
 			</el-button>
@@ -61,15 +61,4 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.pw-input {
-	margin-bottom: 0;
-}
-
-.pw-text {
-	margin-bottom: 18px;
-}
-
-.el-text {
-	margin-left: 1rem;
-}
 </style>

@@ -59,7 +59,7 @@ onMounted(() => {
 			重置
 		</el-button>
 
-		<el-table v-if="mounted" :data="tags || []" style="margin-top: 1rem">
+		<el-table v-if="mounted" :data="tags || []" class="m-t-1">
 			<el-table-column type="expand">
 				<template #default="props">
 					<div class="table-expand">
@@ -86,9 +86,5 @@ h1 {
 
 .table-expand {
 	margin-left: 2rem;
-}
-
-.el-text {
-	margin-left: 1rem;
 }
 </style>

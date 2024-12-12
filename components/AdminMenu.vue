@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-	<el-card :body-style="{padding: 0}">
+	<el-card :body-class="'p-0'">
 		<el-menu class="b-no" router unique-opened>
 			<el-menu-item index="/admin/settings">
 				<template #title>

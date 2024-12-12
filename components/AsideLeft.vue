@@ -3,14 +3,11 @@
 
 <template>
 	<el-card>
-		<h1>
+		<h1 class="m-0">
 			<SiteBrand/>
 		</h1>
 	</el-card>
 </template>
 
 <style scoped>
-h1 {
-	margin: 0;
-}
 </style>

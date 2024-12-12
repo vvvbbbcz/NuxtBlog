@@ -3,7 +3,7 @@
 
 <template>
 	<el-container direction="vertical" class="mh-100vh">
-		<el-header class="m-1 b-r-1 b-1px">
+		<el-header class="m-1 b-r-1 b-1px b-s-cb p-0">
 			<MainMenu/>
 		</el-header>
 		<el-container>
@@ -25,11 +25,6 @@
 </template>
 
 <style scoped>
-.el-header {
-	padding: 0;
-	box-sizing: content-box;
-}
-
 .el-aside {
 	text-align: center;
 	min-width: 12rem;

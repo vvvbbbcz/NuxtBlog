@@ -7,7 +7,7 @@ const toggleDark = inject('toggleDark') as (value?: (boolean | undefined)) => bo
 </script>
 
 <template>
-	<div class="menu">
+	<div class="d-fl a-i-c j-c-s">
 		<el-menu mode="horizontal" class="b-no" router>
 			<el-menu-item class="brand" index="/">
 				<SiteBrand/>
@@ -29,12 +29,6 @@ const toggleDark = inject('toggleDark') as (value?: (boolean | undefined)) => bo
 <style scoped>
 a {
 	text-decoration: none;
-}
-
-.menu {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 }
 
 .el-menu {

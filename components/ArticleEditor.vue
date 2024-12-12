@@ -133,9 +133,5 @@ onMounted(async () => {
 	</el-container>
 </template>
 
-<script>
-
-</script>
-
 <style scoped>
 </style>

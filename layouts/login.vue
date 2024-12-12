@@ -6,12 +6,16 @@ useHead({
 
 <template>
 	<el-container class="mh-100vh">
-		<el-card body-style="box-sizing: border-box; height: 100%;">
+		<el-card body-class="b-s-bb h-100p">
 			<slot/>
 		</el-card>
 	</el-container>
 	<Background/>
 </template>
+
+<style>
+@import "assets/css/login.css";
+</style>
 
 <style scoped>
 .el-card {

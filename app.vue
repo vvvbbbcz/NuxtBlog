@@ -26,7 +26,7 @@ useHead({
 </template>
 
 <style>
-@import url('./assets/css/style.css');
+@import "assets/css/style.css";
 
 body {
 	margin: 0;

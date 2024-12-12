@@ -128,7 +128,4 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.el-menu {
-	margin-bottom: 1rem;
-}
 </style>

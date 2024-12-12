@@ -18,7 +18,7 @@ async function logout() {
 </script>
 
 <template>
-	<div class="menu">
+	<div class="d-fl a-i-c j-c-s">
 		<el-menu mode="horizontal" class="b-no" router>
 			<el-menu-item class="first" index="/">
 				返回主页
@@ -30,12 +30,6 @@ async function logout() {
 </template>
 
 <style scoped>
-.menu {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
 .el-menu {
 	width: calc(100% - 8rem);
 	background-color: unset;

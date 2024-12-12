@@ -12,14 +12,14 @@ if (!loggedIn.value) {
 
 <template>
 	<el-container direction="vertical" class="mh-100vh">
-		<el-header class="m-1 b-r-1 b-1px">
+		<el-header class="m-1 b-r-1 b-1px b-s-cb p-0">
 			<AdminHeader/>
 		</el-header>
 		<el-container>
 			<el-aside class="m-1">
 				<AdminMenu/>
 			</el-aside>
-			<el-main class="m-1">
+			<el-main class="m-1 p-0">
 				<slot/>
 			</el-main>
 		</el-container>
@@ -30,20 +30,16 @@ if (!loggedIn.value) {
 	<Background/>
 </template>
 
-<style scoped>
-.el-header {
-	padding: 0;
-	box-sizing: content-box;
-}
+<style>
+@import "assets/css/login.css";
+@import "assets/css/admin.css";
+</style>
 
+<style scoped>
 .el-aside {
 	width: 20%;
 	max-width: 12rem;
 	min-width: 9rem;
-}
-
-.el-main {
-	padding: 0;
 }
 
 .el-footer {

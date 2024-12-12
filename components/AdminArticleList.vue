@@ -69,7 +69,7 @@ onMounted(() => {
 					</div>
 
 					<div v-else>
-						<div class="detail">
+						<div class="m-b-1">
 							<ArticleInfoForm :info="scope.row"/>
 						</div>
 						<el-button type="danger" @click="remove(scope.row._id)">
@@ -81,7 +81,7 @@ onMounted(() => {
 		</el-table-column>
 		<el-table-column prop="ti" label="标题" min-width="150">
 			<template #default="scope">
-				<h1>{{ scope.row.ti }}</h1>
+				<h1 class="m-0">{{ scope.row.ti }}</h1>
 			</template>
 		</el-table-column>
 		<el-table-column prop="au" label="作者" min-width="100">
@@ -114,19 +114,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-h1 {
-	margin: 0;
-}
 
 .table-expand {
 	margin-left: 2rem;
-}
-
-.detail {
-	margin-bottom: 1rem;
-}
-
-.el-text {
-	margin-left: 1rem;
 }
 </style>

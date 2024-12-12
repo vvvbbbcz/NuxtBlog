@@ -9,27 +9,23 @@ function toArticle(year: string, name: string) {
 </script>
 
 <template>
-	<div v-if="status === 'pending'">
-		<el-card>
-			<el-skeleton animated/>
-		</el-card>
-	</div>
-	<el-card v-else class="list-item" v-for="article in articles">
+	<el-card v-if="status === 'pending'" class="m-b-1">
+		<el-skeleton animated/>
+	</el-card>
+	<el-card v-else-if="status === 'error'" class="m-b-1">
+		<h1>加载失败</h1>
+	</el-card>
+	<el-card v-else class="m-b-1" v-for="article in (articles || [])">
 		<el-link @click="toArticle(`${article.yr}`, `${article.ur}`)">
-			<h1 class="title">{{ article.ti }}</h1>
+			<h1 class="title m-0">{{ article.ti }}</h1>
 		</el-link>
 		<div v-highlight v-html="article.ab"/>
 	</el-card>
 </template>
 
 <style scoped>
-.el-card {
-	margin-bottom: 1rem;
-}
-
 .title {
 	text-align: center;
 	font-size: 2rem;
-	margin: 0;
 }
 </style>

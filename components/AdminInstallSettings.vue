@@ -111,7 +111,7 @@ onMounted(() => {
 			<el-input v-if="mounted" v-model="data.confirmPassword" type="password" show-password/>
 		</el-form-item>
 	</el-form>
-	<div style="margin-left: auto">
+	<div class="m-l-a">
 		<el-button type="primary" @click="save">
 			保存
 		</el-button>

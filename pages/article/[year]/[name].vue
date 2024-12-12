@@ -33,12 +33,12 @@ onMounted(() => {
 <template>
 	<el-card v-highlight>
 		<div v-if="error?.statusCode === 404">
-			<h1 class="main-title">404 Not Found</h1>
+			<h1 class="main-title m-0">404 Not Found</h1>
 			<hr/>
 			<p>文章不存在</p>
 		</div>
 		<div v-else>
-			<h1 class="main-title">{{ article?.ti }}</h1>
+			<h1 class="main-title m-0">{{ article?.ti }}</h1>
 			<el-container class="gap-2">
 				<a v-for="tag in article?.tg" :href="`/tag?name=${tag.urlName}`">
 					<el-tag type="primary">
@@ -63,7 +63,6 @@ onMounted(() => {
 h1.main-title {
 	text-align: center;
 	font-size: 2rem;
-	margin: 0;
 }
 
 .el-container {

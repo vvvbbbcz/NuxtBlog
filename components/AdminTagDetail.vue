@@ -73,13 +73,13 @@ async function remove() {
 </script>
 
 <template>
-	<div v-if="!editing" class="detail">
+	<div v-if="!editing" class="m-b-1">
 		<span>文章: </span>
 		<el-button @click="fetch()">
 			获取 / 刷新
 		</el-button>
 
-		<el-table v-if="(status === 'success')" :data="articles || []" style="width: 100%">
+		<el-table v-if="(status === 'success')" :data="articles || []" class="w-100p">
 			<el-table-column prop="ti" label="标题" min-width="100">
 				<template #default="props">
 					<h1>{{ props.row.ti }}</h1>
@@ -142,13 +142,5 @@ async function remove() {
 h1 {
 	margin: 0 0.5rem;
 	display: inline-block;
-}
-
-.detail {
-	margin-bottom: 1rem;
-}
-
-.el-text {
-	margin-left: 1rem;
 }
 </style>

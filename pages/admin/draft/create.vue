@@ -6,7 +6,7 @@ definePageMeta({
 </script>
 
 <template>
-	<el-card class="h-100p border-box" :body-class="'h-100p border-box'">
+	<el-card class="h-100p b-s-bb" :body-class="'h-100p b-s-bb'">
 		<ArticleEditor/>
 	</el-card>
 </template>

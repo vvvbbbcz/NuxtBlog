@@ -57,7 +57,7 @@ onMounted(() => {
 
 <template>
 	<el-container direction="vertical">
-		<h1>
+		<h1 class="m-0">
 			<SiteBrand/>
 		</h1>
 		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
@@ -76,7 +76,6 @@ onMounted(() => {
 
 <style scoped>
 h1 {
-	margin: 0;
 	text-align: center;
 }
 
