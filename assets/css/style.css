@@ -1,3 +1,11 @@
+p {
+    line-height: 1.8rem;
+}
+
+img {
+    max-width: 100%;
+}
+
 .el-card {
     --el-card-border-radius: 1rem !important;
     box-shadow: none !important;
