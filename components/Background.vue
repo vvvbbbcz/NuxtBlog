@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const {data} = useNuxtData('blogInfo');
-const bg = data.value ? data.value.background.ur : '';
+const { data } = useNuxtData('blogInfo');
+const bg = data.value?.background?.ur;
 </script>
 
 <template>
-	<div v-if="bg" id="bg" :style="{backgroundImage: `url(${bg})`}"/>
+	<div v-if="bg" id="bg" :style="{ backgroundImage: `url(${bg})` }" />
 </template>
 
 <style scoped>
