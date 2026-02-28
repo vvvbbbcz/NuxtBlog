@@ -10,26 +10,27 @@
     "postinstall": "nuxt prepare"
   },
   "engines": {
-    "node": "^20.6.0"
+    "node": "^24.13.0"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
-    "@types/html-truncate": "^1.2.4",
-    "@vueuse/core": "^12.2.0",
-    "check-password-strength": "^2.0.10",
-    "element-plus": "^2.9.1",
+    "@element-plus/icons-vue": "^2.3.2",
+    "@vueuse/core": "^14.2.1",
+    "check-password-strength": "^3.0.0",
+    "element-plus": "^2.13.2",
     "highlight.js": "^11.11.1",
     "html-truncate": "^1.2.2",
     "moment": "^2.30.1",
-    "mongoose": "^8.9.3",
-    "nuxt": "^3.15.0",
-    "nuxt-auth-utils": "^0.5.7",
-    "vditor": "^3.10.8",
+    "mongoose": "^9.2.2",
+    "nuxt": "^4.3.1",
+    "nuxt-auth-utils": "^0.5.29",
+    "vditor": "^3.11.2",
     "vue": "latest",
     "vue-router": "latest"
   },
   "packageManager": "pnpm@9.12.3",
   "devDependencies": {
-    "@element-plus/nuxt": "^1.1.1"
+    "@element-plus/nuxt": "^1.1.1",
+    "@types/node": "^25.3.1",
+    "@types/html-truncate": "^1.2.4"
   }
 }
