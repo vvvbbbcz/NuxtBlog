@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import {ElMessage as message, ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
 
 definePageMeta({
 	layout: 'admin',
 	middleware: ['auth'],
 });
 
-const {data: fetchedData}: any = await useFetch(`/api/admin/blogInfo/get`);
+const { data: fetchedData }: any = await useFetch(`/api/admin/blogInfo/get`);
 
 const data = ref(fetchedData.value);
 const form = ref<FormInstance>();
 const rule = ref<FormRules<typeof data>>({
-	name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-	separator: [{required: true, message: '请输入分隔符', trigger: 'blur'}],
+	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+	separator: [{ required: true, message: '请输入分隔符', trigger: 'blur' }],
 })
 
 async function save(form: FormInstance) {
@@ -21,12 +21,12 @@ async function save(form: FormInstance) {
 			$fetch(`/api/admin/blogInfo/update`, {
 				method: 'PATCH',
 				body: data.value
-			}).then(({status}) => {
+			}).then(({ status }) => {
 				if (status === 'success') {
-					message({type: 'success', message: '保存成功'});
+					ElMessage({ type: 'success', message: '保存成功' });
 				}
 			}).catch(error => {
-				notify({type: 'error', title: '保存失败', message: error});
+				ElNotification({ type: 'error', title: '保存失败', message: error });
 			});
 		}
 	});
@@ -43,10 +43,10 @@ onMounted(() => {
 		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<h2>网站信息</h2>
 			<el-form-item prop="name" label="博客名称">
-				<el-input v-if="mounted" v-model="data.name"/>
+				<el-input v-if="mounted" v-model="data.name" />
 			</el-form-item>
 			<el-form-item prop="separator" label="分隔符">
-				<el-input v-if="mounted" v-model="data.separator"/>
+				<el-input v-if="mounted" v-model="data.separator" />
 			</el-form-item>
 		</el-form>
 		<div class="m-l-a">
@@ -60,5 +60,4 @@ onMounted(() => {
 	</el-card>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

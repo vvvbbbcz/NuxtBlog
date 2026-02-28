@@ -2,9 +2,8 @@
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 import moment from "moment";
-import {ElMessage as message, ElNotification as notify} from "element-plus";
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
-import {aesEncrypt, generateIV} from "~/utils/aesCrypto";
+import { aesEncrypt, generateIV } from "~/utils/aesCrypto";
 
 const props = defineProps({
 	id: Number,
@@ -43,12 +42,12 @@ const article = ref<Article>({
 });
 
 if (props.id !== undefined) {
-	const {data: articleData, status, error}: any =
-		await useFetch('/api/admin/article/get', {query: {id: props.id}});
+	const { data: articleData, status, error }: any =
+		await useFetch('/api/admin/article/get', { query: { id: props.id } });
 	if (status.value === 'success') {
 		Object.assign(article.value, articleData.value);
 	} else if (status.value === 'error') {
-		notify({type: 'error', title: '获取文章失败', message: error.value.message});
+		ElNotification({ type: 'error', title: '获取文章失败', message: error.value.message });
 	}
 }
 
@@ -57,7 +56,7 @@ const form = ref<InstanceType<typeof ArticleInfoForm>>();
 
 async function update(draft: boolean) {
 	if (await form.value?.validate()) {
-		const {user}: any = useUserSession();
+		const { user }: any = useUserSession();
 
 		article.value.publish = false;
 		if (!draft) {
@@ -77,14 +76,14 @@ async function update(draft: boolean) {
 		article.value.au = user.value._id; // TODO
 		article.value.dr = draft;
 
-		const {data, status}: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
+		const { data, status }: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
 			method: props.id ? 'PATCH' : 'POST',
 			body: article.value
 		}).catch(error => {
-			notify({type: 'error', title: '保存失败', message: error});
+			ElNotification({ type: 'error', title: '保存失败', message: error });
 		});
 		if (status === 'success') {
-			message({type: 'success', message: '保存成功'});
+			ElMessage({ type: 'success', message: '保存成功' });
 			unsaved.value = false;
 			if (!props.id) { // create
 				await navigateTo(`/admin/article/edit/${data._id}`);
@@ -114,7 +113,7 @@ onMounted(async () => {
 
 <template>
 	<el-container class="h-100p" direction="vertical">
-		<ArticleInfoForm ref="form" :info="article" @change="unsaved = true"/>
+		<ArticleInfoForm ref="form" :info="article" @change="unsaved = true" />
 		<div class="m-b-1 d-fl a-i-c">
 			<el-button-group class="m-r-1">
 				<el-button v-if="article.dr" type="primary" @click="update(true)">
@@ -133,5 +132,4 @@ onMounted(async () => {
 	</el-container>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

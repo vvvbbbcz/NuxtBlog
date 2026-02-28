@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {ElNotification as notify, type FormInstance, type FormRules} from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
 
 const props = defineProps(['refresh', 'row', 'column', '$index']);
 
 const editing = ref<boolean>(false);
 
-const {data: articles, execute, status} =
-	await useLazyFetch(`/api/admin/tag/fetchArticle`, {query: {id: props.row._id}, immediate: false});
+const { data: articles, execute, status } =
+	await useLazyFetch(`/api/admin/tag/fetchArticle`, { query: { id: props.row._id }, immediate: false });
 
 function fetch() {
 	if (status.value === 'success') {
@@ -29,8 +29,8 @@ const newTag = ref<TagForm>({
 });
 const tagForm = ref<FormInstance>();
 const rule = ref<FormRules<TagForm>>({
-	ur: [{required: true, message: '请输入 URL 名称', trigger: 'blur'}],
-	ti: [{required: true, message: '请输入名称', trigger: 'blur'}],
+	ur: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
+	ti: [{ required: true, message: '请输入名称', trigger: 'blur' }],
 });
 
 async function save() {
@@ -42,32 +42,32 @@ async function save() {
 				ur: newTag.value.ur,
 				ti: newTag.value.ti,
 			}
-		}).then(({status}) => {
+		}).then(({ status }) => {
 			if (status === 'success') {
-				notify({type: 'success', title: '保存成功'});
+				ElNotification({ type: 'success', title: '保存成功' });
 				props.row.ur = newTag.value.ur;
 				props.row.ti = newTag.value.ti;
 			}
 		}).catch(error => {
-			notify({type: 'error', title: '保存失败', message: error});
+			ElNotification({ type: 'error', title: '保存失败', message: error });
 		});
 	}
 }
 
 async function remove() {
-	const {status}: any = await $fetch(`/api/admin/tag/remove`, {
+	const { status }: any = await $fetch(`/api/admin/tag/remove`, {
 		method: 'DELETE',
 		body: {
 			_id: props.row._id
 		}
 	}).catch(error => {
-		notify({type: 'error', title: '删除失败', message: error});
+		ElNotification({ type: 'error', title: '删除失败', message: error });
 	});
 	if (status === 'success') {
-		notify({type: 'success', title: '删除成功'});
+		ElNotification({ type: 'success', title: '删除成功' });
 		await props.refresh();
 	} else if (status === 'error') {
-		notify({type: 'error', title: '删除失败'});
+		ElNotification({ type: 'error', title: '删除失败' });
 	}
 }
 </script>
@@ -101,10 +101,10 @@ async function remove() {
 	<div v-else>
 		<el-form ref="tagForm" :model="newTag" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<el-form-item label="名称" prop="ti">
-				<el-input v-model="newTag.ti"/>
+				<el-input v-model="newTag.ti" />
 			</el-form-item>
 			<el-form-item label="URL" prop="ur">
-				<el-input v-model="newTag.ur"/>
+				<el-input v-model="newTag.ur" />
 			</el-form-item>
 		</el-form>
 	</div>

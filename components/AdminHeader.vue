@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import {ElMessage as message} from "element-plus";
-import {Moon, Sunny} from "@element-plus/icons-vue";
-import type {WritableComputedRef} from "vue";
+import { Moon, Sunny } from "@element-plus/icons-vue";
+import type { WritableComputedRef } from "vue";
 
-const {loggedIn, clear} = useUserSession();
+const { loggedIn, clear } = useUserSession();
 
 const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
 const toggleDark = inject('toggleDark') as (value?: (boolean | undefined)) => boolean;
 
 async function logout() {
 	await clear();
-	message({type: 'success', message: '退出成功'});
+	ElMessage({ type: 'success', message: '退出成功' });
 	if (!loggedIn.value) {
 		await navigateTo('/admin/login');
 	}
@@ -25,7 +24,7 @@ async function logout() {
 			</el-menu-item>
 		</el-menu>
 		<el-button type="primary" @click="logout">退出</el-button>
-		<el-button class="m-l-1 m-r-1" :icon="isDark ? Sunny : Moon" circle @click="toggleDark()"/>
+		<el-button class="m-l-1 m-r-1" :icon="isDark ? Sunny : Moon" circle @click="toggleDark()" />
 	</div>
 </template>
 
