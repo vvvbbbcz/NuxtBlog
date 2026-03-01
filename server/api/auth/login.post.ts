@@ -1,10 +1,11 @@
 import User from "~/server/utils/models/BlogData";
 import apiStatus from "~/server/utils/apiStatus";
+import { fromDB } from "~/utils/dbTypes/user";
 
 function filter(body: any) {
 	return {
-		ur: body.ur,
-		pw: body.pw,
+		username: String(body.username),
+		password: String(body.password),
 	};
 }
 
@@ -12,8 +13,8 @@ export default defineEventHandler(async (event) => {
 	const body = filter(await readBody(event));
 
 	if (process.env.INSTALL) {
-		const isValid = (body.ur === 'installer') &&
-			(await verifyPassword(await hashPassword('installer'), body.pw));
+		const isValid = (body.username === 'installer') &&
+			(await verifyPassword(await hashPassword('installer'), body.password));
 
 		if (!isValid) {
 			throw createError({ statusCode: 422 });
@@ -27,23 +28,19 @@ export default defineEventHandler(async (event) => {
 			loggedInAt: new Date()
 		});
 	} else {
-		const user = await User
-			.findOne(filters.user({ ur: body.ur }))
-			.select(['pw'])
-			.lean();
+		const user = fromDB(await User
+			.findOne(filters.user({ ur: body.username }))
+			.select('pw')
+			.lean());
 
-		if (!user || !user.pw) {
-			throw createError({ statusCode: 422 });
-		}
-
-		if (!await verifyPassword(user.pw, body.pw)) {
+		if (!user?.id || !user.password || !await verifyPassword(user.password, body.password)) {
 			throw createError({ statusCode: 422 });
 		}
 
 		await setUserSession(event, {
 			user: {
-				_id: user._id,
-				ur: body.ur,
+				_id: user.id,
+				ur: body.username,
 			},
 			loggedInAt: new Date()
 		});

@@ -12,14 +12,19 @@ if (loggedIn.value) {
 	await navigateTo('/admin');
 }
 
-const data = ref<{ ur: string, pw: string }>({
-	ur: '',
-	pw: ''
+interface Data {
+	username: string;
+	password: string;
+}
+
+const data = ref<Data>({
+	username: '',
+	password: ''
 });
 const form = ref<FormInstance>();
-const rule = ref<FormRules<typeof data>>({
-	ur: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-	pw: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+const rule = ref<FormRules<Data>>({
+	username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+	password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 });
 
 async function login() {
@@ -27,10 +32,7 @@ async function login() {
 		if (valid) {
 			$fetch('/api/auth/login', {
 				method: 'POST',
-				body: {
-					ur: data.value.ur,
-					pw: data.value.pw,
-				}
+				body: data.value
 			}).then(async ({ status }) => {
 				if (status === 'success') {
 					ElMessage({ type: 'success', message: '登录成功' });
@@ -61,10 +63,10 @@ onMounted(() => {
 		</h1>
 		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<el-form-item prop="ur" label="用户名">
-				<el-input v-if="mounted" v-model="data.ur"></el-input>
+				<el-input v-if="mounted" v-model="data.username"></el-input>
 			</el-form-item>
 			<el-form-item prop="pw" label="密码">
-				<el-input v-if="mounted" v-model="data.pw" type="password" show-password></el-input>
+				<el-input v-if="mounted" v-model="data.password" type="password" show-password></el-input>
 			</el-form-item>
 		</el-form>
 		<el-button type="primary" @click="login">
