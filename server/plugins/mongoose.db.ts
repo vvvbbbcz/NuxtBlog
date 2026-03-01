@@ -1,4 +1,4 @@
-import consola from "consola";
+import { consola } from "consola";
 import mongoose from "mongoose";
 import BlogData from "~/server/utils/models/BlogData";
 
@@ -27,7 +27,8 @@ export default defineNitroPlugin(async (nitroApp) => {
 	consola.info(`Loaded ${models.length} Mongoose model(s)`);
 
 	try {
-		await mongoose.connect(process.env.MONGODB_URI, {dbName: process.env.MONGODB_DB_NAME});
+		mongoose.set('strictQuery', true);
+		await mongoose.connect(process.env.MONGODB_URI, { dbName: process.env.MONGODB_DB_NAME });
 	} catch (error) {
 		consola.error(`Error connecting to MongoDB: ${error}`);
 	}
