@@ -1,13 +1,15 @@
-import BlogData from "~/server/utils/models/BlogData";
+import BlogInfo from "~/server/utils/models/BlogData";
+import filters from "~/server/utils/filters";
+import { fromDB } from "~/utils/dbTypes/blogInfo";
 
 export default defineEventHandler(async (event) => {
-	const data = await BlogData
-		.findOne({_id: 0})
-		.select(['-_id', 'blogInfo'])
+	const data = await BlogInfo
+		.findOne(filters.blog_info)
+		.select(['-_id', 'ti', 'md', 'au', 'co'])
 		.lean();
-	if (data?.blogInfo) {
-		return data.blogInfo;
+	if (data) {
+		return fromDB(data);
 	} else {
-		throw createError({statusCode: 404, statusMessage: 'Not Found'});
+		throw createError({ statusCode: 404, statusMessage: 'Not Found' });
 	}
 });

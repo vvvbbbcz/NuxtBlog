@@ -1,16 +1,19 @@
 import BlogInfo from "~/server/utils/models/BlogData";
+import filters from "~/server/utils/filters";
 import mongoose from "mongoose";
+import { fromDB } from "~/utils/dbTypes/blogInfo";
 
 export default defineEventHandler(async (event) => {
 	if (mongoose.connection.readyState) {
 		const data = await BlogInfo
-			.findOne({_id: 0})
-			.select(['-_id', 'blogInfo'])
-			.populate('blogInfo.background', ['-_id', 'ur'])
+			.findOne(filters.blog_info)
+			.select(['-_id', 'ti', 'md', 'au'])
+			.populate('co', ['-_id', 'ur'])
 			.lean();
-		if (data?.blogInfo) {
-			return data.blogInfo;
+
+		if (data) {
+			return fromDB(data);
 		}
 	}
-	throw createError({statusCode: 500});
+	throw createError({ statusCode: 500 });
 })

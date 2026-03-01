@@ -1,16 +1,12 @@
 import BlogData from "~/server/utils/models/BlogData";
 import apiStatus from "~/server/utils/apiStatus";
+import { toDB } from "~/utils/dbTypes/blogInfo";
 
 async function filter(body: any) {
 	return {
 		blogInfo: {
 			_id: 0,
-			blogInfo: {
-				name: body.name,
-				icon: body.icon,
-				separator: body.separator,
-				background: body.background,
-			},
+			...toDB(body),
 		},
 		admin: {
 			_id: -1,
@@ -27,16 +23,16 @@ async function filter(body: any) {
 
 export default defineEventHandler(async (event) => {
 	if (!process.env.INSTALL) {
-		throw createError({statusCode: 405, statusMessage: 'Not in install mode'});
+		throw createError({ statusCode: 405, statusMessage: 'Not in install mode' });
 	}
 
 	// check if installed
-	if (await BlogData.exists({_id: 0}).exec()) {
-		throw createError({statusCode: 405, statusMessage: 'Installed'});
+	if (await BlogData.exists({ _id: 0 }).exec()) {
+		throw createError({ statusCode: 405, statusMessage: 'Installed' });
 	}
 
 	const body = await filter(await readBody(event));
 	await Promise.all([BlogData.create(body.blogInfo), BlogData.create(body.admin)]);
 
-	return apiStatus.success(event, {code: 201});
+	return apiStatus.success(event, { code: 201 });
 })
