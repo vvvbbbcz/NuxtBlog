@@ -4,7 +4,7 @@ import { fromDB } from "~/utils/dbTypes/blogInfo";
 
 export default defineEventHandler(async (event) => {
 	const data = await BlogInfo
-		.findOne(filters.blog_info)
+		.findOne(filters.blog_info())
 		.select(['-_id', 'ti', 'md', 'au', 'co'])
 		.lean();
 	if (data) {

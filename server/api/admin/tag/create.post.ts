@@ -13,23 +13,23 @@ function filter(id: number, body: any) {
 
 export default defineEventHandler(async (event) => {
 	const data = await Tag
-		.findOne(filters.tag)
-		.sort({_id: 1})
+		.findOne(filters.tag())
+		.sort({ _id: 1 })
 		.select('_id')
 		.lean();
 
-	if (data?._id && (data._id <= -100000)) {
-		throw createError({statusCode: 405, statusMessage: 'Tags are full'});
+	if (data?._id && (data._id <= -8192)) {
+		throw createError({ statusCode: 405, statusMessage: 'Tags are full' });
 	}
 
-	const id = data?._id ? (data._id - 1) : -1001;
+	const id = data?._id ? (data._id - 1) : -256 - 1;
 	const body = filter(id, await readBody(event));
 
 	try {
 		await Tag.create(body);
 	} catch (error: any) {
-		throw createError({statusCode: 500, statusMessage: error});
+		throw createError({ statusCode: 500, statusMessage: error });
 	}
 
-	return apiStatus.success(event, {code: 201, data: {id: id}});
+	return apiStatus.success(event, { code: 201, data: { id: id } });
 })

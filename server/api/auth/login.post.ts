@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 		});
 	} else {
 		const user = await User
-			.findOne({ _id: { $gt: -1001, $lt: 0 }, ur: body.ur })
+			.findOne(filters.user({ ur: body.ur }))
 			.select(['pw'])
 			.lean();
 

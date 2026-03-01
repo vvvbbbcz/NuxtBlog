@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
 	const query = getQuery(event).id;
 	const id = parseInt(Array.isArray(query) ? query[0] : query);
 	if (!isNaN(id) && id >= -8192 && id < -256) {
-		return Article.find({ _id: { $gt: 0 }, tg: id })
+		return Article.find(filters.article.all({ tg: id }))
 			.select(['ur', 'ti', 'vi'])
 			.populate('au', ['co', 'ti'])
 			.lean();
