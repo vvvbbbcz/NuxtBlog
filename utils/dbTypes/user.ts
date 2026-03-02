@@ -47,3 +47,4 @@ function toDB(data: User): UserDB {
 }
 
 export { fromDB, toDB }
+export type { User }
