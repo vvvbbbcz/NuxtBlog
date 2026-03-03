@@ -1,11 +1,15 @@
 import Article from "~/server/utils/models/BlogData";
+import { fromDB } from "~/utils/dbTypes/article";
 
 export default defineEventHandler(async () => {
-	return Article.find({_id: {$gt: 0}, vi: 0, dr: false, de: false})
+	return (await Article
+		.find(filters.article.published({ vi: 0 }))
 		.limit(10)
-		.sort({_id: -1})
+		.sort({ _id: -1 })
 		.select(['-_id', 'ur', 'ti', 'ab', 'co', 'yr', 'da'])
 		.populate('tg', ['-_id', 'ur', 'ti'])
 		.populate('au', ['-_id', 'ur', 'ti', 'co'])
-		.lean();
+		.lean())
+		.map(fromDB)
+		.filter((i) => i !== null);
 });

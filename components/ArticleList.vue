@@ -15,11 +15,11 @@ function toArticle(year: string, name: string) {
 	<el-card v-else-if="status === 'error'" class="m-b-1">
 		<h1>加载失败</h1>
 	</el-card>
-	<el-card v-else class="m-b-1" v-for="article in (articles || [])">
-		<el-link @click="toArticle(`${article.yr}`, `${article.ur}`)">
-			<h1 class="title m-0">{{ article.ti }}</h1>
+	<el-card v-else class="m-b-1" v-for="article in articles">
+		<el-link @click="toArticle(`${article.year}`, `${article.url}`)">
+			<h1 class="title m-0">{{ article.title }}</h1>
 		</el-link>
-		<div v-highlight v-html="article.ab"/>
+		<div v-highlight v-html="article.abstract"/>
 	</el-card>
 </template>
 
