@@ -7,7 +7,7 @@ definePageMeta({
 
 <template>
 	<el-card>
-		<AdminArticleList type="draft"/>
+		<AdminArticleList type="drafted"/>
 	</el-card>
 </template>
 

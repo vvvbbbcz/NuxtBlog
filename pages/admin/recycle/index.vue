@@ -7,7 +7,7 @@ definePageMeta({
 
 <template>
 	<el-card>
-		<AdminArticleList type="recycle"/>
+		<AdminArticleList type="deleted"/>
 	</el-card>
 </template>
 
