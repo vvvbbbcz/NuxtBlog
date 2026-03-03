@@ -4,50 +4,37 @@ import "vditor/dist/index.css";
 import moment from "moment";
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 import { aesEncrypt, generateIV } from "~/utils/aesCrypto";
+import type { Article } from "~/utils/dbTypes/article";
 
 const props = defineProps({
 	id: Number,
 });
 
-interface Article {
-	_id: number | undefined,
-	ur: string,
-	ti: string,
-	md: string,
-	ht: string,
-	tg: number[],
-	da: string,
-	au: number,
-	pw: string,
-	iv: number[]
-	vi: number,
-	dr: boolean,
-	publish: boolean
-}
-
-const article = ref<Article>({
-	_id: props.id,
-	ur: '',
-	ti: '',
-	md: '',
-	ht: '',
-	tg: [],
-	da: '',
-	au: 0,
-	pw: '',
+const article = ref<Article & { publish: boolean }>({
+	id: props.id,
+	url: '',
+	title: '',
+	markdown: '',
+	html: '',
+	tag: [],
+	date: '',
+	author: 0,
+	password: '',
 	iv: [],
-	vi: 0,
-	dr: true,
-	publish: false,
+	visible: 0,
+	drafted: true,
+	deleted: false,
+	publish: false
 });
 
 if (props.id !== undefined) {
-	const { data: articleData, status, error }: any =
+	const { data: articleData, status, error } =
 		await useFetch('/api/admin/article/get', { query: { id: props.id } });
-	if (status.value === 'success') {
+
+	if (articleData.value) {
 		Object.assign(article.value, articleData.value);
 	} else if (status.value === 'error') {
-		ElNotification({ type: 'error', title: '获取文章失败', message: error.value.message });
+		ElNotification({ type: 'error', title: '获取文章失败', message: error.value?.message });
 	}
 }
 
@@ -60,21 +47,23 @@ async function update(draft: boolean) {
 
 		article.value.publish = false;
 		if (!draft) {
-			if (article.value.vi === 2) {
+			if (article.value.visible === 2) {
 				const iv = generateIV();
 				article.value.iv = Array.from(iv);
-				article.value.ht = await aesEncrypt(article.value.pw, iv, vditor.getHTML());
+				article.value.html = await aesEncrypt(article.value.password || "", iv, vditor.getHTML());
 			} else {
-				article.value.ht = vditor.getHTML();
+				article.value.html = vditor.getHTML();
 			}
-			if (article.value.dr) {
+
+			if (article.value.drafted) {
 				article.value.publish = true;
 			}
 		}
-		article.value.md = vditor.getValue();
-		article.value.da = moment().format("YYYY-MM-DD HH:mm:ss");
-		article.value.au = user.value._id; // TODO
-		article.value.dr = draft;
+
+		article.value.markdown = vditor.getValue();
+		article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
+		article.value.author = user.value._id; // TODO
+		article.value.drafted = draft;
 
 		const { data, status }: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
 			method: props.id ? 'PATCH' : 'POST',
@@ -96,7 +85,7 @@ let vditor: Vditor;
 onMounted(async () => {
 	vditor = new Vditor('vditor', {
 		height: '100%',
-		value: article.value.md,
+		value: article.value.markdown || "",
 		toolbarConfig: {
 			pin: true,
 		},
@@ -116,7 +105,7 @@ onMounted(async () => {
 		<ArticleInfoForm ref="form" :info="article" @change="unsaved = true" />
 		<div class="m-b-1 d-fl a-i-c">
 			<el-button-group class="m-r-1">
-				<el-button v-if="article.dr" type="primary" @click="update(true)">
+				<el-button v-if="article.drafted" type="primary" @click="update(true)">
 					保存草稿
 				</el-button>
 				<el-button v-else type="primary" @click="update(true)">

@@ -102,3 +102,5 @@ export {
     fromDB,
     toDB,
 }
+
+export type { Article }

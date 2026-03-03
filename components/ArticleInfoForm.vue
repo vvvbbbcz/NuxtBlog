@@ -1,26 +1,20 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
 import type { FormValidateCallback } from "element-plus/es/components/form/src/types";
+import type { Article } from "~/utils/dbTypes/article";
 
-interface ArticleInfo {
-	ur: string,
-	ti: string,
-	tg: number[],
-	pw: string,
-	vi: number
-}
-
-const props = defineProps<{ info: ArticleInfo }>();
+const props = defineProps<{ info: Article }>();
+const undef = undefined;
 
 const form = ref<FormInstance>();
-const rule = ref<FormRules<ArticleInfo>>({
-	ur: [{ required: true, message: '请输入 URL 标题', trigger: 'blur' }],
-	ti: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-	pw: [{ required: true, validator: validatePassword, trigger: 'blur' }],
+const rule = ref<FormRules<Article>>({
+	url: [{ required: true, message: '请输入 URL 标题', trigger: 'blur' }],
+	title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+	password: [{ required: true, validator: validatePassword, trigger: 'blur' }],
 });
 
 function validatePassword(rule: any, value: any, callback: any) {
-	if (props.info.vi === 2 && !value) { // strength bigger than 0
+	if (props.info.visible === 2 && !value) { // strength bigger than 0
 		callback(new Error('请输入密码'))
 	} else {
 		callback()
@@ -77,13 +71,13 @@ onMounted(async () => {
 	<el-form v-if="mounted" ref="form" :model="props.info" :rules="rule" label-width="auto" hide-required-asterisk
 		status-icon>
 		<el-form-item prop="ti" label="标题">
-			<el-input v-model="props.info.ti" @change="$emit('change')" />
+			<el-input v-model="props.info.title" @change="$emit('change')" />
 		</el-form-item>
 		<el-form-item prop="ur" label="URL">
-			<el-input v-model="props.info.ur" @change="$emit('change')" />
+			<el-input v-model="props.info.url" @change="$emit('change')" />
 		</el-form-item>
 		<el-form-item prop="tg" label="标签">
-			<el-select v-model="props.info.tg" multiple filterable remote collapse-tags collapse-tags-tooltip
+			<el-select v-model="props.info.tag" multiple filterable remote collapse-tags collapse-tags-tooltip
 				:max-collapse-tags="5" remote-show-suffix :remote-method="fetchTags" :loading="tagsStatus === 'pending'"
 				@change="$emit('change')">
 				<el-option v-for="item in tagList" :label="item.ti || ''" :value="item._id" />
@@ -103,17 +97,24 @@ onMounted(async () => {
 				</template>
 			</el-select>
 		</el-form-item>
-		<el-form-item prop="vi" label="可见性">
+		<el-form-item prop="visible" label="可见性">
 			<div style="display: flex;">
-				<el-segmented v-model="info.vi" :options="visibleOptions">
+				<el-segmented v-if="props.info.visible !== null" v-model="props.info.visible" :options="visibleOptions">
 					<template #default="{ item }">
 						<div class="flex flex-col items-center gap-2 p-2">
 							<div>{{ item.label }}</div>
 						</div>
 					</template>
 				</el-segmented>
-				<el-form-item prop="pw" label="密码" v-if="props.info.vi === 2">
-					<el-input v-model="props.info.pw" type="password" show-password />
+				<el-segmented v-else v-model="undef" :options="visibleOptions">
+					<template #default="{ item }">
+						<div class="flex flex-col items-center gap-2 p-2">
+							<div>{{ item.label }}</div>
+						</div>
+					</template>
+				</el-segmented>
+				<el-form-item prop="pw" label="密码" v-if="props.info.visible === 2">
+					<el-input v-model="props.info.password" type="password" show-password />
 				</el-form-item>
 			</div>
 		</el-form-item>
