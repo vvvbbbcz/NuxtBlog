@@ -5,14 +5,14 @@ import { fromDB } from "~/utils/dbTypes/blogInfo";
 
 export default defineEventHandler(async (event) => {
 	if (mongoose.connection.readyState) {
-		const data = await BlogInfo
+		const data = fromDB(await BlogInfo
 			.findOne(filters.blog_info())
 			.select(['-_id', 'ti', 'md', 'au'])
 			.populate('co', ['-_id', 'ur'])
-			.lean();
+			.lean());
 
 		if (data) {
-			return fromDB(data);
+			return data;
 		}
 	}
 	throw createError({ statusCode: 500 });

@@ -1,15 +1,15 @@
 import { mapStruct, toNumber, toString } from "../dbTypes";
 
 interface BlogInfo {
-    _id?: number | null,
-    name?: string | null,
-    separator?: string | null,
-    description?: string | null,
-    background?: number | null,
-    icon?: number | null,
+    id?: number,
+    name?: string,
+    separator?: string,
+    description?: string,
+    background?: number,
+    icon?: number,
 }
 
-interface BlogInfoDB {
+interface BlogInfoFromDB {
     _id?: number | null,
     ti?: string | null,
     md?: string | null,
@@ -18,8 +18,20 @@ interface BlogInfoDB {
     au?: number | null,
 }
 
-function fromDB(dbData: BlogInfoDB): BlogInfo {
+interface BlogInfoToDB {
+    _id?: number,
+    ti?: string,
+    md?: string,
+    ab?: string,
+    co?: number,
+    au?: number,
+}
+
+function fromDB(dbData: BlogInfoFromDB | null): BlogInfo | null {
+    if (!dbData) return null;
+
     return mapStruct(dbData, {
+        id: toNumber('_id'),
         name: toString('ti'),
         separator: toString('md'),
         description: toString('ab'),
@@ -28,19 +40,17 @@ function fromDB(dbData: BlogInfoDB): BlogInfo {
     });
 }
 
-function toDB(data: BlogInfo): BlogInfoDB {
-    let dbData: BlogInfoDB = mapStruct(data, {
+function toDB(data: BlogInfo): BlogInfoToDB {
+    return mapStruct(data, {
+        _id: toNumber('id'),
         ti: toString('name'),
         md: toString('separator'),
         ab: toString('description'),
         co: toNumber('background'),
         au: toNumber('icon'),
     });
-    return dbData
 }
 
-export {
-    fromDB,
-    toDB,
-}
+export { fromDB, toDB }
+export type { BlogInfo }
 
