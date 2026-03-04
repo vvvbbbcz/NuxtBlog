@@ -1,27 +1,35 @@
 <script setup lang="ts">
 import { passwordStrength } from "check-password-strength";
 import type { FormInstance, FormRules } from "element-plus";
+import type { BlogInfo } from "~/utils/dbTypes/blogInfo";
+import type { User } from "~/utils/dbTypes/user";
 import { isEmail, isUsername } from "~/utils/regularValidator";
 
-const data = ref({
-	name: '',
-	icon: 0,
-	separator: '',
-	background: '',
-	ur: '',
-	ti: '',
-	md: '',
-	pw: '',
+const data = ref<{ blogInfo: BlogInfo, user: User } & { confirmPassword: string }>({
+	blogInfo: {
+		name: '',
+		separator: '',
+		background: 0,
+		description: '',
+		icon: 0,
+	},
+	user: {
+		username: '',
+		nickname: '',
+		email: '',
+		password: '',
+	},
 	confirmPassword: '',
 });
+
 const form = ref<FormInstance>();
 const rule = ref<FormRules<typeof data>>({
-	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-	separator: [{ required: true, message: '请输入分隔符', trigger: 'blur' }],
-	ur: [{ required: true, validator: validateUsername, trigger: 'blur' }],
-	ti: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
-	md: [{ required: true, validator: validateEmail, trigger: 'blur' }],
-	pw: [{ required: true, validator: validatePassword, trigger: 'blur' }],
+	"blogInfo.name": [{ required: true, message: '请输入名称', trigger: 'blur' }],
+	"blogInfo.separator": [{ required: true, message: '请输入分隔符', trigger: 'blur' }],
+	"user.username": [{ required: true, validator: validateUsername, trigger: 'blur' }],
+	"user.nickname": [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+	"user.email": [{ required: true, validator: validateEmail, trigger: 'blur' }],
+	"user.password": [{ required: true, validator: validatePassword, trigger: 'blur' }],
 	confirmPassword: [{ required: true, validator: validateConfirmPassword, trigger: 'blur' }],
 });
 
@@ -51,7 +59,7 @@ function validatePassword(rule: any, value: any, callback: any) {
 }
 
 function validateConfirmPassword(rule: any, value: any, callback: any) {
-	if (value !== data.value.pw) {
+	if (value !== data.value.user.password) {
 		callback(new Error('密码不一致'))
 	} else {
 		callback()
@@ -59,11 +67,10 @@ function validateConfirmPassword(rule: any, value: any, callback: any) {
 }
 
 async function save() {
-	$fetch(`/api/admin/blogInfo/create`, {
+	$fetch(`/api/admin/install`, {
 		method: 'POST',
 		body: {
 			...data.value,
-			pw: data.value.pw,
 			confirmPassword: undefined,
 		}
 	}).then(async ({ status }) => {
@@ -85,25 +92,25 @@ onMounted(() => {
 <template>
 	<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 		<h2>网站信息</h2>
-		<el-form-item prop="name" label="博客名称">
-			<el-input v-if="mounted" v-model="data.name" />
+		<el-form-item prop="blogInfo.name" label="博客名称">
+			<el-input v-if="mounted" v-model="data.blogInfo.name" />
 		</el-form-item>
-		<el-form-item prop="separator" label="分隔符">
-			<el-input v-if="mounted" v-model="data.separator" />
+		<el-form-item prop="blogInfo.separator" label="分隔符">
+			<el-input v-if="mounted" v-model="data.blogInfo.separator" />
 		</el-form-item>
 
 		<h2>管理员信息</h2>
-		<el-form-item prop="ur" label="用户名">
-			<el-input v-if="mounted" v-model="data.ur" />
+		<el-form-item prop="user.username" label="用户名">
+			<el-input v-if="mounted" v-model="data.user.username" />
 		</el-form-item>
-		<el-form-item prop="ti" label="昵称">
-			<el-input v-if="mounted" v-model="data.ti" />
+		<el-form-item prop="user.nickname" label="昵称">
+			<el-input v-if="mounted" v-model="data.user.nickname" />
 		</el-form-item>
-		<el-form-item prop="md" label="邮箱">
-			<el-input v-if="mounted" v-model="data.md" />
+		<el-form-item prop="user.email" label="邮箱">
+			<el-input v-if="mounted" v-model="data.user.email" />
 		</el-form-item>
-		<el-form-item prop="pw" label="密码">
-			<el-input v-if="mounted" v-model="data.pw" type="password" show-password />
+		<el-form-item prop="user.password" label="密码">
+			<el-input v-if="mounted" v-model="data.user.password" type="password" show-password />
 		</el-form-item>
 		<el-form-item prop="confirmPassword" label="确认密码">
 			<el-input v-if="mounted" v-model="data.confirmPassword" type="password" show-password />

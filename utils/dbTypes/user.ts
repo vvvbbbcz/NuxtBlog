@@ -1,16 +1,16 @@
 import { mapStruct, toNumber, toString } from "../dbTypes";
 
 interface User {
-    id?: number | null
-    username?: string | null
-    nickname?: string | null
-    email?: string | null
-    avatar?: number | null
-    password?: string | null
-    adminLevel?: number | null
+    id?: number
+    username?: string
+    nickname?: string
+    email?: string
+    avatar?: number
+    password?: string
+    adminLevel?: number
 }
 
-interface UserDB {
+interface UserFromDB {
     _id?: number | null
     ur?: string | null
     ti?: string | null
@@ -20,7 +20,17 @@ interface UserDB {
     vi?: number | null
 }
 
-function fromDB(dbData: UserDB | null): User | null {
+interface UserToDB {
+    _id?: number
+    ur?: string
+    ti?: string
+    md?: string
+    co?: number
+    pw?: string
+    vi?: number
+}
+
+function fromDB(dbData: UserFromDB | null): User | null {
     if (!dbData) return null;
 
     return mapStruct(dbData, {
@@ -34,7 +44,7 @@ function fromDB(dbData: UserDB | null): User | null {
     });
 }
 
-function toDB(data: User): UserDB {
+function toDB(data: User): UserToDB {
     return mapStruct(data, {
         _id: toNumber('id'),
         ur: toString('username'),
