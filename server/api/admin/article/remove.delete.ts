@@ -2,7 +2,7 @@ import Article from "~/server/utils/models/BlogData";
 import apiStatus from "~/server/utils/apiStatus";
 
 export default defineEventHandler(async (event) => {
-	const id = parseInt((await readBody(event))._id);
+	const id = parseInt((await readBody(event)).id);
 	if (!isNaN(id) && id > 0) {
 		const result = await Article.updateOne({_id: id}, {de: true}).exec();
 		if (result.matchedCount < 1) {

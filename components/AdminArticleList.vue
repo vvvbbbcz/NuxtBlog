@@ -13,7 +13,7 @@ async function remove(id: number) {
 	const apiType = props.type === 'deleted' ? 'delete' : 'remove';
 	$fetch(`/api/admin/article/${apiType}`, {
 		method: 'DELETE',
-		body: { _id: id }
+		body: { id: id }
 	}).then(async ({ status }) => {
 		if (status === 'success') {
 			ElMessage({ type: 'success', message: '删除成功' });
@@ -27,7 +27,7 @@ async function remove(id: number) {
 async function restore(id: number) {
 	$fetch(`/api/admin/article/restore`, {
 		method: 'PATCH',
-		body: { _id: id }
+		body: { id: id }
 	}).then(async ({ status }) => {
 		if (status === 'success') {
 			ElMessage({ type: 'success', message: '还原成功' });
