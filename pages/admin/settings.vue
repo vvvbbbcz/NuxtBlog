@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
+import type { BlogInfo } from "~/utils/dbTypes/blogInfo";
 
 definePageMeta({
 	layout: 'admin',
 	middleware: ['auth'],
 });
 
-const { data: fetchedData }: any = await useFetch(`/api/admin/blogInfo/get`);
+const { data } = await useFetch(`/api/admin/blogInfo/get`);
+let blogInfo = ref<BlogInfo>({});
+if (data.value) blogInfo.value = data.value;
 
-const data = ref(fetchedData.value);
 const form = ref<FormInstance>();
-const rule = ref<FormRules<typeof data>>({
+const rule = ref<FormRules<typeof blogInfo>>({
 	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
 	separator: [{ required: true, message: '请输入分隔符', trigger: 'blur' }],
 })
@@ -20,7 +22,7 @@ async function save(form: FormInstance) {
 		if (valid) {
 			$fetch(`/api/admin/blogInfo/update`, {
 				method: 'PATCH',
-				body: data.value
+				body: blogInfo.value
 			}).then(({ status }) => {
 				if (status === 'success') {
 					ElMessage({ type: 'success', message: '保存成功' });
@@ -40,13 +42,13 @@ onMounted(() => {
 
 <template>
 	<el-card>
-		<el-form ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
+		<el-form ref="form" :model="blogInfo" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<h2>网站信息</h2>
 			<el-form-item prop="name" label="博客名称">
-				<el-input v-if="mounted" v-model="data.name" />
+				<el-input v-if="mounted" v-model="blogInfo.name" />
 			</el-form-item>
 			<el-form-item prop="separator" label="分隔符">
-				<el-input v-if="mounted" v-model="data.separator" />
+				<el-input v-if="mounted" v-model="blogInfo.separator" />
 			</el-form-item>
 		</el-form>
 		<div class="m-l-a">
