@@ -10,29 +10,14 @@ const props = defineProps({
 	id: Number,
 });
 
-const article = ref<Article & { publish: boolean }>({
-	id: props.id,
-	url: '',
-	title: '',
-	markdown: '',
-	html: '',
-	tag: [],
-	date: '',
-	author: 0,
-	password: '',
-	iv: [],
-	visible: 0,
-	drafted: true,
-	deleted: false,
-	publish: false
-});
+const article = ref<Article>({ visible: 0 });
 
 if (props.id !== undefined) {
-	const { data: articleData, status, error } =
+	const { data, status, error } =
 		await useFetch('/api/admin/article/get', { query: { id: props.id } });
 
-	if (articleData.value) {
-		Object.assign(article.value, articleData.value);
+	if (data.value) {
+		article.value = data.value;
 	} else if (status.value === 'error') {
 		ElNotification({ type: 'error', title: '获取文章失败', message: error.value?.message });
 	}
@@ -45,23 +30,23 @@ async function update(draft: boolean) {
 	if (await form.value?.validate()) {
 		const { user }: any = useUserSession();
 
-		article.value.publish = false;
 		if (!draft) {
 			if (article.value.visible === 2) {
 				const iv = generateIV();
 				article.value.iv = Array.from(iv);
 				article.value.html = await aesEncrypt(article.value.password || "", iv, vditor.getHTML());
 			} else {
+				article.value.iv = undefined;
 				article.value.html = vditor.getHTML();
 			}
-
-			if (article.value.drafted) {
-				article.value.publish = true;
-			}
+		} else {
+			article.value.iv = undefined;
+			article.value.html = undefined;
 		}
 
 		article.value.markdown = vditor.getValue();
 		article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
+		article.value.year = moment().year();
 		article.value.author = user.value._id; // TODO
 		article.value.drafted = draft;
 
@@ -75,7 +60,7 @@ async function update(draft: boolean) {
 			ElMessage({ type: 'success', message: '保存成功' });
 			unsaved.value = false;
 			if (!props.id) { // create
-				await navigateTo(`/admin/article/edit/${data._id}`);
+				await navigateTo(`/admin/article/edit/${data.id}`);
 			}
 		}
 	}
@@ -85,7 +70,7 @@ let vditor: Vditor;
 onMounted(async () => {
 	vditor = new Vditor('vditor', {
 		height: '100%',
-		value: article.value.markdown || "",
+		value: article.value.markdown,
 		toolbarConfig: {
 			pin: true,
 		},
