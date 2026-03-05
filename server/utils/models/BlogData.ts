@@ -10,7 +10,8 @@ const schema = new Schema({
 	_id: Number,
 
 	// article: url name
-	// menu item: url (optional)
+    // blog info: always null
+	// menu item: url
 	// user: username
 	// tag: url name
 	// picture: url
@@ -47,6 +48,11 @@ const schema = new Schema({
 	tg: [{ type: Number, ref: 'BlogData' }],
 
 	// article: publish year
+    // blog info: always null
+    // user: always 0
+    // menu item: always 1
+    // tag: always 2
+    // picture: always 3
 	yr: {
 		type: Number, required: function () {
 			return this._id > 0;

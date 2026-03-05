@@ -14,7 +14,7 @@ async function filter(body: { blogInfo: BlogInfo, user: User }) {
 	}
 	return {
 		blogInfo: toBlogInfoDB(body.blogInfo),
-		user: toUserDB(body.user),
+		user: { ...toUserDB(body.user), yr: 0 },
 	}
 }
 
