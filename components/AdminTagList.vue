@@ -5,18 +5,18 @@ import type { FormInstance, FormRules } from 'element-plus';
 const { data: tags, refresh: refreshTags } = await useFetch(`/api/admin/tag/list`);
 
 interface TagForm {
-	ur: string
-	ti: string
+	url: string
+	name: string
 }
 
 const newTag = ref<TagForm>({
-	ur: '',
-	ti: '',
+	url: '',
+	name: '',
 });
 const tagForm = ref<FormInstance>();
 const rule = ref<FormRules<TagForm>>({
-	ur: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
-	ti: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+	url: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
+	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
 });
 
 async function createTag() {
@@ -45,11 +45,11 @@ onMounted(() => {
 <template>
 	<el-card>
 		<el-form ref="tagForm" :model="newTag" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
-			<el-form-item label="名称" prop="ti">
-				<el-input v-if="mounted" v-model="newTag.ti" />
+			<el-form-item label="名称" prop="name">
+				<el-input v-if="mounted" v-model="newTag.name" />
 			</el-form-item>
-			<el-form-item label="URL" prop="ur">
-				<el-input v-if="mounted" v-model="newTag.ur" />
+			<el-form-item label="URL" prop="url">
+				<el-input v-if="mounted" v-model="newTag.url" />
 			</el-form-item>
 		</el-form>
 		<el-button type="primary" @click="createTag()">

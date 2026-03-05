@@ -1,18 +1,24 @@
 import { mapStruct, toNumber, toString } from "../dbTypes";
 
 interface Tag {
-    id?: number | null
-    url?: string | null
-    name?: string | null
+    id?: number,
+    url?: string,
+    name?: string,
 }
 
-interface TagDB {
-    _id?: number | null
-    ur?: string | null
-    ti?: string | null
+interface TagFromDB {
+    _id?: number | null,
+    ur?: string | null,
+    ti?: string | null,
 }
 
-function fromDB(dbData: TagDB | null): Tag | null {
+interface TagToDB {
+    _id?: number,
+    ur?: string,
+    ti?: string,
+}
+
+function fromDB(dbData: TagFromDB | null): Tag | null {
     if (!dbData) return null;
 
     return mapStruct(dbData, {
@@ -22,7 +28,7 @@ function fromDB(dbData: TagDB | null): Tag | null {
     });
 }
 
-function toDB(data: Tag): TagDB {
+function toDB(data: Tag): TagToDB {
     return mapStruct(data, {
         _id: toNumber('id'),
         ur: toString('url'),
@@ -31,4 +37,4 @@ function toDB(data: Tag): TagDB {
 }
 
 export { fromDB, toDB }
-export type { Tag, TagDB }
+export type { Tag }
