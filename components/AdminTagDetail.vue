@@ -54,7 +54,7 @@ async function remove() {
 	const { status }: any = await $fetch(`/api/admin/tag/remove`, {
 		method: 'DELETE',
 		body: {
-			_id: props.row.id
+			id: props.row.id
 		}
 	}).catch(error => {
 		ElNotification({ type: 'error', title: '删除失败', message: error });
