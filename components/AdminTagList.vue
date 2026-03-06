@@ -1,20 +1,16 @@
 <script setup lang="ts">
 
 import type { FormInstance, FormRules } from 'element-plus';
+import type { Tag } from '~/utils/dbTypes/tag';
 
 const { data: tags, refresh: refreshTags } = await useFetch(`/api/admin/tag/list`);
 
-interface TagForm {
-	url: string
-	name: string
-}
-
-const newTag = ref<TagForm>({
+const newTag = ref<Tag>({
 	url: '',
 	name: '',
 });
 const tagForm = ref<FormInstance>();
-const rule = ref<FormRules<TagForm>>({
+const rule = ref<FormRules<Tag>>({
 	url: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
 	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
 });
@@ -68,9 +64,9 @@ onMounted(() => {
 					</div>
 				</template>
 			</el-table-column>
-			<el-table-column prop="ti" label="名称" min-width="100">
+			<el-table-column prop="name" label="名称" min-width="100">
 				<template #default="props">
-					<h1>{{ props.row.ti }}</h1>
+					<h1>{{ props.row.name }}</h1>
 				</template>
 			</el-table-column>
 			<el-table-column prop="articles.length" label="文章数" min-width="100" />

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
+import type { Tag } from "~/utils/dbTypes/tag";
 
-const props = defineProps(['refresh', 'row', 'column', '$index']);
+const props = defineProps<{ refresh: any, row: Tag, column: any, $index: number }>();
 
 const editing = ref<boolean>(false);
 
 const { data: articles, execute, status } =
-	await useLazyFetch(`/api/admin/tag/fetchArticle`, { query: { id: props.row._id }, immediate: false });
+	await useLazyFetch(`/api/admin/tag/fetchArticle`, { query: { id: props.row.id }, immediate: false });
 
 function fetch() {
 	if (status.value === 'success') {
@@ -18,19 +19,14 @@ function fetch() {
 
 const hide = ref<boolean>(false);
 
-interface TagForm {
-	ur: string
-	ti: string
-}
-
-const newTag = ref<TagForm>({
-	ur: props.row.ur,
-	ti: props.row.ti,
+const newTag = ref<Tag>({
+	url: props.row.url,
+	name: props.row.name,
 });
 const tagForm = ref<FormInstance>();
-const rule = ref<FormRules<TagForm>>({
-	ur: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
-	ti: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+const rule = ref<FormRules<Tag>>({
+	url: [{ required: true, message: '请输入 URL 名称', trigger: 'blur' }],
+	name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
 });
 
 async function save() {
@@ -38,15 +34,15 @@ async function save() {
 		$fetch(`/api/admin/tag/update`, {
 			method: 'PATCH',
 			body: {
-				_id: props.row._id,
-				ur: newTag.value.ur,
-				ti: newTag.value.ti,
+				_id: props.row.id,
+				ur: newTag.value.url,
+				ti: newTag.value.name,
 			}
 		}).then(({ status }) => {
 			if (status === 'success') {
 				ElNotification({ type: 'success', title: '保存成功' });
-				props.row.ur = newTag.value.ur;
-				props.row.ti = newTag.value.ti;
+				props.row.url = newTag.value.url;
+				props.row.name = newTag.value.name;
 			}
 		}).catch(error => {
 			ElNotification({ type: 'error', title: '保存失败', message: error });
@@ -58,7 +54,7 @@ async function remove() {
 	const { status }: any = await $fetch(`/api/admin/tag/remove`, {
 		method: 'DELETE',
 		body: {
-			_id: props.row._id
+			_id: props.row.id
 		}
 	}).catch(error => {
 		ElNotification({ type: 'error', title: '删除失败', message: error });
@@ -97,17 +93,17 @@ async function remove() {
 			</el-table-column>
 		</el-table>
 	</div>
-
 	<div v-else>
 		<el-form ref="tagForm" :model="newTag" :rules="rule" label-width="auto" hide-required-asterisk status-icon>
 			<el-form-item label="名称" prop="ti">
-				<el-input v-model="newTag.ti" />
+				<el-input v-model="newTag.name" />
 			</el-form-item>
 			<el-form-item label="URL" prop="ur">
-				<el-input v-model="newTag.ur" />
+				<el-input v-model="newTag.url" />
 			</el-form-item>
 		</el-form>
 	</div>
+
 	<div v-if="!editing">
 		<el-button type="primary" @click="editing = true">
 			编辑
