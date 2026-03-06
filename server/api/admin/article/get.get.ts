@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
     if (filters.isArticle(id)) {
         const data = fromDB(await Article.findOne({ _id: id, de: false })
             .select(['ur', 'ti', 'md', 'tg', 'pw', 'vi', 'dr'])
+            .populate('tg', ['ti'])
             .lean());
         if (data) {
             return data;

@@ -44,15 +44,18 @@ async function update(draft: boolean) {
             article.value.html = undefined;
         }
 
-        article.value.markdown = vditor.getValue();
-        article.value.date = moment().format("YYYY-MM-DD HH:mm:ss");
-        article.value.year = moment().year();
-        article.value.author = user.value._id; // TODO
         article.value.drafted = draft;
 
         const { data, status }: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
             method: props.id ? 'PATCH' : 'POST',
-            body: article.value
+            body: {
+                ...article.value,
+                ...form.value?.getValue(),
+                markdown: vditor.getValue(),
+                date: moment().format("YYYY-MM-DD HH:mm:ss"),
+                year: moment().year(),
+                author: user.value._id // TODO
+            }
         }).catch(error => {
             ElNotification({ type: 'error', title: '保存失败', message: error });
         });
