@@ -1,6 +1,6 @@
 import { mapStruct, toBoolean, toNumber, toNumberArray, toString } from "../dbTypes";
 import { fromDB as userFromDB, type User } from "./user";
-import { fromDB as tagFromDB, type Tag, type TagDB } from "./tag";
+import { fromDB as tagFromDB, type Tag, type TagFromDB } from "./tag";
 
 interface Article {
     id?: number,
@@ -68,7 +68,7 @@ function fromDB(dbData: ArticleFromDB | null): Article | null {
         html: toString('ht'),
         tag: {
             from: 'tg',
-            transform: (v: (number | TagDB)[]) => v
+            transform: (v: (number | TagFromDB)[]) => v
                 .map((i) => i instanceof Object ? tagFromDB(i) : Number(i))
                 .filter((i) => i !== null)
         },

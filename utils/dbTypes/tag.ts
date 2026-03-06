@@ -37,4 +37,4 @@ function toDB(data: Tag): TagToDB {
 }
 
 export { fromDB, toDB }
-export type { Tag }
+export type { Tag, TagFromDB }
