@@ -2,12 +2,12 @@
 import type { FormInstance, FormRules } from "element-plus";
 import type { Tag } from "~/utils/dbTypes/tag";
 
-const props = defineProps<{ refresh: any, row: Tag, column: any, $index: number }>();
+const props = defineProps<{ refresh: any, tag: Tag }>();
 
 const editing = ref<boolean>(false);
 
 const { data: articles, execute, status } =
-	await useLazyFetch(`/api/admin/tag/fetchArticle`, { query: { id: props.row.id }, immediate: false });
+	await useLazyFetch(`/api/admin/tag/fetchArticle`, { query: { id: props.tag.id }, immediate: false });
 
 function fetch() {
 	if (status.value === 'success') {
@@ -20,8 +20,8 @@ function fetch() {
 const hide = ref<boolean>(false);
 
 const newTag = ref<Tag>({
-	url: props.row.url,
-	name: props.row.name,
+	url: props.tag.url,
+	name: props.tag.name,
 });
 const tagForm = ref<FormInstance>();
 const rule = ref<FormRules<Tag>>({
@@ -34,15 +34,14 @@ async function save() {
 		$fetch(`/api/admin/tag/update`, {
 			method: 'PATCH',
 			body: {
-				_id: props.row.id,
-				ur: newTag.value.url,
-				ti: newTag.value.name,
+				id: props.tag.id,
+				...newTag.value
 			}
 		}).then(({ status }) => {
 			if (status === 'success') {
 				ElNotification({ type: 'success', title: '保存成功' });
-				props.row.url = newTag.value.url;
-				props.row.name = newTag.value.name;
+				props.tag.url = newTag.value.url;
+				props.tag.name = newTag.value.name;
 			}
 		}).catch(error => {
 			ElNotification({ type: 'error', title: '保存失败', message: error });
@@ -54,7 +53,7 @@ async function remove() {
 	const { status }: any = await $fetch(`/api/admin/tag/remove`, {
 		method: 'DELETE',
 		body: {
-			id: props.row.id
+			id: props.tag.id
 		}
 	}).catch(error => {
 		ElNotification({ type: 'error', title: '删除失败', message: error });

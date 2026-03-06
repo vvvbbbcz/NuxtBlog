@@ -59,8 +59,7 @@ onMounted(() => {
 			<el-table-column type="expand">
 				<template #default="props">
 					<div class="table-expand">
-						<AdminTagDetail :refresh="refreshTags" :row="props.row" :column="props.column"
-							:$index="props.$index" />
+						<AdminTagDetail :refresh="refreshTags" :tag="props.row" />
 					</div>
 				</template>
 			</el-table-column>
