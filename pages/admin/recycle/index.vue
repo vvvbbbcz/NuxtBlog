@@ -1,16 +1,14 @@
 <script setup lang="ts">
 definePageMeta({
-	layout: 'admin',
-	middleware: ['auth'],
+    layout: 'admin',
+    middleware: ['auth'],
 });
 </script>
 
 <template>
-	<el-card>
-		<AdminArticleList type="deleted"/>
-	</el-card>
+    <el-card>
+        <AdminArticleList type="deleted" />
+    </el-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

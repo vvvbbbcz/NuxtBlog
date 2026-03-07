@@ -1,14 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
-	layout: 'admin',
-	middleware: ['auth'],
+    layout: 'admin',
+    middleware: ['auth'],
 });
 </script>
 
 <template>
-	<AdminTagList/>
+    <AdminTagList />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

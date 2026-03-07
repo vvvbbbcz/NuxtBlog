@@ -1,18 +1,16 @@
 <script setup lang="ts">
 definePageMeta({
-	layout: 'admin',
-	middleware: ['auth'],
+    layout: 'admin',
+    middleware: ['auth'],
 });
 
-const {user}: any = useUserSession();
+const { user }: any = useUserSession();
 </script>
 
 <template>
-	<el-card>
-		<AdminInstallSettings v-if="user._id === 0"/>
-	</el-card>
+    <el-card>
+        <AdminInstallSettings v-if="user._id === 0" />
+    </el-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
