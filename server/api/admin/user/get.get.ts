@@ -1,19 +1,21 @@
 import User from "~/server/utils/models/BlogData";
 import filters from "~/server/utils/filters";
+import { fromDB } from "~/utils/dbTypes/user";
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event).id;
     const id = parseInt(Array.isArray(query) ? query[0] : query);
+
     if (filters.isUser(id)) {
         const { user }: any = await getUserSession(event);
         if (user._id !== id) {
             throw createError({ statusCode: 404, statusMessage: 'User Not Found' });
         }
 
-        const data = await User
+        const data = fromDB(await User
             .findById(id)
             .select(['-_id', 'ur', 'ti', 'md', 'co'])
-            .lean();
+            .lean());
         if (data) {
             return data;
         } else {
