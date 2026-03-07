@@ -9,7 +9,7 @@ function filter(body: Article) {
 
     const data = {
         id: body.id === undefined ? NaN : Number(body.id),
-        article: toDB(body)
+        article: { ...toDB(body), _id: undefined }
     }
 
     return data;
