@@ -74,10 +74,10 @@ async function remove() {
 			获取 / 刷新
 		</el-button>
 
-		<el-table v-if="(status === 'success')" :data="articles || []" class="w-100p">
-			<el-table-column prop="ti" label="标题" min-width="100">
+		<el-table v-if="(status === 'success')" :data="articles ?? []" class="w-100p">
+			<el-table-column prop="title" label="标题" min-width="100">
 				<template #default="props">
-					<h1>{{ props.row.ti }}</h1>
+					<h1>{{ props.row.title }}</h1>
 				</template>
 			</el-table-column>
 			<el-table-column fixed="right" label="操作" width="200">
