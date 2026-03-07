@@ -4,7 +4,7 @@ const title = data.value?.name ?? 'NuxtBlog'
 </script>
 
 <template>
-	<span class="site-name">{{ title }}</span>
+    <span class="site-name">{{ title }}</span>
 </template>
 
 <style scoped></style>

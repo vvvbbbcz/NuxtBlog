@@ -2,10 +2,10 @@
 </script>
 
 <template>
-	<p>
-		&copy; <SiteBrand/>
-	</p>
+    <p>
+        &copy;
+        <SiteBrand />
+    </p>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
