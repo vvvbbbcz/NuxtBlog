@@ -17,8 +17,8 @@ const rule = ref<FormRules<typeof blogInfo>>({
 	separator: [{ required: true, message: '请输入分隔符', trigger: 'blur' }],
 })
 
-async function save(form: FormInstance) {
-	await form.validate(async (valid) => {
+async function save() {
+	await form.value?.validate(async (valid) => {
 		if (valid) {
 			$fetch(`/api/admin/blogInfo/update`, {
 				method: 'PATCH',
@@ -52,7 +52,7 @@ onMounted(() => {
 			</el-form-item>
 		</el-form>
 		<div class="m-l-a">
-			<el-button type="primary" @click="save(form)">
+			<el-button type="primary" @click="save()">
 				保存
 			</el-button>
 			<el-button @click="form?.resetFields()">
