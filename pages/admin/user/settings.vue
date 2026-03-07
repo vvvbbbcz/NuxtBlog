@@ -11,10 +11,10 @@ definePageMeta({
 
 const page = ref<string>('info');
 
-const { user }: any = useUserSession();
-const { data } = await useFetch('/api/admin/user/get', { query: { id: user.value._id } });
+const { user }: { user: ComputedRef<User | null> } = useUserSession();
+const { data } = await useFetch('/api/admin/user/get', { query: { id: user.value?.id } });
 
-const info = ref<User>(data.value);
+const info = ref<User>(data.value ?? {});
 const infoForm = ref<FormInstance>();
 const infoRule = ref<FormRules<User>>({
     username: [{ required: true, message: '请输入名称', trigger: 'blur' }],

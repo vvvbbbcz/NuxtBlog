@@ -5,6 +5,7 @@ import moment from "moment";
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 import { aesEncrypt, generateIV } from "~/utils/aesCrypto";
 import type { Article } from "~/utils/dbTypes/article";
+import type { User } from "~/utils/dbTypes/user";
 
 const props = defineProps({
     id: Number,
@@ -28,7 +29,7 @@ const form = ref<InstanceType<typeof ArticleInfoForm>>();
 
 async function update(draft: boolean) {
     if (await form.value?.validate()) {
-        const { user }: any = useUserSession();
+        const { user }: { user: ComputedRef<User | null> } = useUserSession();
 
         if (!draft) {
             if (article.value.visible === 2) {
@@ -54,7 +55,7 @@ async function update(draft: boolean) {
                 markdown: vditor.getValue(),
                 date: moment().format("YYYY-MM-DD HH:mm:ss"),
                 year: moment().year(),
-                author: user.value._id // TODO
+                author: user.value?.id // TODO
             }
         }).catch(error => {
             ElNotification({ type: 'error', title: '保存失败', message: error });

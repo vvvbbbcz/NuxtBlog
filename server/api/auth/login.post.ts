@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
 
         await setUserSession(event, {
             user: {
-                _id: 0,
-                ur: 'installer',
+                id: 0,
+                username: 'installer',
             },
             loggedInAt: new Date()
         });
@@ -39,8 +39,8 @@ export default defineEventHandler(async (event) => {
 
         await setUserSession(event, {
             user: {
-                _id: user.id,
-                ur: body.username,
+                id: user.id,
+                username: body.username,
             },
             loggedInAt: new Date()
         });
