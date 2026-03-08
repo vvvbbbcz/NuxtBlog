@@ -8,17 +8,17 @@ async function getKeyFromPassword(password: string) {
         'AES-GCM', false, ["encrypt", "decrypt"]);
 }
 
-function encodeCiphertext(ciphertext: string) {
-    const ciphertextArray = ciphertext.split('').map((x) => {
+function encodeCipherText(cipherText: string) {
+    const cipherTextArray = cipherText.split('').map((x) => {
         const charCode = x.charCodeAt(0);
         return charCode - 32 > 126 ? charCode + 95 - 160 : charCode - 32;
     });
-    return new Uint8Array(ciphertextArray);
+    return new Uint8Array(cipherTextArray);
 }
 
-function decodeCiphertext(ciphertextBuffer: ArrayBufferLike) {
-    const ciphertext = Array.from(new Uint8Array(ciphertextBuffer));
-    return ciphertext.map((b) => String.fromCharCode(b + 32 > 126 ? b - 95 + 160 : b + 32)).join('');
+function decodeCipherText(cipherTextBuffer: ArrayBufferLike) {
+    const cipherText = Array.from(new Uint8Array(cipherTextBuffer));
+    return cipherText.map((b) => String.fromCharCode(b + 32 > 126 ? b - 95 + 160 : b + 32)).join('');
 }
 
 export function generateIV() {
@@ -29,13 +29,13 @@ export async function aesEncrypt(password: string, iv: Uint8Array, text: string)
     const key = await getKeyFromPassword(password);
     const data = textEncoder.encode(text);
 
-    const ciphertextBuffer = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
-    return decodeCiphertext(ciphertextBuffer);
+    const cipherTextBuffer = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+    return decodeCipherText(cipherTextBuffer);
 }
 
-export async function aesDecrypt(password: string, iv: Uint8Array, ciphertext: string) {
+export async function aesDecrypt(password: string, iv: Uint8Array, cipherText: string) {
     const key = await getKeyFromPassword(password);
 
-    const ciphertextBuffer = encodeCiphertext(ciphertext);
-    return textDecoder.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertextBuffer));
+    const cipherTextBuffer = encodeCipherText(cipherText);
+    return textDecoder.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, cipherTextBuffer));
 }
