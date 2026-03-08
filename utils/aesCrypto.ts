@@ -29,7 +29,7 @@ export async function aesEncrypt(password: string, iv: Uint8Array, text: string)
     const key = await getKeyFromPassword(password);
     const data = textEncoder.encode(text);
 
-    const cipherTextBuffer = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+    const cipherTextBuffer = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv.slice() }, key, data);
     return decodeCipherText(cipherTextBuffer);
 }
 
@@ -37,5 +37,5 @@ export async function aesDecrypt(password: string, iv: Uint8Array, cipherText: s
     const key = await getKeyFromPassword(password);
 
     const cipherTextBuffer = encodeCipherText(cipherText);
-    return textDecoder.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, cipherTextBuffer));
+    return textDecoder.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv.slice() }, key, cipherTextBuffer));
 }

@@ -6,7 +6,7 @@ definePageMeta({
 
 const error = ref(false);
 const param = useRoute().params.id;
-const id = parseInt(Array.isArray(param) ? param[0] : param);
+const id = parseInt((Array.isArray(param) ? param[0] : param) ?? '');
 if (isNaN(id)) {
     error.value = true;
 }
