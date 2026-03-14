@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { MenuItemRegistered } from 'element-plus';
 import BlogSettings from './BlogSettings.vue';
-import ArticleEditor from '../ArticleEditor.vue';
+import ArticleEditor from './ArticleEditor.vue';
 import ArticleList from './ArticleList.vue';
 import TagList from './TagList.vue';
 import UserList from './UserList.vue';

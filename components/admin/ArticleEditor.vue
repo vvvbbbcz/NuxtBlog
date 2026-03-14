@@ -1,17 +1,34 @@
 <script setup lang="ts">
-import Vditor from "vditor";
-import "vditor/dist/index.css";
 import moment from "moment";
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 import { aesEncrypt, generateIV } from "~/utils/aesCrypto";
 import type { Article } from "~/utils/dbTypes/article";
 import type { User } from "~/utils/dbTypes/user";
+import { MdEditor } from "md-editor-v3";
+import 'md-editor-v3/lib/style.css';
+import markdownit from "markdown-it";
+import hljs from "highlight.js";
 
 const props = defineProps({
     id: Number,
 });
 
-const article = ref<Article>({ visible: 0 });
+const { user }: { user: ComputedRef<User | null> } = useUserSession();
+const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
+const article = ref<Article>({ visible: 0, drafted: true });
+const unsaved = ref<boolean>(false);
+const form = ref<InstanceType<typeof ArticleInfoForm>>();
+const md = markdownit({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(str, { language: lang }).value;
+            } catch (_) { }
+        }
+
+        return '';
+    }
+})
 
 if (props.id !== undefined) {
     const { data, status, error } =
@@ -24,25 +41,24 @@ if (props.id !== undefined) {
     }
 }
 
-const unsaved = ref<boolean>(false);
-const form = ref<InstanceType<typeof ArticleInfoForm>>();
-
 async function update(draft: boolean) {
     if (await form.value?.validate()) {
-        const { user }: { user: ComputedRef<User | null> } = useUserSession();
+        const edited = article.value;
 
         if (!draft) {
-            if (article.value.visible === 2) {
+            const html = md.render(edited.markdown ?? '');
+
+            if (edited.visible === 2) {
                 const iv = generateIV();
-                article.value.iv = Array.from(iv);
-                article.value.html = await aesEncrypt(article.value.password || "", iv, vditor.getHTML());
+                edited.iv = Array.from(iv);
+                edited.html = await aesEncrypt(edited.password || "", iv, html);
             } else {
-                article.value.iv = undefined;
-                article.value.html = vditor.getHTML();
+                edited.iv = undefined;
+                edited.html = html;
             }
         } else {
-            article.value.iv = undefined;
-            article.value.html = undefined;
+            edited.iv = undefined;
+            edited.html = undefined;
         }
 
         article.value.drafted = draft;
@@ -50,12 +66,11 @@ async function update(draft: boolean) {
         const { data, status }: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
             method: props.id ? 'PATCH' : 'POST',
             body: {
-                ...article.value,
+                ...edited,
                 ...form.value?.getValue(),
-                markdown: vditor.getValue(),
                 date: moment().format("YYYY-MM-DD HH:mm:ss"),
                 year: moment().year(),
-                author: user.value?.id // TODO
+                author: user.value?.id
             }
         }).catch(error => {
             ElNotification({ type: 'error', title: '保存失败', message: error });
@@ -63,30 +78,12 @@ async function update(draft: boolean) {
         if (status === 'success') {
             ElMessage({ type: 'success', message: '保存成功' });
             unsaved.value = false;
-            if (!props.id) { // create
-                await navigateTo(`/admin/article/edit/${data.id}`);
-            }
+            // if (!props.id) { // create
+            //     await navigateTo(`/admin/article/edit/${data.id}`);
+            // }
         }
     }
 }
-
-let vditor: Vditor;
-onMounted(async () => {
-    vditor = new Vditor('vditor', {
-        height: '100%',
-        value: article.value.markdown,
-        toolbarConfig: {
-            pin: true,
-        },
-        input(value) {
-            unsaved.value = true;
-        },
-        cache: {
-            enable: false,
-        },
-        cdn: "/vditor"
-    });
-})
 </script>
 
 <template>
@@ -106,7 +103,7 @@ onMounted(async () => {
             </el-button-group>
             <el-text v-if="unsaved" class="m-l-1" type="warning">未保存</el-text>
         </div>
-        <div id="vditor"></div>
+        <MdEditor v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" />
     </el-container>
 </template>
 
