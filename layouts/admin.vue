@@ -16,12 +16,7 @@ if (!loggedIn.value) {
             <AdminHeader />
         </el-header>
         <el-container>
-            <el-aside class="m-1">
-                <AdminMenu />
-            </el-aside>
-            <el-main class="m-1 p-0">
-                <slot />
-            </el-main>
+            <slot />
         </el-container>
         <el-footer class="m-1 b-r-1 b-1px t-a-c">
             <Footer />
@@ -36,12 +31,6 @@ if (!loggedIn.value) {
 </style>
 
 <style scoped>
-.el-aside {
-    width: 20%;
-    max-width: 12rem;
-    min-width: 9rem;
-}
-
 @media screen and (max-width: 36em) {
     .el-header {
         margin: 0 !important;
@@ -53,12 +42,6 @@ if (!loggedIn.value) {
 
     .el-container {
         flex-direction: column;
-    }
-
-    .el-aside {
-        width: unset;
-        max-width: unset;
-        min-width: unset;
     }
 }
 </style>
