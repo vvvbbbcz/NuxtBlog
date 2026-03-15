@@ -1,21 +1,8 @@
 <script setup lang="ts">
-import BlogSettings from './BlogSettings.vue';
-import ArticleEditor from './ArticleEditor.vue';
-import ArticleList from './ArticleList.vue';
-import TagList from './TagList.vue';
-import UserList from './UserList.vue';
-import ProfileSettings from './ProfileSettings.vue';
 
-interface Tab {
-    label: string;
-    name: string;
-    content: any;
-    props?: Object;
-}
+const props = defineProps<{ addTab: (tab: AdminTab) => void }>();
 
-const props = defineProps<{ addTab: (tab: Tab) => void }>();
-
-function click(tab: Tab) {
+function click(tab: AdminTab) {
     props.addTab(tab);
 }
 </script>
@@ -24,7 +11,7 @@ function click(tab: Tab) {
     <el-card :body-class="'p-0'">
         <el-menu class="b-no" unique-opened>
             <el-menu-item index="blog-settings"
-                @click="click({ label: '博客设置', name: $event.index, content: markRaw(BlogSettings) })">
+                @click="click({ label: '博客设置', name: $event.index, content: 'BlogSettings' })">
                 博客设置
             </el-menu-item>
 
@@ -33,13 +20,13 @@ function click(tab: Tab) {
                     文章管理
                 </template>
                 <el-menu-item index="new-draft"
-                    @click="click({ label: '新建草稿', name: $event.index, content: markRaw(ArticleEditor) })">
+                    @click="click({ label: '新建草稿', name: $event.index, content: 'ArticleEditor' })">
                     新建草稿
                 </el-menu-item>
                 <el-menu-item index="article-list" @click="click({
                     label: '文章列表',
                     name: $event.index,
-                    content: markRaw(ArticleList),
+                    content: 'ArticleList',
                     props: { type: 'published' }
                 })">
                     文章列表
@@ -47,7 +34,7 @@ function click(tab: Tab) {
                 <el-menu-item index="draft-list" @click="click({
                     label: '草稿列表',
                     name: $event.index,
-                    content: markRaw(ArticleList),
+                    content: 'ArticleList',
                     props: { type: 'drafted' }
                 })">
                     草稿列表
@@ -55,13 +42,13 @@ function click(tab: Tab) {
                 <el-menu-item index="recycle" @click="click({
                     label: '回收站',
                     name: $event.index,
-                    content: markRaw(ArticleList),
+                    content: 'ArticleList',
                     props: { type: 'deleted' }
                 })">
                     回收站
                 </el-menu-item>
                 <el-menu-item index="tags"
-                    @click="click({ label: '标签管理', name: $event.index, content: markRaw(TagList) })">
+                    @click="click({ label: '标签管理', name: $event.index, content: 'TagList' })">
                     标签管理
                 </el-menu-item>
             </el-sub-menu>
@@ -82,11 +69,11 @@ function click(tab: Tab) {
                     用户管理
                 </template>
                 <el-menu-item index="profile"
-                    @click="click({ label: '个人设置', name: $event.index, content: markRaw(ProfileSettings) })">
+                    @click="click({ label: '个人设置', name: $event.index, content: 'ProfileSettings' })">
                     个人设置
                 </el-menu-item>
                 <el-menu-item index="user-list"
-                    @click="click({ label: '用户列表', name: $event.index, content: markRaw(UserList) })">
+                    @click="click({ label: '用户列表', name: $event.index, content: 'UserList' })">
                     用户列表
                 </el-menu-item>
             </el-sub-menu>

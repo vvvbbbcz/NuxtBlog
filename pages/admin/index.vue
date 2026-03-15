@@ -11,20 +11,11 @@ definePageMeta({
 
 const { user }: { user: ComputedRef<User | null> } = useUserSession();
 
-interface Tab {
-    label: string;
-    name: string;
-    content: any;
-    props?: Object;
-}
-
 const activeTab = ref(-1);
-
-const tabs = ref<Tab[]>([]);
-
+const tabs = ref<AdminTab[]>([]);
 const tabMap = ref<{ [key: string]: number }>({})
 
-function addTab(tab: Tab) {
+function addTab(tab: AdminTab) {
     const idx = tabMap.value[tab.name];
     if (idx !== undefined) {
         activeTab.value = idx;
@@ -76,7 +67,7 @@ function removeTab(index: TabPaneName) {
                 </el-tab-pane>
                 <el-tab-pane v-for="(item, idx) in tabs" :key="idx" :label="item.label" :name="idx">
                     <KeepAlive>
-                        <component :is="item.content" v-bind="item.props" />
+                        <component :is="registry[item.content]" v-bind="item.props" />
                     </KeepAlive>
                 </el-tab-pane>
             </el-tabs>
