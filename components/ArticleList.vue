@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import 'highlight.js/styles/default.css';
 
 const { data: articles, status } = useLazyFetch(`/api/article/list`);
 
@@ -19,7 +18,7 @@ function toArticle(year: string, name: string) {
         <el-link @click="toArticle(`${article.year}`, `${article.url}`)">
             <h1 class="title m-0">{{ article.title }}</h1>
         </el-link>
-        <div v-highlight v-html="article.abstract" />
+        <div v-html="article.abstract" />
     </el-card>
 </template>
 

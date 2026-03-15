@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import 'highlight.js/styles/default.css';
 import { aesDecrypt } from "~/utils/aesCrypto";
 import { Clock, CollectionTag, User } from "@element-plus/icons-vue";
 
@@ -42,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <el-card v-highlight>
+    <el-card>
         <div v-if="error?.statusCode === 404">
             <h1 class="main-title m-0">404 Not Found</h1>
             <hr />
