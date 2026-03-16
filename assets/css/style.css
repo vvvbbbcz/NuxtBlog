@@ -19,7 +19,7 @@ img {
     padding-right: var(--el-menu-base-level-padding);
 }
 
-.el-header .el-menu--horizontal > .el-sub-menu.is-active .el-sub-menu__title {
+.el-header .el-menu--horizontal>.el-sub-menu.is-active .el-sub-menu__title {
     border-bottom: none;
 }
 
@@ -31,7 +31,9 @@ img {
     border: none !important;
 }
 
-.bg-c, .el-header, .el-footer {
+.bg-c,
+.el-header,
+.el-footer {
     background-color: var(--el-bg-color-overlay);
 }
 
@@ -119,15 +121,28 @@ img {
     flex-wrap: wrap;
 }
 
+p > code {
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
+    border-radius: var(3px);
+    padding: 2px 4px;
+}
+
+pre.shiki code {
+    display: inline-block;
+    width: 100%;
+    overflow-x: auto;
+}
+
 pre.shiki {
     border-radius: 1rem;
     padding: 1rem;
     counter-reset: line;
-    padding-left: 3.5rem;
     position: relative;
 }
 
 pre.shiki code .line {
+    padding-left: 2.5rem;
     position: relative;
 }
 
@@ -135,7 +150,7 @@ pre.shiki code .line::before {
     counter-increment: line;
     content: counter(line);
     position: absolute;
-    left: -3.5rem;
+    left: -1rem;
     width: 2.5rem;
     text-align: right;
     color: #888;
