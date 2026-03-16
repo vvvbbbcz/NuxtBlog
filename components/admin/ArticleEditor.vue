@@ -81,11 +81,17 @@ async function update(draft: boolean) {
         }
     }
 }
+
+const mounted = ref(false);
+onMounted(() => {
+    mounted.value = true;
+});
 </script>
 
 <template>
     <el-container class="h-100p" direction="vertical">
         <ArticleInfoForm ref="form" :info="article" @change="unsaved = true" />
+
         <div class="m-b-1 d-fl a-i-c">
             <el-button-group class="m-r-1">
                 <el-button v-if="article.drafted" type="primary" @click="update(true)">
@@ -100,7 +106,8 @@ async function update(draft: boolean) {
             </el-button-group>
             <el-text v-if="unsaved" class="m-l-1" type="warning">未保存</el-text>
         </div>
-        <MdEditor v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" />
+
+        <MdEditor v-if="mounted" v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" />
     </el-container>
 </template>
 
