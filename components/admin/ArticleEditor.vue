@@ -6,8 +6,7 @@ import type { Article } from "~/utils/dbTypes/article";
 import type { User } from "~/utils/dbTypes/user";
 import { MdEditor } from "md-editor-v3";
 import 'md-editor-v3/lib/style.css';
-import markdownit from "markdown-it";
-import Shiki from '@shikijs/markdown-it'
+import { codeToHtml } from "shiki";
 
 const props = defineProps({
     id: Number,
@@ -18,14 +17,14 @@ const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
 const article = ref<Article>({ visible: 0, drafted: true });
 const unsaved = ref<boolean>(false);
 const form = ref<InstanceType<typeof ArticleInfoForm>>();
-const md = markdownit();
-
-md.use(await Shiki({
-    themes: {
-        light: 'github-light',
-        dark: 'github-dark',
+const md = new MarkdownItAsync({
+    highlight: async (code, lang) => {
+        return await codeToHtml(code, {
+            lang,
+            themes: { light: 'github-light', dark: 'github-dark' }
+        });
     }
-}))
+});
 
 if (props.id !== undefined) {
     const { data, status, error } =
@@ -43,7 +42,7 @@ async function update(draft: boolean) {
         const edited = article.value;
 
         if (!draft) {
-            const html = md.render(edited.markdown ?? '');
+            const html = await md.renderAsync(edited.markdown ?? '');
 
             if (edited.visible === 2) {
                 const iv = generateIV();
