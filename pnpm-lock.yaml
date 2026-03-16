@@ -54,9 +54,6 @@ importers:
       '@element-plus/nuxt':
         specifier: ^1.1.1
         version: 1.1.5(@element-plus/icons-vue@2.3.2(vue@3.5.29))(element-plus@2.13.2(vue@3.5.29))(magicast@0.5.2)
-      '@shikijs/markdown-it':
-        specifier: ^4.0.2
-        version: 4.0.2
       '@types/html-truncate':
         specifier: ^1.2.4
         version: 1.2.4
@@ -1425,15 +1422,6 @@ packages:
   '@shikijs/langs@4.0.2':
     resolution: {integrity: sha512-KaXby5dvoeuZzN0rYQiPMjFoUrz4hgwIE+D6Du9owcHcl6/g16/yT5BQxSW5cGt2MZBz6Hl0YuRqf12omRfUUg==}
     engines: {node: '>=20'}
-
-  '@shikijs/markdown-it@4.0.2':
-    resolution: {integrity: sha512-7DDEhknj/mXTN7ME8CjKWBv5O/4YgOiJBZLgs/NbUFMC7Ik1x/VEhaK+aBjX60bJdok0E2mxEYan/GzJ2xRx+A==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      markdown-it-async: ^2.2.0
-    peerDependenciesMeta:
-      markdown-it-async:
-        optional: true
 
   '@shikijs/primitive@4.0.2':
     resolution: {integrity: sha512-M6UMPrSa3fN5ayeJwFVl9qWofl273wtK1VG8ySDZ1mQBfhCpdd8nEx7nPZ/tk7k+TYcpqBZzj/AnwxT9lO+HJw==}
@@ -5460,11 +5448,6 @@ snapshots:
   '@shikijs/langs@4.0.2':
     dependencies:
       '@shikijs/types': 4.0.2
-
-  '@shikijs/markdown-it@4.0.2':
-    dependencies:
-      markdown-it: 14.1.1
-      shiki: 4.0.2
 
   '@shikijs/primitive@4.0.2':
     dependencies:
