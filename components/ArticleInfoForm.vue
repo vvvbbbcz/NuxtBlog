@@ -33,11 +33,9 @@ async function validate(callback?: FormValidateCallback): Promise<boolean> {
     return form.value?.validate(callback) || false;
 }
 
-function getValue(): Article {
-    return { ...data.value };
-}
+defineExpose({ validate });
 
-defineExpose({ validate, getValue });
+const emit = defineEmits<{ change: [Article] }>();
 
 const visibleOptions = [
     { value: 0, label: '公开' },
@@ -86,16 +84,18 @@ onMounted(async () => {
     <el-form v-if="mounted" ref="form" :model="data" :rules="rule" label-width="auto" hide-required-asterisk
         status-icon>
         <el-form-item prop="ti" label="标题">
-            <el-input v-model="data.title" @change="$emit('change')" />
+            <el-input v-model="data.title" @change="(value) => emit('change', { title: value })" />
         </el-form-item>
         <el-form-item prop="ur" label="URL">
-            <el-input v-model="data.url" @change="$emit('change')" />
+            <el-input v-model="data.url" @change="(value) => emit('change', { url: value })" />
         </el-form-item>
         <el-form-item prop="tg" label="标签">
             <el-select v-model="data.tag" multiple filterable remote collapse-tags collapse-tags-tooltip
                 :max-collapse-tags="5" remote-show-suffix :remote-method="fetchTags" :loading="tagsStatus === 'pending'"
-                @change="$emit('change')">
+                @change="(value: Tag[]) => emit('change', { tag: value })">
+
                 <el-option v-for="item in tagList" :label="item.name" :value="item.id ?? 0" />
+
                 <template #loading>
                     <svg class="circular" viewBox="0 0 50 50">
                         <circle class="path" cx="25" cy="25" r="20" fill="none" />

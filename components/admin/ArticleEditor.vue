@@ -7,16 +7,23 @@ import type { User } from "~/utils/dbTypes/user";
 import { MdEditor } from "md-editor-v3";
 import 'md-editor-v3/lib/style.css';
 import { codeToHtml } from "shiki";
+import { useLocalStorage } from "@vueuse/core";
 
 const props = defineProps({
     id: Number,
 });
 
 const { user }: { user: ComputedRef<User | null> } = useUserSession();
+
 const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
-const article = ref<Article>({ visible: 0, drafted: true });
-const unsaved = ref<boolean>(false);
+
+const storageKey = ref(`article-${props.id ?? 'new'}`);
+const article = useLocalStorage<Article>(storageKey, { visible: 0, drafted: true });
+
+const saved = ref(false);
+
 const form = ref<InstanceType<typeof ArticleInfoForm>>();
+
 const md = new MarkdownItAsync({
     highlight: async (code, lang) => {
         return await codeToHtml(code, {
@@ -59,37 +66,51 @@ async function update(draft: boolean) {
 
         article.value.drafted = draft;
 
-        const { data, status }: any = await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
+        await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
             method: props.id ? 'PATCH' : 'POST',
             body: {
                 ...edited,
-                ...form.value?.getValue(),
                 date: moment().format("YYYY-MM-DD HH:mm:ss"),
                 year: moment().year(),
                 author: user.value?.id
             }
+        }).then(async ({ data, status }: any) => {
+            if (status === 'success') {
+                if (props.id === undefined) {
+                    const oldData = article.value;
+                    storageKey.value = `article-${data.id}`;
+                    await nextTick();
+                    article.value = oldData;
+                    localStorage.removeItem(`article-new`);
+                }
+
+                saved.value = true;
+                ElMessage({ type: 'success', message: '保存成功' });
+            }
         }).catch(error => {
             ElNotification({ type: 'error', title: '保存失败', message: error });
         });
-        if (status === 'success') {
-            ElMessage({ type: 'success', message: '保存成功' });
-            unsaved.value = false;
-            // if (!props.id) { // create
-            //     await navigateTo(`/admin/article/edit/${data.id}`);
-            // }
-        }
     }
+}
+
+function editInfo(info: Article) {
+    article.value = { ...article.value, ...info };
+    saved.value = false;
 }
 
 const mounted = ref(false);
 onMounted(() => {
     mounted.value = true;
 });
+
+watch(article, () => {
+    saved.value = false;
+});
 </script>
 
 <template>
     <el-container class="h-100p" direction="vertical">
-        <ArticleInfoForm ref="form" :info="article" @change="unsaved = true" />
+        <ArticleInfoForm ref="form" :info="article" @change="editInfo" />
 
         <div class="m-b-1 d-fl a-i-c">
             <el-button-group class="m-r-1">
@@ -103,7 +124,8 @@ onMounted(() => {
                     发布
                 </el-button>
             </el-button-group>
-            <el-text v-if="unsaved" class="m-l-1" type="warning">未保存</el-text>
+            <el-text v-if="saved" class="m-l-1" type="success">已云端保存</el-text>
+            <el-text v-else class="m-l-1" type="warning">已本地保存</el-text>
         </div>
 
         <MdEditor v-if="mounted" v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" />

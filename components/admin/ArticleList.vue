@@ -16,6 +16,7 @@ async function remove(id: number) {
         body: { id: id }
     }).then(async ({ status }) => {
         if (status === 'success') {
+            localStorage.removeItem(`article-${id}`);
             ElMessage({ type: 'success', message: '删除成功' });
             await refresh();
         }
