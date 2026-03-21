@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 
-const props = defineProps<{ type: 'published' | 'drafted' | 'deleted' }>();
+const props = defineProps<{
+    type: 'published' | 'drafted' | 'deleted'
+}>();
+
+const addTab = inject('addTab') as (tab: AdminTab) => void;
 
 const { data: articles, refresh } = await useFetch(`/api/admin/article/list/${props.type}`);
 
@@ -107,7 +111,12 @@ onMounted(() => {
                 <el-button v-if="props.type === 'deleted'" type="primary" @click="restore(scope.row.id)">
                     还原
                 </el-button>
-                <el-button v-else type="primary" @click="edit(scope.row.id)">
+                <el-button v-else type="primary" @click="addTab({
+                    label: `编辑文章：${scope.row.title}`,
+                    name: `edit-${scope.row.id}`,
+                    content: 'ArticleEditor',
+                    props: { id: scope.row.id }
+                })">
                     编辑
                 </el-button>
             </template>
