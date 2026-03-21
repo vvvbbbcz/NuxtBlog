@@ -46,6 +46,10 @@ onMounted(() => {
 </script>
 
 <template>
+    <el-button class="m-l-1" type="primary" @click="refresh()">
+        刷新
+    </el-button>
+
     <el-table v-if="mounted && articles" :data="articles">
         <el-table-column type="expand">
             <template #default="scope">
