@@ -28,6 +28,8 @@ function addTab(tab: AdminTab) {
     }
 }
 
+provide('addTab', addTab);
+
 function removeTab(index: TabPaneName) {
     if (typeof index === 'string') {
         const idx = tabMap.value[index];
@@ -54,7 +56,7 @@ function removeTab(index: TabPaneName) {
 
 <template>
     <el-aside class="m-1">
-        <AsideMenu :add-tab="addTab" />
+        <AsideMenu />
     </el-aside>
     <el-main class="m-1 p-0">
         <el-card>

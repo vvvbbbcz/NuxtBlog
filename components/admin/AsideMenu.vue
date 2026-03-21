@@ -1,17 +1,12 @@
 <script setup lang="ts">
-
-const props = defineProps<{ addTab: (tab: AdminTab) => void }>();
-
-function click(tab: AdminTab) {
-    props.addTab(tab);
-}
+const addTab = inject('addTab') as (tab: AdminTab) => void;
 </script>
 
 <template>
     <el-card :body-class="'p-0'">
         <el-menu class="b-no" unique-opened>
             <el-menu-item index="blog-settings"
-                @click="click({ label: '博客设置', name: $event.index, content: 'BlogSettings' })">
+                @click="addTab({ label: '博客设置', name: $event.index, content: 'BlogSettings' })">
                 博客设置
             </el-menu-item>
 
@@ -20,10 +15,10 @@ function click(tab: AdminTab) {
                     文章管理
                 </template>
                 <el-menu-item index="new-draft"
-                    @click="click({ label: '新建草稿', name: $event.index, content: 'ArticleEditor' })">
+                    @click="addTab({ label: '新建草稿', name: $event.index, content: 'ArticleEditor' })">
                     新建草稿
                 </el-menu-item>
-                <el-menu-item index="article-list" @click="click({
+                <el-menu-item index="article-list" @click="addTab({
                     label: '文章列表',
                     name: $event.index,
                     content: 'ArticleList',
@@ -31,7 +26,7 @@ function click(tab: AdminTab) {
                 })">
                     文章列表
                 </el-menu-item>
-                <el-menu-item index="draft-list" @click="click({
+                <el-menu-item index="draft-list" @click="addTab({
                     label: '草稿列表',
                     name: $event.index,
                     content: 'ArticleList',
@@ -39,7 +34,7 @@ function click(tab: AdminTab) {
                 })">
                     草稿列表
                 </el-menu-item>
-                <el-menu-item index="recycle" @click="click({
+                <el-menu-item index="recycle" @click="addTab({
                     label: '回收站',
                     name: $event.index,
                     content: 'ArticleList',
@@ -48,7 +43,7 @@ function click(tab: AdminTab) {
                     回收站
                 </el-menu-item>
                 <el-menu-item index="tags"
-                    @click="click({ label: '标签管理', name: $event.index, content: 'TagList' })">
+                    @click="addTab({ label: '标签管理', name: $event.index, content: 'TagList' })">
                     标签管理
                 </el-menu-item>
             </el-sub-menu>
@@ -69,11 +64,11 @@ function click(tab: AdminTab) {
                     用户管理
                 </template>
                 <el-menu-item index="profile"
-                    @click="click({ label: '个人设置', name: $event.index, content: 'ProfileSettings' })">
+                    @click="addTab({ label: '个人设置', name: $event.index, content: 'ProfileSettings' })">
                     个人设置
                 </el-menu-item>
                 <el-menu-item index="user-list"
-                    @click="click({ label: '用户列表', name: $event.index, content: 'UserList' })">
+                    @click="addTab({ label: '用户列表', name: $event.index, content: 'UserList' })">
                     用户列表
                 </el-menu-item>
             </el-sub-menu>
