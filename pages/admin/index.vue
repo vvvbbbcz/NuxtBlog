@@ -60,7 +60,7 @@ function removeTab(index: TabPaneName) {
         <el-card>
             <InstallSettings v-if="user?.id === 0" />
 
-            <el-tabs v-model="activeTab" closable @tab-remove="removeTab">
+            <el-tabs v-model="activeTab" type="card" closable @tab-remove="removeTab">
                 <el-tab-pane label="欢迎" :name="-1" :key="-1" :closable="false">
                     <p>欢迎来到后台管理中心</p>
                     <p>你可以在左侧菜单栏中进行操作</p>
