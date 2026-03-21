@@ -9,10 +9,6 @@ const addTab = inject('addTab') as (tab: AdminTab) => void;
 
 const { data: articles, refresh } = await useFetch(`/api/admin/article/list/${props.type}`);
 
-async function edit(id: number) {
-    await navigateTo(`/admin/article/edit/${id}`);
-}
-
 async function remove(id: number) {
     const apiType = props.type === 'deleted' ? 'delete' : 'remove';
     $fetch(`/api/admin/article/${apiType}`, {
