@@ -63,7 +63,7 @@ async function update(draft: boolean) {
             edited.html = undefined;
         }
 
-        article.value.drafted = draft;
+        edited.drafted = draft;
 
         const hasId = id.value !== undefined;
         await $fetch(`/api/admin/article/${hasId ? 'update' : 'create'}`, {
