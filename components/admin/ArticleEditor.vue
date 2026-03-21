@@ -9,15 +9,14 @@ import 'md-editor-v3/lib/style.css';
 import { codeToHtml } from "shiki";
 import { useLocalStorage } from "@vueuse/core";
 
-const props = defineProps({
-    id: Number,
-});
+const props = defineProps<{ id?: number}>();
+const id = ref(props.id);
 
 const { user }: { user: ComputedRef<User | null> } = useUserSession();
 
 const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
 
-const storageKey = ref(`article-${props.id ?? 'new'}`);
+const storageKey = ref(`article-${id.value ?? 'new'}`);
 const article = useLocalStorage<Article>(storageKey, { visible: 0, drafted: true });
 
 const saved = ref(false);
@@ -33,9 +32,9 @@ const md = new MarkdownItAsync({
     }
 });
 
-if (props.id !== undefined) {
+if (id.value !== undefined) {
     const { data, status, error } =
-        await useFetch('/api/admin/article/get', { query: { id: props.id } });
+        await useFetch('/api/admin/article/get', { query: { id: id.value } });
 
     if (data.value) {
         article.value = data.value;
@@ -66,8 +65,9 @@ async function update(draft: boolean) {
 
         article.value.drafted = draft;
 
-        await $fetch(`/api/admin/article/${props.id ? 'update' : 'create'}`, {
-            method: props.id ? 'PATCH' : 'POST',
+        const hasId = id.value !== undefined;
+        await $fetch(`/api/admin/article/${hasId ? 'update' : 'create'}`, {
+            method: hasId ? 'PATCH' : 'POST',
             body: {
                 ...edited,
                 date: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -76,7 +76,10 @@ async function update(draft: boolean) {
             }
         }).then(async ({ data, status }: any) => {
             if (status === 'success') {
-                if (props.id === undefined) {
+                if (!hasId) {
+                    id.value = data.id;
+                    edited.id = data.id;
+
                     const oldData = article.value;
                     storageKey.value = `article-${data.id}`;
                     await nextTick();
