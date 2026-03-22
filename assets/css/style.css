@@ -6,6 +6,10 @@ img {
     max-width: 100%;
 }
 
+aside h1 {
+    font-size: 1.5em;
+}
+
 .el-card {
     --el-card-border-radius: 1rem !important;
     box-shadow: none !important;

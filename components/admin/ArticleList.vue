@@ -85,7 +85,7 @@ onMounted(() => {
         </el-table-column>
         <el-table-column prop="title" label="标题" min-width="150">
             <template #default="scope">
-                <h1 class="m-0">{{ scope.row.title }}</h1>
+                <span class="title">{{ scope.row.title }}</span>
             </template>
         </el-table-column>
         <el-table-column prop="author" label="作者" min-width="100">
@@ -121,6 +121,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.title {
+    font-size: 1.2rem;
+}
+
 .table-expand {
     margin-left: 2rem;
 }
