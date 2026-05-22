@@ -3,7 +3,7 @@ import ArticleInfoForm from "~/components/ArticleInfoForm.vue";
 
 const addTab = inject('addTab') as (tab: AdminTab) => void;
 
-const { data: articles, refresh } = await useFetch('/api/admin/article/list/published');
+const { data: articles, refresh } = await useFetch('/api/admin/article/list/drafted');
 
 async function remove(id: number) {
     $fetch('/api/admin/article/remove', {
@@ -55,9 +55,6 @@ onMounted(() => {
             <template #default="scope">
                 {{ scope.row.author.nickname }}
             </template>
-        </el-table-column>
-
-        <el-table-column prop="date" label="修改时间" min-width="100">
         </el-table-column>
 
         <el-table-column prop="visible" label="可见性" min-width="70">

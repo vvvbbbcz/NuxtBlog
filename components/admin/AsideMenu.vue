@@ -21,24 +21,21 @@ const addTab = inject('addTab') as (tab: AdminTab) => void;
                 <el-menu-item index="article-list" @click="addTab({
                     label: '文章列表',
                     name: $event.index,
-                    content: 'ArticleList',
-                    props: { type: 'published' }
+                    content: 'ArticleList'
                 })">
                     文章列表
                 </el-menu-item>
                 <el-menu-item index="draft-list" @click="addTab({
                     label: '草稿列表',
                     name: $event.index,
-                    content: 'ArticleList',
-                    props: { type: 'drafted' }
+                    content: 'DraftList'
                 })">
                     草稿列表
                 </el-menu-item>
                 <el-menu-item index="recycle" @click="addTab({
                     label: '回收站',
                     name: $event.index,
-                    content: 'ArticleList',
-                    props: { type: 'deleted' }
+                    content: 'RecycleList'
                 })">
                     回收站
                 </el-menu-item>

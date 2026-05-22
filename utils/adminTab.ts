@@ -4,11 +4,15 @@ import ArticleList from '~/components/admin/ArticleList.vue';
 import TagList from '~/components/admin/TagList.vue';
 import UserList from '~/components/admin/UserList.vue';
 import ProfileSettings from '~/components/admin/ProfileSettings.vue';
+import RecycleList from '~/components/admin/RecycleList.vue';
+import DraftList from '~/components/admin/DraftList.vue';
 
 export const registry = {
     BlogSettings,
     ArticleEditor,
     ArticleList,
+    DraftList,
+    RecycleList,
     TagList,
     UserList,
     ProfileSettings,
