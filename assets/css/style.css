@@ -128,7 +128,7 @@ aside h1 {
 p > code {
     color: var(--el-color-primary);
     background-color: var(--el-color-primary-light-9);
-    border-radius: var(3px);
+    border-radius: 3px;
     padding: 2px 4px;
 }
 
