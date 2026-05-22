@@ -92,8 +92,8 @@ onMounted(() => {
                     <el-input v-if="mounted" v-model="info.email" />
                 </el-form-item>
             </el-form>
-            <el-button type="primary" @click="save(infoForm, info)">
-                保存（暂不支持）
+            <el-button type="primary" @click="save(infoForm, info)" disabled>
+                保存
             </el-button>
             <el-button @click="infoForm?.resetFields()">
                 重置
@@ -112,7 +112,7 @@ onMounted(() => {
                     <el-input v-if="mounted" v-model="pw.confirmPassword" type="password" show-password />
                 </el-form-item>
             </el-form>
-            <el-button type="primary" @click="save(pwForm, pw)">
+            <el-button type="primary" @click="save(pwForm, pw)" disabled>
                 保存
             </el-button>
             <el-button @click="pwForm?.resetFields()">
