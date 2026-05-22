@@ -67,19 +67,23 @@ function validateConfirmPassword(rule: any, value: any, callback: any) {
 }
 
 async function save() {
-    $fetch(`/api/admin/install`, {
-        method: 'POST',
-        body: {
-            ...data.value,
-            confirmPassword: undefined,
+    await form.value?.validate(async (valid) => {
+        if (valid) {
+            $fetch(`/api/admin/install`, {
+                method: 'POST',
+                body: {
+                    ...data.value,
+                    confirmPassword: undefined,
+                }
+            }).then(async ({ status }) => {
+                if (status === 'success') {
+                    ElMessage({ type: 'success', message: '保存成功' });
+                    await navigateTo('/admin/login');
+                }
+            }).catch(error => {
+                ElNotification({ type: 'error', title: '保存失败', message: error });
+            });
         }
-    }).then(async ({ status }) => {
-        if (status === 'success') {
-            ElMessage({ type: 'success', message: '保存成功' });
-            await navigateTo('/admin/login');
-        }
-    }).catch(error => {
-        ElNotification({ type: 'error', title: '保存失败', message: error });
     });
 }
 
