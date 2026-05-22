@@ -1,6 +1,6 @@
 {
-  "name": "nuxt-app",
-  "private": true,
+  "name": "nuxt-blog",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
