@@ -50,7 +50,6 @@ function validateEmail(rule: any, value: any, callback: any) {
 }
 
 function validatePassword(rule: any, value: any, callback: any) {
-    console.log(value)
     if (!passwordStrength(value).id) { // strength bigger than 0
         callback(new Error('密码强度太弱'))
     } else {
