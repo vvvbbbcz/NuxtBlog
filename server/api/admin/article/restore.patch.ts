@@ -5,7 +5,9 @@ import filters from "~/server/utils/filters";
 export default defineEventHandler(async (event) => {
     const id = parseInt((await readBody(event)).id);
     if (filters.isArticle(id)) {
-        const result = await Article.updateOne({ _id: id }, { de: false }).exec();
+        const result = await Article.updateOne({ _id: id }, { de: false }).exec().catch((err) => {
+            throw createError({ statusCode: 500, statusMessage: String(err) });
+        });
 
         if (result.matchedCount < 1) {
             throw createError({ statusCode: 404, statusMessage: 'Article Not Found' });

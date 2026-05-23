@@ -24,12 +24,16 @@ export default defineEventHandler(async (event) => {
     }
 
     // check if installed
-    if (await DB.exists({ _id: 0 }).exec()) {
+    if (await DB.exists({ _id: 0 }).exec().catch((err) => {
+        throw createError({ statusCode: 500, statusMessage: String(err) })
+    })) {
         throw createError({ statusCode: 405, statusMessage: 'Installed' });
     }
 
     const body = await filter(await readBody(event));
-    await Promise.all([DB.create(body.blogInfo), DB.create(body.user)]);
+    await Promise.all([DB.create(body.blogInfo), DB.create(body.user)]).catch((err) => {
+        throw createError({ statusCode: 500, statusMessage: String(err) });
+    });
 
     return apiStatus.success(event, { code: 201 });
 })

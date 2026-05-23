@@ -10,7 +10,11 @@ export default defineEventHandler(async (event) => {
         const data = fromDB(await Article.findOne({ _id: id, de: false })
             .select(['ur', 'ti', 'md', 'tg', 'pw', 'vi', 'dr'])
             .populate('tg', ['ti'])
-            .lean());
+            .lean()
+            .catch((err) => {
+                throw createError({ statusCode: 500, statusMessage: String(err) });
+            }));
+
         if (data) {
             return data;
         } else {

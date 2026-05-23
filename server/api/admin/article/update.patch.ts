@@ -20,7 +20,10 @@ export default defineEventHandler(async (event) => {
     const id = body.id;
 
     if (filters.isArticle(id)) {
-        const result = await DB.updateOne({ _id: id }, body.article).exec();
+        const result = await DB.updateOne({ _id: id }, body.article).exec().catch((err) => {
+            throw createError({ statusCode: 500, statusMessage: String(err) });
+        });
+
         if (result.matchedCount < 1) {
             throw createError({ statusCode: 404, statusMessage: 'Article Not Found' });
         }

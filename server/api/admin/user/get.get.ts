@@ -15,7 +15,10 @@ export default defineEventHandler(async (event) => {
         const data = fromDB(await User
             .findById(id)
             .select(['-_id', 'ur', 'ti', 'md', 'co'])
-            .lean());
+            .lean()
+            .catch((err) => {
+                throw createError({ statusCode: 500, statusMessage: String(err) });
+            }));
         if (data) {
             return data;
         } else {

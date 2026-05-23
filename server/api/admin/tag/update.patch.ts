@@ -15,7 +15,10 @@ export default defineEventHandler(async (event) => {
     const id = body.id;
 
     if (filters.isTag(id)) {
-        const tag = await DB.updateOne({ _id: id }, body.tag).exec();
+        const tag = await DB.updateOne({ _id: id }, body.tag).exec().catch((err) => {
+            throw createError({ statusCode: 500, statusMessage: String(err) });
+        });
+
         if (tag.matchedCount < 1) {
             throw createError({ statusCode: 404, statusMessage: 'Tag Not Found' });
         } else {

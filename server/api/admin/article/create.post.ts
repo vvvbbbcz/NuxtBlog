@@ -15,7 +15,10 @@ export default defineEventHandler(async (event) => {
         .findOne({ _id: { $gt: 0 } })
         .sort({ _id: -1 })
         .select('_id')
-        .lean();
+        .lean()
+        .catch((err) => {
+            throw createError({ statusCode: 500, statusMessage: String(err) });
+        });
 
     const id = data?._id ? (data._id + 1) : 1;
     const body = filter(id, await readBody(event))

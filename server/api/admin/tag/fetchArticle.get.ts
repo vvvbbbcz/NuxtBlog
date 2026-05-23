@@ -7,12 +7,14 @@ export default defineEventHandler(async (event) => {
     const id = parseInt(Array.isArray(query) ? query[0] : query);
 
     if (filters.isTag(id)) {
-        return (await Article.find(filters.article.all({ tg: id }))
+        return await Article.find(filters.article.all({ tg: id }))
             .select(['ur', 'ti', 'vi'])
             .populate('au', ['co', 'ti'])
-            .lean())
-            .map(fromDB)
-            .filter((i) => i !== null);
+            .lean()
+            .then((res) => res.map(fromDB).filter((i) => i !== null))
+            .catch((err) => {
+                throw createError({ statusCode: 500, statusMessage: String(err) });
+            });
     }
     throw createError({ statusCode: 400, statusMessage: 'Invalid ID' });
 });
