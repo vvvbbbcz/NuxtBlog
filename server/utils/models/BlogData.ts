@@ -11,8 +11,8 @@ const schema = new Schema({
 
     // article: url name
     // blog info: always null
-    // menu item: url
     // user: username
+    // menu item: url
     // tag: url name
     // picture: url
     ur: {
@@ -25,6 +25,7 @@ const schema = new Schema({
     // blog info: name
     // tag: name
     // user: nickname
+    // menu item: label
     ti: String,
 
     // article: markdown
@@ -45,6 +46,8 @@ const schema = new Schema({
     co: { type: Number, ref: 'BlogData' },
 
     // article: tags
+    // blog info: menus items
+    // menu item: sub menu
     tg: [{ type: Number, ref: 'BlogData' }],
 
     // article: publish year
@@ -65,6 +68,7 @@ const schema = new Schema({
 
     // article: author
     // blog info: icon
+    // menu item: page or article
     // picture: uploader
     au: { type: Number, ref: 'BlogData' },
 
@@ -77,12 +81,15 @@ const schema = new Schema({
 
     // article: visible (public = 0, private = 1, encrypted > 1)
     // user: admin level (root = 0, admin = 1, editor = 2, author = 3, contributor = 4, user > 4)
+    // menu item: position (top = 0, left = 1, bottom = 2)
     vi: Number,
 
     // article: draft
+    // menu item: open in new tab
     dr: { type: Boolean, default: true },
 
     // article: deleted
+    // menu item: external link
     de: { type: Boolean, default: false },
 });
 
