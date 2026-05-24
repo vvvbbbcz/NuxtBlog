@@ -1,8 +1,11 @@
 {
     "cSpell.words": [
+        "markdownit",
         "Nuxt",
         "popconfirm",
-        "vditor"
+        "shiki",
+        "shikijs",
+        "vueuse"
     ],
     "vue.autoInsert.dotValue": true,
 }
