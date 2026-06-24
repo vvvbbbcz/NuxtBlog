@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import type { TabPaneName } from 'element-plus';
 import AsideMenu from '~/components/admin/AsideMenu.vue';
-import InstallSettings from '~/components/admin/InstallSettings.vue';
-import type { User } from '~/utils/dbTypes/user';
 
 definePageMeta({
     layout: 'admin',
     middleware: ['auth'],
 });
-
-const { user }: { user: ComputedRef<User | null> } = useUserSession();
 
 const activeTab = ref(-1);
 const tabs = ref<AdminTab[]>([]);
@@ -60,8 +56,6 @@ function removeTab(index: TabPaneName) {
     </el-aside>
     <el-main class="m-1 p-0">
         <el-card>
-            <InstallSettings v-if="user?.id === 0" />
-
             <el-tabs v-model="activeTab" type="card" closable @tab-remove="removeTab">
                 <el-tab-pane label="欢迎" :name="-1" :key="-1" :closable="false">
                     <p>欢迎来到后台管理中心</p>

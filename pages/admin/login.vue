@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus';
+import type { User } from '~/utils/dbTypes/user';
 
 definePageMeta({
     layout: 'login'
 });
 
 
-const { loggedIn, fetch } = useUserSession();
+const session = useUserSession();
+const { loggedIn, fetch } = session;
+const { user }: { user: ComputedRef<User | null> } = session;
 
-if (loggedIn.value) {
-    await navigateTo('/admin');
+if (loggedIn.value && user.value?.id !== undefined) {
+    if (user.value.id < 0) {
+        await navigateTo('/admin');
+    } else {
+        await navigateTo(`/admin/install`);
+    }
 }
 
 interface Data {
@@ -39,8 +46,12 @@ async function login() {
 
                     await fetch();
 
-                    if (loggedIn.value) {
-                        await navigateTo('/admin');
+                    if (loggedIn.value && user.value?.id !== undefined) {
+                        if (user.value.id < 0) {
+                            await navigateTo('/admin');
+                        } else {
+                            await navigateTo(`/admin/install`);
+                        }
                     }
                 }
             }).catch(() => {
