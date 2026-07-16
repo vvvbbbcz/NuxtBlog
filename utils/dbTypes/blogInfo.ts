@@ -1,11 +1,12 @@
 import { mapStruct, toNumber, toString } from "../dbTypes";
+import { fromDB as pictureFromDB, type Picture } from "./picture";
 
 interface BlogInfo {
     id?: number,
     name?: string,
     separator?: string,
     description?: string,
-    background?: number,
+    background?: number | Picture,
     icon?: number,
 }
 
@@ -35,7 +36,10 @@ function fromDB(dbData: BlogInfoFromDB | null): BlogInfo | null {
         name: toString('ti'),
         separator: toString('md'),
         description: toString('ab'),
-        background: toNumber('co'),
+        background: {
+            from: 'co',
+            transform: (v: any) => (v instanceof Object ? pictureFromDB(v) : Number(v)) ?? undefined
+        },
         icon: toNumber('au'),
     });
 }
@@ -46,7 +50,12 @@ function toDB(data: BlogInfo): BlogInfoToDB {
         ti: toString('name'),
         md: toString('separator'),
         ab: toString('description'),
-        co: toNumber('background'),
+        co: {
+            from: 'background',
+            transform: (v: number | Picture) => {
+                return v instanceof Object ? (v.id ?? undefined) : Number(v)
+            }
+        },
         au: toNumber('icon'),
     });
 }

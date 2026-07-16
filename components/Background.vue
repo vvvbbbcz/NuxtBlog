@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data } = useNuxtData('blogInfo');
-const bg = data.value?.background?.ur;
+const bg = data.value?.background?.url;
 </script>
 
 <template>
