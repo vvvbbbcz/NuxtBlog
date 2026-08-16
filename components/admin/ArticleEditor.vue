@@ -43,11 +43,11 @@ if (id.value !== undefined) {
     }
 }
 
-async function update(draft: boolean) {
+async function update(publish?: boolean) {
     if (await form.value?.validate()) {
         const edited = article.value;
 
-        if (!draft) {
+        if (publish) {
             const html = await md.renderAsync(edited.markdown ?? '');
 
             if (edited.visible === 2) {
@@ -63,7 +63,7 @@ async function update(draft: boolean) {
             edited.html = undefined;
         }
 
-        edited.drafted = draft;
+        edited.drafted = publish !== undefined ? !publish : undefined;
 
         const hasId = id.value !== undefined;
         await $fetch(`/api/admin/article/${hasId ? 'update' : 'create'}`, {
@@ -117,13 +117,16 @@ watch(article, () => {
 
         <div class="m-b-1 d-fl a-i-c">
             <el-button-group class="m-r-1">
-                <el-button v-if="article.drafted" type="primary" @click="update(true)">
+                <el-button v-if="article.drafted" type="primary" @click="update(false)">
                     保存草稿
                 </el-button>
-                <el-button v-else type="primary" @click="update(true)">
+                <el-button v-else type="primary" @click="update(false)">
                     转为草稿
                 </el-button>
-                <el-button type="primary" @click="update(false)">
+                <el-button v-if="!article.drafted" type="primary" @click="update()">
+                    暂存
+                </el-button>
+                <el-button type="primary" @click="update(true)">
                     发布
                 </el-button>
             </el-button-group>
