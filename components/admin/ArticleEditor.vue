@@ -134,7 +134,7 @@ watch(article, () => {
             <el-text v-else class="m-l-1" type="warning">已本地保存</el-text>
         </div>
 
-        <MdEditor v-if="mounted" v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" />
+        <MdEditor v-if="mounted" v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" @on-save="update()" />
     </el-container>
 </template>
 
