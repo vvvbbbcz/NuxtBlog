@@ -43,13 +43,13 @@ function removeTab(index: TabPaneName) {
         (active === index && active === tabList.length - 1)) active--;
     activeTab.value = active
 
-    // remove the tab from the list
-    const filtered = tabList.filter((_, i) => i !== index);
-    tabs.value = filtered
-
     // remove the mapping of the tab
     const tab = tabList[index]
     if (tab !== undefined) delete tabMap.value[tab.name]
+
+    // remove the tab from the list
+    const filtered = tabList.filter((_, i) => i !== index);
+    tabs.value = filtered
 
     // rebuild the mapping for the remaining tabs
     filtered.forEach((tab, i) => tabMap.value[tab.name] = i)
