@@ -12,16 +12,15 @@ const tabs = ref<AdminTab[]>([]); // tab list
 const tabMap = ref<{ [key: string]: number }>({}) // mapping from tab name to index
 
 function addTab(tab: AdminTab) {
-    const idx = tabMap.value[tab.name]; // query the index of the tab with the same name
-    if (idx !== undefined) { // if the tab already exists
-        activeTab.value = idx; // switch to the existing tab
-    } else {
-        const tail = tabs.value.length; // get the index of the last tab
+    let idx = tabMap.value[tab.name]; // query the index of the tab with the same name
 
+    if (idx === undefined) { // if the tab doesn't exist
+        idx = tabs.value.length; // get the index of the new tab
         tabs.value.push(tab); // add the new tab to the list
-        tabMap.value[tab.name] = tail // add the mapping from tab name to index
-        activeTab.value = tail; // switch to the new tab
+        tabMap.value[tab.name] = idx; // add the mapping from tab name to index
     }
+
+    activeTab.value = idx; // switch to the existing or new tab
 }
 
 provide('addTab', addTab);
