@@ -8,44 +8,50 @@ definePageMeta({
 });
 
 const activeTab = ref(-1);
-const tabs = ref<AdminTab[]>([]);
-const tabMap = ref<{ [key: string]: number }>({})
+const tabs = ref<AdminTab[]>([]); // tab list
+const tabMap = ref<{ [key: string]: number }>({}) // mapping from tab name to index
 
 function addTab(tab: AdminTab) {
-    const idx = tabMap.value[tab.name];
-    if (idx !== undefined) {
-        activeTab.value = idx;
+    const idx = tabMap.value[tab.name]; // query the index of the tab with the same name
+    if (idx !== undefined) { // if the tab already exists
+        activeTab.value = idx; // switch to the existing tab
     } else {
-        const tail = tabs.value.length;
+        const tail = tabs.value.length; // get the index of the last tab
 
-        tabs.value.push(tab);
-        tabMap.value[tab.name] = tail
-        activeTab.value = tail;
+        tabs.value.push(tab); // add the new tab to the list
+        tabMap.value[tab.name] = tail // add the mapping from tab name to index
+        activeTab.value = tail; // switch to the new tab
     }
 }
 
 provide('addTab', addTab);
 
 function removeTab(index: TabPaneName) {
-    if (typeof index === 'string') {
-        const idx = tabMap.value[index];
-        if (idx === undefined) return;
+    if (typeof index === 'string') { // if the index is a string (tab name)
+        const idx = tabMap.value[index]; // get the index of the tab with the name
+        if (idx === undefined) return; // if the tab does not exist, do nothing
         index = idx
     };
 
     const tabList = tabs.value
     let active = activeTab.value
 
+    // if the tab to be removed is before the active tab,
+    // or if the active tab is the last one and is being removed,
+    // we need to adjust the active tab index
     if ((active > index) ||
         (active === index && active === tabList.length - 1)) active--;
     activeTab.value = active
 
+    // remove the tab from the list
     const filtered = tabList.filter((_, i) => i !== index);
     tabs.value = filtered
 
+    // remove the mapping of the tab
     const tab = tabList[index]
     if (tab !== undefined) delete tabMap.value[tab.name]
 
+    // rebuild the mapping for the remaining tabs
     filtered.forEach((tab, i) => tabMap.value[tab.name] = i)
 }
 </script>
