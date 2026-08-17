@@ -7,17 +7,18 @@ import type { User } from "~/utils/dbTypes/user";
 import { MdEditor } from "md-editor-v3";
 import 'md-editor-v3/lib/style.css';
 import { codeToHtml } from "shiki";
-import { useLocalStorage } from "@vueuse/core";
 
-const props = defineProps<{ id?: number}>();
-const id = ref(props.id);
+const props = defineProps<{ id?: number }>();
+let id = props.id;
 
 const { user }: { user: ComputedRef<User | null> } = useUserSession();
 
 const isDark = inject('isDark') as WritableComputedRef<boolean, boolean>;
 
-const storageKey = ref(`article-${id.value ?? 'new'}`);
-const article = useLocalStorage<Article>(storageKey, { visible: 0, drafted: true });
+let storageKey = `article-${id ?? 'new'}`;
+const article = ref<Article>({ visible: 0, drafted: true });
+const localData = ref<Article | null>(null);
+const markdown = ref('');
 
 const saved = ref(false);
 
@@ -32,12 +33,13 @@ const md = new MarkdownItAsync({
     }
 });
 
-if (id.value !== undefined) {
+if (id !== undefined) {
     const { data, status, error } =
-        await useFetch('/api/admin/article/get', { query: { id: id.value } });
+        await useFetch('/api/admin/article/get', { query: { id } });
 
     if (data.value) {
         article.value = data.value;
+        markdown.value = article.value.markdown ?? '';
     } else if (status.value === 'error') {
         ElNotification({ type: 'error', title: '获取文章失败', message: error.value?.message });
     }
@@ -65,7 +67,7 @@ async function update(publish?: boolean) {
 
         edited.drafted = publish !== undefined ? !publish : undefined;
 
-        const hasId = id.value !== undefined;
+        const hasId = id !== undefined;
         await $fetch(`/api/admin/article/${hasId ? 'update' : 'create'}`, {
             method: hasId ? 'PATCH' : 'POST',
             body: {
@@ -77,14 +79,16 @@ async function update(publish?: boolean) {
         }).then(async ({ data, status }: any) => {
             if (status === 'success') {
                 if (!hasId) {
-                    id.value = data.id;
+                    id = data.id;
                     edited.id = data.id;
 
                     const oldData = article.value;
-                    storageKey.value = `article-${data.id}`;
+                    storageKey = `article-${data.id}`;
                     await nextTick();
                     article.value = oldData;
                     localStorage.removeItem(`article-new`);
+                } else {
+                    localStorage.removeItem(storageKey);
                 }
 
                 saved.value = true;
@@ -98,16 +102,39 @@ async function update(publish?: boolean) {
 
 function editInfo(info: Article) {
     article.value = { ...article.value, ...info };
-    saved.value = false;
+}
+
+function editorInput(markdown: string) {
+    article.value = { ...article.value, markdown };
 }
 
 const mounted = ref(false);
 onMounted(() => {
     mounted.value = true;
-});
 
-watch(article, () => {
-    saved.value = false;
+    const stored = localStorage.getItem(storageKey);
+    if (stored !== null) {
+        localData.value = JSON.parse(stored);
+        ElMessageBox.confirm("发现本地保存的草稿，是否恢复？", "提示", {
+            type: "warning",
+            showClose: false,
+            confirmButtonText: "恢复",
+            cancelButtonText: "取消",
+        }).then(() => {
+            article.value = { ...article.value, ...localData.value };
+            markdown.value = article.value.markdown ?? '';
+
+            ElMessage({ type: 'success', message: '已恢复' });
+            localStorage.removeItem(storageKey);
+        }).catch(() => {
+            localStorage.removeItem(storageKey);
+        });
+    }
+
+    watch(article, () => {
+        localStorage.setItem(storageKey, JSON.stringify(article.value));
+        saved.value = false;
+    });
 });
 </script>
 
@@ -134,7 +161,8 @@ watch(article, () => {
             <el-text v-else class="m-l-1" type="warning">已本地保存</el-text>
         </div>
 
-        <MdEditor v-if="mounted" v-model="article.markdown" :theme="isDark ? 'dark' : 'light'" @on-save="update()" />
+        <MdEditor v-if="mounted" v-model="markdown" :theme="isDark ? 'dark' : 'light'" @on-save="update()"
+            @on-change="editorInput" />
     </el-container>
 </template>
 
