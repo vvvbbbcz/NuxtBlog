@@ -5,7 +5,8 @@ import { Article, toDB } from "~/utils/dbTypes/article";
 import filters from "~/server/utils/filters";
 
 function filter(body: Article) {
-    if (!body.drafted && body.visible === 0) body.abstract = truncate(body.html || "", 200);
+    if (!body.drafted && body.visible === 0 && body.html !== undefined)
+        body.abstract = truncate(body.html, 200);
 
     const data = {
         id: body.id === undefined ? NaN : Number(body.id),
