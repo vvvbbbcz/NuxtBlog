@@ -21,3 +21,7 @@
 .p-1 {
     padding: 1rem;
 }
+
+.md-editor-fullscreen {
+    z-index: 2000;
+}
