@@ -33,7 +33,17 @@ async function validate(callback?: FormValidateCallback): Promise<boolean> {
     return form.value?.validate(callback) || false;
 }
 
-defineExpose({ validate });
+function setInfo(info: Article) {
+    data.value = {
+        title: info.title,
+        url: info.url,
+        tag: info.tag,
+        visible: info.visible,
+        password: info.password,
+    };
+}
+
+defineExpose({ validate, setInfo });
 
 const emit = defineEmits<{ change: [Article] }>();
 

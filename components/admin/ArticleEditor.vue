@@ -123,6 +123,7 @@ onMounted(() => {
         }).then(() => {
             article.value = { ...article.value, ...localData.value };
             markdown.value = article.value.markdown ?? '';
+            form.value?.setInfo(article.value);
 
             ElMessage({ type: 'success', message: '已恢复' });
             localStorage.removeItem(storageKey);
