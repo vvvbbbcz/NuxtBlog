@@ -82,10 +82,7 @@ async function update(publish?: boolean) {
                     id = data.id;
                     edited.id = data.id;
 
-                    const oldData = article.value;
                     storageKey = `article-${data.id}`;
-                    await nextTick();
-                    article.value = oldData;
                     localStorage.removeItem(`article-new`);
                 } else {
                     localStorage.removeItem(storageKey);
