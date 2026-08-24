@@ -65,7 +65,7 @@ async function update(publish?: boolean) {
             edited.html = undefined;
         }
 
-        edited.drafted = publish !== undefined ? !publish : undefined;
+        edited.drafted = !(publish ?? !edited.drafted);
 
         const hasId = id !== undefined;
         await $fetch(`/api/admin/article/${hasId ? 'update' : 'create'}`, {
