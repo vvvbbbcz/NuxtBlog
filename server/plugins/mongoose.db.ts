@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import BlogData from "~/server/utils/models/BlogData";
 
 export default defineNitroPlugin(async (nitroApp) => {
+    const config = useRuntimeConfig();
+
     mongoose.connection.once('open', () => {
         consola.success('Connected to MongoDB');
     });
@@ -15,20 +17,12 @@ export default defineNitroPlugin(async (nitroApp) => {
         mongoose.disconnect();
     });
 
-    if (!process.env.MONGODB_URI) {
-        consola.warn('No MONGODB_URI found in env');
-        return;
-    } else if (!process.env.MONGODB_DB_NAME) {
-        consola.warn('No MONGODB_DB_NAME found in env');
-        return;
-    }
-
     const models = [BlogData];
     consola.info(`Loaded ${models.length} Mongoose model(s)`);
 
     try {
         mongoose.set('strictQuery', true);
-        await mongoose.connect(process.env.MONGODB_URI, { dbName: process.env.MONGODB_DB_NAME });
+        await mongoose.connect(config.blog.mongodb.uri, { dbName: config.blog.mongodb.database });
     } catch (error) {
         consola.error(`Error connecting to MongoDB: ${error}`);
     }

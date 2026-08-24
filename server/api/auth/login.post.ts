@@ -10,9 +10,10 @@ function filter(body: any) {
 }
 
 export default defineEventHandler(async (event) => {
+    const config = useRuntimeConfig(event);
     const body = filter(await readBody(event));
 
-    if (process.env.INSTALL) {
+    if (config.blog.installing) {
         const isValid = (body.username === 'installer') &&
             (await verifyPassword(await hashPassword('installer'), body.password));
 

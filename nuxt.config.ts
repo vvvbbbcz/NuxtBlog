@@ -9,8 +9,16 @@ export default defineNuxtConfig({
 		'nuxt-auth-utils'
 	],
 	runtimeConfig: {
+        blog: {
+            mongodb: {
+                uri: "",
+                database: ""
+            },
+            installing: false,
+        },
 		session: {
-			maxAge: 60 * 60 * 24 // 1 day
+			maxAge: 60 * 60 * 24, // 1 day
+            password: ""
 		}
 	},
 	app: {

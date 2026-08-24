@@ -19,8 +19,10 @@ async function filter(body: { blogInfo: BlogInfo, user: User }) {
 }
 
 export default defineEventHandler(async (event) => {
-    if (!process.env.INSTALL) {
-        throw createError({ statusCode: 405, statusMessage: 'Not in install mode' });
+    const config = useRuntimeConfig(event);
+
+    if (!config.blog.installing) {
+        throw createError({ statusCode: 405, statusMessage: 'Not in installing mode' });
     }
 
     // check if installed
